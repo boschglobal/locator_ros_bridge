@@ -111,7 +111,7 @@ private:
   rclcpp::TimerBase::SharedPtr session_refresh_timer_;
 
   std::vector<rclcpp::ServiceBase::SharedPtr> services_;
-  rclcpp::CallbackGroup::SharedPtr callback_group_services_;
+  rclcpp::callback_group::CallbackGroup::SharedPtr callback_group_services_;
 
   // Flag to indicate if the bridge should send odometry data to the locator.
   // Value retrieved by the locator settings.

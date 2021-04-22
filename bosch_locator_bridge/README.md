@@ -4,10 +4,11 @@ General information about this repository, including legal information and build
 
 ## Overview
 
-This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software]. It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
+This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software].
+It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
 It also allows to control the Locator software via ROS 2 service calls.
 
-The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
+The package has been tested under [ROS 2] Foxy and Ubuntu 20.04.
 The bridge is compatible with Locator version 1.2.1.
 
 ## Quick Start
@@ -244,7 +245,7 @@ This can happen if you switch the Locator into a mode where it requires e.g. las
 To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the Locator mode.
 
 
-[ROS 2]: https://docs.ros.org/en/rolling
+[ROS 2]: https://docs.ros.org/en/foxy
 [Bosch Rexroth Locator Software]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
 [Poco]: https://pocoproject.org/
 [sensor_msgs/msg/LaserScan]: https://github.com/ros2/common_interfaces/blob/master/sensor_msgs/msg/LaserScan.msg

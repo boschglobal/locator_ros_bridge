@@ -99,7 +99,7 @@ void LocatorBridgeNode::init()
   syncConfig();
 
   callback_group_services_ = create_callback_group(
-    rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::callback_group::CallbackGroupType::MutuallyExclusive);
   services_.push_back(
     create_service<bosch_locator_bridge::srv::StartRecording>(
       "~/start_visual_recording",

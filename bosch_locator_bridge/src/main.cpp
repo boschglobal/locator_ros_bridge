@@ -24,7 +24,7 @@ int main(int argc, char ** argv)
   auto node = std::make_shared<LocatorBridgeNode>("locator_ros_bridge");
   node->init();
 
-  rclcpp::executors::MultiThreadedExecutor executor(rclcpp::ExecutorOptions(), 4);
+  rclcpp::executors::MultiThreadedExecutor executor(rclcpp::executor::ExecutorArgs(), 4);
   executor.add_node(node);
   executor.spin();
   rclcpp::shutdown();
