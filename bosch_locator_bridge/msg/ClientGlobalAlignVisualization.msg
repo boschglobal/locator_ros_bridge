@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # The time at which the Localization Client received the laser scan used to generate this Datagram
-builtin_interfaces/Time timestamp
+time timestamp
 
 # A unique id for matching datagrams that were emitted at the same time but by different visualization interfaces
 uint64 visualization_id

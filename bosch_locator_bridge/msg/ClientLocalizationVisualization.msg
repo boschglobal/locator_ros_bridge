@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # The time at which the Localization Client received the laser scan used to generate this Datagram
-builtin_interfaces/Time timestamp
+time timestamp
 
 # currently unused; this field is reserved to match a uniqueId provided via the ClientSensorLaser interface
 uint64 unique_id
@@ -23,7 +23,7 @@ uint64 unique_id
 int32 loc_state
 
 # Distance traversed by the sensor since the last successful loop closure
-float64 distance_to_last_lc
+float64 distanceToLastLC
 
 # The relative delay within the system when processing laser scans.
 # 0: no delay; 1.0 : delay causes loop closures to be omitted when building the temporary map

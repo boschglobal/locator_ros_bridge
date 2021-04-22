@@ -13,15 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BOSCH_LOCATOR_BRIDGE__LOCATOR_RPC_INTERFACE_HPP_
-#define BOSCH_LOCATOR_BRIDGE__LOCATOR_RPC_INTERFACE_HPP_
+#pragma once
 
-#include <Poco/JSON/Object.h>
+#include <unordered_map>
 #include <Poco/Net/HTTPClientSession.h>
 
-#include <string>
-#include <unordered_map>
-#include <utility>
+#include <Poco/JSON/Object.h>
 
 /**
  * Shared RPC interface for JSON RPC communication with localization client and map server.
@@ -30,10 +27,10 @@
 class LocatorRPCInterface
 {
 public:
-  LocatorRPCInterface(const std::string & host, uint16_t port);
+  LocatorRPCInterface(const std::string& host, uint16_t port);
   virtual ~LocatorRPCInterface();
 
-  void login(const std::string & user, const std::string & password);
+  void login(const std::string& user, const std::string& password);
   void refresh();
   void logout();
 
@@ -41,18 +38,15 @@ public:
   std::unordered_map<std::string, std::pair<int32_t, int32_t>> getAboutModules();
 
   Poco::DynamicStruct getConfigList();
-  void setConfigList(const Poco::DynamicStruct & config);
+  void setConfigList(const Poco::DynamicStruct& config);
 
   Poco::JSON::Object getSessionQuery() const;
-  Poco::JSON::Object call(const std::string & method, const Poco::JSON::Object & query_obj);
+  Poco::JSON::Object call(const std::string& method, const Poco::JSON::Object& query_obj);
 
 protected:
-  Poco::JSON::Object json_rpc_call(
-    Poco::Net::HTTPClientSession & session, const std::string & method,
-    const Poco::JSON::Object & query_obj);
+  Poco::JSON::Object json_rpc_call(Poco::Net::HTTPClientSession& session, const std::string& method,
+                                   const Poco::JSON::Object& query_obj);
   Poco::Net::HTTPClientSession session_;
   std::string session_id_;
   size_t query_id_;
 };
-
-#endif  // BOSCH_LOCATOR_BRIDGE__LOCATOR_RPC_INTERFACE_HPP_

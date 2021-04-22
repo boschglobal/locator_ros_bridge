@@ -15,29 +15,22 @@
 
 #include "receiving_interface.hpp"
 
-#include <Poco/NObserver.h>
-
-#include <string>
-#include <vector>
-
 #include "rosmsgs_datagram_converter.hpp"
 
-#include "bosch_locator_bridge/msg/client_global_align_visualization.hpp"
-#include "bosch_locator_bridge/msg/client_localization_pose.hpp"
-#include "bosch_locator_bridge/msg/client_localization_visualization.hpp"
-#include "bosch_locator_bridge/msg/client_map_visualization.hpp"
-#include "bosch_locator_bridge/msg/client_recording_visualization.hpp"
+#include "bosch_locator_bridge/ClientControlMode.h"
+#include "bosch_locator_bridge/ClientRecordingVisualization.h"
+#include "bosch_locator_bridge/ClientMapVisualization.h"
+#include "bosch_locator_bridge/ClientLocalizationVisualization.h"
+#include "bosch_locator_bridge/ClientLocalizationPose.h"
+#include "bosch_locator_bridge/ClientGlobalAlignVisualization.h"
 
-ReceivingInterface::ReceivingInterface(
-  const Poco::Net::IPAddress & hostadress, Poco::UInt16 port,
-  rclcpp::Node::SharedPtr node)
-: node_(node),
-  tf_broadcaster_(node),
-  ccm_socket_(Poco::Net::SocketAddress(hostadress, port))
+#include <Poco/NObserver.h>
+
+ReceivingInterface::ReceivingInterface(const Poco::Net::IPAddress& hostadress, Poco::UInt16 port, ros::NodeHandle& nh)
+  : nh_(nh), ccm_socket_(Poco::Net::SocketAddress(hostadress, port))
 {
-  reactor_.addEventHandler(
-    ccm_socket_, Poco::NObserver<ReceivingInterface, Poco::Net::ReadableNotification>(
-      *this, &ReceivingInterface::onReadEvent));
+  reactor_.addEventHandler(ccm_socket_, Poco::NObserver<ReceivingInterface, Poco::Net::ReadableNotification>(
+                                            *this, &ReceivingInterface::onReadEvent));
 }
 
 ReceivingInterface::~ReceivingInterface()
@@ -46,27 +39,33 @@ ReceivingInterface::~ReceivingInterface()
   ccm_socket_.shutdown();
 }
 
-void ReceivingInterface::onReadEvent(
-  const Poco::AutoPtr<Poco::Net::ReadableNotification> & /*notification*/)
+void ReceivingInterface::onReadEvent(const Poco::AutoPtr<Poco::Net::ReadableNotification>& notification)
 {
-  try {
+  try
+  {
     // Create buffer with size of available data
     const int bytes_available = ccm_socket_.available();
     std::vector<char> msg(bytes_available);
     int received_bytes = ccm_socket_.receiveBytes(&(msg[0]), bytes_available);
-    if (received_bytes == 0) {
+    if (received_bytes == 0)
+    {
       std::cout << "received msg of length 0... Connection closed? \n";
-    } else {
+    }
+    else
+    {
       datagram_buffer_.insert(datagram_buffer_.end(), msg.begin(), msg.end());
-      const auto bytes_to_delete = tryToParseData(datagram_buffer_, node_);
+      const auto bytes_to_delete = tryToParseData(datagram_buffer_);
       datagram_buffer_.erase(datagram_buffer_.begin(), datagram_buffer_.begin() + bytes_to_delete);
     }
-  } catch (const std::ios_base::failure & io_failure) {
-    // catching this exception is actually no error:
-    // the datagram is just not yet completely transmitted could not be
+  }
+  catch (const std::ios_base::failure& io_failure)
+  {
+    // catching this exception is actually no error: the datagram is just not yet completely transmitted could not be
     // parsed because of that. Will automatically retry after more data is available.
-  } catch (...) {
-    RCLCPP_ERROR_STREAM(node_->get_logger(), "Caught exception in ReceivingInterface!");
+  }
+  catch (...)
+  {
+    ROS_ERROR_STREAM("Caught exception in ReceivingInterface!");
   }
 }
 
@@ -75,11 +74,10 @@ void ReceivingInterface::run()
   reactor_.run();
 }
 
-void ReceivingInterface::publishTransform(
-  const geometry_msgs::msg::PoseStamped & pose, const std::string & parent_frame,
-  const std::string child_frame)
+void ReceivingInterface::publishTransform(const geometry_msgs::PoseStamped& pose, const std::string& parent_frame,
+                                          const std::string child_frame)
 {
-  geometry_msgs::msg::TransformStamped transform;
+  geometry_msgs::TransformStamped transform;
   transform.header.stamp = pose.header.stamp;
   transform.header.frame_id = parent_frame;
 
@@ -93,271 +91,211 @@ void ReceivingInterface::publishTransform(
   tf_broadcaster_.sendTransform(transform);
 }
 
-ClientControlModeInterface::ClientControlModeInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_CONTROL_MODE_PORT, node)
+ClientControlModeInterface::ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_CONTROL_MODE_PORT, nh)
 {
-  // Setup publisher (use QoS settings to emulate a latched topic (ROS 1))
-  client_control_mode_pub_ = node->create_publisher<bosch_locator_bridge::msg::ClientControlMode>(
-    "~/client_control_mode", rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
+  // Setup publisher
+  publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientControlMode>("client_control_mode", 5, true));
 }
 
-size_t ClientControlModeInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr node)
+size_t ClientControlModeInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros message
-  bosch_locator_bridge::msg::ClientControlMode client_control_mode;
+  bosch_locator_bridge::ClientControlMode client_control_mode;
   const auto parsed_bytes =
-    RosMsgsDatagramConverter::convertClientControlMode2Message(
-    datagram,
-    node->now(), client_control_mode);
-  if (parsed_bytes > 0) {
+      RosMsgsDatagramConverter::convertClientControlMode2Message(datagram, ros::Time::now(), client_control_mode);
+  if (parsed_bytes > 0)
+  {
     // publish client control mode
-    client_control_mode_pub_->publish(client_control_mode);
+    publishers_[0].publish(client_control_mode);
   }
   return parsed_bytes;
 }
 
-ClientMapMapInterface::ClientMapMapInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_MAP_MAP_PORT, node)
+ClientMapMapInterface::ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_MAP_MAP_PORT, nh)
 {
   // Setup publisher
-  client_map_map_pub_ =
-    node->create_publisher<sensor_msgs::msg::PointCloud2>("~/client_map_map", 5);
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_map_map", 5));
 }
 
-size_t ClientMapMapInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr node)
+size_t ClientMapMapInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros message
-  sensor_msgs::msg::PointCloud2 map;
-  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(
-    datagram,
-    node->now(), map);
-  if (parsed_bytes > 0) {
+  sensor_msgs::PointCloud2 map;
+  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
+  if (parsed_bytes > 0)
+  {
     // publish
-    client_map_map_pub_->publish(map);
+    publishers_[0].publish(map);
   }
   return parsed_bytes;
 }
 
-ClientMapVisualizationInterface::ClientMapVisualizationInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_MAP_VISUALIZATION_PORT, node)
+ClientMapVisualizationInterface::ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                 ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_MAP_VISUALIZATION_PORT, nh)
 {
   // Setup publisher
-  client_map_visualization_pub_ =
-    node->create_publisher<bosch_locator_bridge::msg::ClientMapVisualization>(
-    "~/client_map_visualization", 5);
-  client_map_visualization_pose_pub_ = node->create_publisher<geometry_msgs::msg::PoseStamped>(
-    "~/client_map_visualization/pose", 5);
-  client_map_visualization_scan_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
-    "~/client_map_visualization/scan", 5);
-  client_map_visualization_path_poses_pub_ = node->create_publisher<geometry_msgs::msg::PoseArray>(
-    "~/client_map_visualization/path_poses", 5);
+  publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientMapVisualization>("client_map_visualization", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseStamped>("client_map_visualization/pose", 5));
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_map_visualization/scan", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseArray>("client_map_visualization/path_poses", 5));
 }
 
-size_t ClientMapVisualizationInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr /*node*/)
+size_t ClientMapVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros messages
-  bosch_locator_bridge::msg::ClientMapVisualization client_map_visualization;
-  geometry_msgs::msg::PoseStamped pose;
-  sensor_msgs::msg::PointCloud2 scan;
-  geometry_msgs::msg::PoseArray path_poses;
+  bosch_locator_bridge::ClientMapVisualization client_map_visualization;
+  geometry_msgs::PoseStamped pose;
+  sensor_msgs::PointCloud2 scan;
+  geometry_msgs::PoseArray path_poses;
 
   const auto bytes_parsed = RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
-    datagram, client_map_visualization, pose, scan, path_poses);
+      datagram, client_map_visualization, pose, scan, path_poses);
 
-  if (bytes_parsed > 0) {
+  if (bytes_parsed > 0)
+  {
     // publish
     publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
-    client_map_visualization_pub_->publish(client_map_visualization);
-    client_map_visualization_pose_pub_->publish(pose);
-    client_map_visualization_scan_pub_->publish(scan);
-    client_map_visualization_path_poses_pub_->publish(path_poses);
+    publishers_[0].publish(client_map_visualization);
+    publishers_[1].publish(pose);
+    publishers_[2].publish(scan);
+    publishers_[3].publish(path_poses);
   }
   return bytes_parsed;
 }
 
-ClientRecordingMapInterface::ClientRecordingMapInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_MAP_PORT, node)
+ClientRecordingMapInterface::ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_MAP_PORT, nh)
 {
   // Setup publisher
-  client_recording_map_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
-    "~/client_recording_map", 5);
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_recording_map", 5));
 }
 
-size_t ClientRecordingMapInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr node)
+size_t ClientRecordingMapInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros message
-  sensor_msgs::msg::PointCloud2 map;
-  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(
-    datagram,
-    node->now(), map);
-  if (parsed_bytes > 0) {
+  sensor_msgs::PointCloud2 map;
+  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
+  if (parsed_bytes > 0)
+  {
     // publish
-    client_recording_map_pub_->publish(map);
+    publishers_[0].publish(map);
   }
   return parsed_bytes;
 }
 
-ClientRecordingVisualizationInterface::ClientRecordingVisualizationInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_VISUALIZATION_PORT, node)
+ClientRecordingVisualizationInterface::ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                             ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_VISUALIZATION_PORT, nh)
 {
   // Setup publisher
-  client_recording_visualization_pub_ =
-    node->create_publisher<bosch_locator_bridge::msg::ClientRecordingVisualization>(
-    "~/client_recording_visualization", 5);
-  client_recording_visualization_pose_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseStamped>(
-    "~/client_recording_visualization/pose",
-    5);
-  client_recording_visualization_scan_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
-    "~/client_recording_visualization/scan", 5);
-  client_recording_visualization_path_poses_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseArray>(
-    "~/client_recording_visualization/path_poses", 5);
+  publishers_.push_back(
+      nh.advertise<bosch_locator_bridge::ClientRecordingVisualization>("client_recording_visualization", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseStamped>("client_recording_visualization/pose", 5));
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_recording_visualization/scan", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseArray>("client_recording_visualization/path_poses", 5));
 }
 
-size_t ClientRecordingVisualizationInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr /*node*/)
+size_t ClientRecordingVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros messages
-  bosch_locator_bridge::msg::ClientRecordingVisualization client_recording_visualization;
-  geometry_msgs::msg::PoseStamped pose;
-  sensor_msgs::msg::PointCloud2 scan;
-  geometry_msgs::msg::PoseArray path_poses;
+  bosch_locator_bridge::ClientRecordingVisualization client_recording_visualization;
+  geometry_msgs::PoseStamped pose;
+  sensor_msgs::PointCloud2 scan;
+  geometry_msgs::PoseArray path_poses;
 
-  const auto parsed_bytes =
-    RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Message(
-    datagram, client_recording_visualization, pose, scan, path_poses);
+  const auto parsed_bytes = RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Message(
+      datagram, client_recording_visualization, pose, scan, path_poses);
 
-  if (parsed_bytes > 0) {
+  if (parsed_bytes > 0)
+  {
     // publish
     publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
-    client_recording_visualization_pub_->publish(client_recording_visualization);
-    client_recording_visualization_pose_pub_->publish(pose);
-    client_recording_visualization_scan_pub_->publish(scan);
-    client_recording_visualization_path_poses_pub_->publish(path_poses);
+    publishers_[0].publish(client_recording_visualization);
+    publishers_[1].publish(pose);
+    publishers_[2].publish(scan);
+    publishers_[3].publish(path_poses);
   }
   return parsed_bytes;
 }
 
-ClientLocalizationMapInterface::ClientLocalizationMapInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_MAP_PORT, node)
+ClientLocalizationMapInterface::ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress,
+                                                               ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_MAP_PORT, nh)
 {
-  // Setup publisher (use QoS settings to emulate a latched topic (ROS 1))
-  client_localization_map_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
-    "~/client_localization_map", rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
-  client_localization_gridmap_pub_ =
-    node->create_publisher<nav_msgs::msg::OccupancyGrid>(
-    "/map", rclcpp::QoS(
-      rclcpp::KeepLast(
-        1)).transient_local().reliable());
+  // Setup publisher
+  // enable latching, since this is usually only published once
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_localization_map", 5, true));
 }
 
-size_t ClientLocalizationMapInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr node)
+size_t ClientLocalizationMapInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros message
-  sensor_msgs::msg::PointCloud2 map;
-  const auto bytes_parsed = RosMsgsDatagramConverter::convertMapDatagram2Message(
-    datagram,
-    node->now(), map);
-  if (bytes_parsed > 0) {
+  sensor_msgs::PointCloud2 map;
+  const auto bytes_parsed = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
+  if (bytes_parsed > 0)
+  {
     // publish
-    client_localization_map_pub_->publish(map);
+    publishers_[0].publish(map);
   }
   return bytes_parsed;
 }
 
 ClientLocalizationVisualizationInterface::ClientLocalizationVisualizationInterface(
-  const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT, node)
+    const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT, nh)
 {
   // Setup publisher
-  client_localization_visualization_pub_ =
-    node->create_publisher<bosch_locator_bridge::msg::ClientLocalizationVisualization>(
-    "~/client_localization_visualization", 5);
-  client_localization_visualization_pose_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseStamped>(
-    "~/client_localization_visualization/pose", 5);
-  client_localization_visualization_scan_pub_ =
-    node->create_publisher<sensor_msgs::msg::PointCloud2>(
-    "~/client_localization_visualization/scan", 5);
+  publishers_.push_back(
+      nh.advertise<bosch_locator_bridge::ClientLocalizationVisualization>("client_localization_visualization", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseStamped>("client_localization_visualization/pose", 5));
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_localization_visualization/scan", 5));
 }
 
-size_t ClientLocalizationVisualizationInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr /*node*/)
+size_t ClientLocalizationVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros messages
-  bosch_locator_bridge::msg::ClientLocalizationVisualization client_localization_visualization;
-  geometry_msgs::msg::PoseStamped pose;
-  sensor_msgs::msg::PointCloud2 scan;
+  bosch_locator_bridge::ClientLocalizationVisualization client_localization_visualization;
+  geometry_msgs::PoseStamped pose;
+  sensor_msgs::PointCloud2 scan;
 
-  const auto bytes_parsed =
-    RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2Message(
-    datagram, client_localization_visualization, pose, scan);
+  const auto bytes_parsed = RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2Message(
+      datagram, client_localization_visualization, pose, scan);
 
-  if (bytes_parsed > 0) {
+  if (bytes_parsed > 0)
+  {
     // publish
-    client_localization_visualization_pub_->publish(client_localization_visualization);
-    client_localization_visualization_pose_pub_->publish(pose);
-    client_localization_visualization_scan_pub_->publish(scan);
+    publishers_[0].publish(client_localization_visualization);
+    publishers_[1].publish(pose);
+    publishers_[2].publish(scan);
   }
   return bytes_parsed;
 }
 
-ClientLocalizationPoseInterface::ClientLocalizationPoseInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_POSE_PORT, node)
+ClientLocalizationPoseInterface::ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress,
+                                                                 ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_POSE_PORT, nh)
 {
   // Setup publisher
-  client_localization_pose_pub_ =
-    node->create_publisher<bosch_locator_bridge::msg::ClientLocalizationPose>(
-    "~/client_localization_pose", 5);
-  client_localization_pose_pose_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    "~/client_localization_pose/pose", 5);
-  client_localization_pose_lidar_odo_pose_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseStamped>(
-    "~/client_localization_pose/lidar_odo_pose", 5);
+  publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientLocalizationPose>("client_localization_pose", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("client_localization_pose/pose", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseStamped>("client_localization_pose/lidar_odo_pose", 5));
 }
 
-size_t ClientLocalizationPoseInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr /*node*/)
+size_t ClientLocalizationPoseInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros messages
-  bosch_locator_bridge::msg::ClientLocalizationPose client_localization_pose;
-  geometry_msgs::msg::PoseStamped pose;
-  geometry_msgs::msg::PoseWithCovarianceStamped poseWithCov;
-  geometry_msgs::msg::PoseStamped lidar_odo_pose;
+  bosch_locator_bridge::ClientLocalizationPose client_localization_pose;
+  geometry_msgs::PoseStamped pose;
+  geometry_msgs::PoseWithCovarianceStamped poseWithCov;
+  geometry_msgs::PoseStamped lidar_odo_pose;
 
-  double covariance[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  double covariance[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
   const auto bytes_parsed = RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
-    datagram, client_localization_pose, pose, covariance, lidar_odo_pose);
+      datagram, client_localization_pose, pose, covariance, lidar_odo_pose);
 
   poseWithCov.pose.pose = pose.pose;
   poseWithCov.header = pose.header;
@@ -369,51 +307,44 @@ size_t ClientLocalizationPoseInterface::tryToParseData(
   poseWithCov.pose.covariance[11] = covariance[4];
   poseWithCov.pose.covariance[35] = covariance[5];
 
-  if (bytes_parsed > 0) {
+  if (bytes_parsed > 0)
+  {
     // publish
     publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
-    client_localization_pose_pub_->publish(client_localization_pose);
-    client_localization_pose_pose_pub_->publish(poseWithCov);
-    client_localization_pose_lidar_odo_pose_pub_->publish(lidar_odo_pose);
+    publishers_[0].publish(client_localization_pose);
+    publishers_[1].publish(poseWithCov);
+    publishers_[2].publish(lidar_odo_pose);
   }
   return bytes_parsed;
 }
 
-ClientGlobalAlignVisualizationInterface::ClientGlobalAlignVisualizationInterface(
-  const Poco::Net::IPAddress & hostadress,
-  rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT, node)
+ClientGlobalAlignVisualizationInterface::ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                                 ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT, nh)
 {
   // Setup publisher
-  client_global_align_visualization_pub_ =
-    node->create_publisher<bosch_locator_bridge::msg::ClientGlobalAlignVisualization>(
-    "~/client_global_align_visualization", 5);
-  client_global_align_visualization_poses_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseArray>(
-    "~/client_global_align_visualization/poses", 5);
-  client_global_align_visualization_landmarks_poses_pub_ =
-    node->create_publisher<geometry_msgs::msg::PoseArray>(
-    "~/client_global_align_visualization/landmarks/poses", 5);
+  publishers_.push_back(
+      nh.advertise<bosch_locator_bridge::ClientGlobalAlignVisualization>("client_global_align_visualization", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseArray>("client_global_align_visualization/poses", 5));
+  publishers_.push_back(nh.advertise<geometry_msgs::PoseArray>("client_global_align_visualization/landmarks/poses", 5));
 }
 
-size_t ClientGlobalAlignVisualizationInterface::tryToParseData(
-  const std::vector<char> & datagram,
-  rclcpp::Node::SharedPtr /*node*/)
+size_t ClientGlobalAlignVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros messages
-  bosch_locator_bridge::msg::ClientGlobalAlignVisualization client_global_align_visualization;
-  geometry_msgs::msg::PoseArray poses;
-  geometry_msgs::msg::PoseArray landmark_poses;
+  bosch_locator_bridge::ClientGlobalAlignVisualization client_global_align_visualization;
+  geometry_msgs::PoseArray poses;
+  geometry_msgs::PoseArray landmark_poses;
 
-  const auto bytes_parsed =
-    RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2Message(
-    datagram, client_global_align_visualization, poses, landmark_poses);
+  const auto bytes_parsed = RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2Message(
+      datagram, client_global_align_visualization, poses, landmark_poses);
 
-  if (bytes_parsed > 0) {
+  if (bytes_parsed > 0)
+  {
     // publish
-    client_global_align_visualization_pub_->publish(client_global_align_visualization);
-    client_global_align_visualization_poses_pub_->publish(poses);
-    client_global_align_visualization_landmarks_poses_pub_->publish(landmark_poses);
+    publishers_[0].publish(client_global_align_visualization);
+    publishers_[1].publish(poses);
+    publishers_[2].publish(landmark_poses);
   }
   return bytes_parsed;
 }

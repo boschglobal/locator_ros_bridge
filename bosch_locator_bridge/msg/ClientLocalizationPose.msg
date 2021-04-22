@@ -14,10 +14,10 @@
 # limitations under the License.
 
 # The time passed between receiving the most recent laser scan and the generation of this Datagram
-builtin_interfaces/Duration age
+duration age
 
 # The time at which the Localization Client received the laser scan used to generate this Datagram
-builtin_interfaces/Time timestamp
+time timestamp
 
 # currently unused; this field is reserved to match a uniqueId provided via the ClientSensorLaser interface
 uint64 unique_id

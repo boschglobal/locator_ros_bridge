@@ -13,17 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BOSCH_LOCATOR_BRIDGE__SENDING_INTERFACE_HPP_
-#define BOSCH_LOCATOR_BRIDGE__SENDING_INTERFACE_HPP_
-
-#include <Poco/Net/ServerSocket.h>
-#include <Poco/Net/StreamSocket.h>
+#pragma once
 
 #include <atomic>
 #include <mutex>
-#include <vector>
 
-#include "rclcpp/node.hpp"
+#include <Poco/Net/ServerSocket.h>
+#include <Poco/Net/StreamSocket.h>
 
 /**
  * for communicating with "push" consumer, e.g. ClientSensorLaser
@@ -31,14 +27,14 @@
 class SendingInterface : public Poco::Runnable
 {
 public:
-  SendingInterface(uint16_t port, rclcpp::Node::SharedPtr node);
+  SendingInterface(uint16_t port);
   void run();
   virtual ~SendingInterface();
 
   /**
    * Send the given data blob to all connected clients.
    */
-  void sendData(void * data, size_t size);
+  void sendData(void* data, size_t size);
 
   void stop();
 
@@ -47,8 +43,4 @@ private:
   Poco::Net::ServerSocket socket_;
   std::atomic<bool> running_;
   std::vector<Poco::Net::StreamSocket> connections_;
-
-  rclcpp::Node::SharedPtr node_;
 };
-
-#endif  // BOSCH_LOCATOR_BRIDGE__SENDING_INTERFACE_HPP_

@@ -13,21 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <memory>
+#include <ros/ros.h>
 
 #include "locator_bridge_node.hpp"
-#include "rclcpp/rclcpp.hpp"
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<LocatorBridgeNode>("locator_ros_bridge");
-  node->init();
+  ros::init(argc, argv, "locator_ros_bridge");
+  LocatorBridgeNode node;
+  node.init();
 
-  rclcpp::executors::MultiThreadedExecutor executor(rclcpp::ExecutorOptions(), 4);
-  executor.add_node(node);
-  executor.spin();
-  rclcpp::shutdown();
+  ros::AsyncSpinner spinner(4);
+  spinner.start();
+  ros::waitForShutdown();
 
   return 0;
 }

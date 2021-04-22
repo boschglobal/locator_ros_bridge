@@ -13,28 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
-#define BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
+#pragma once
+
+#include <unordered_map>
 
 #include <Poco/Thread.h>
 
-#include <memory>
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include <vector>
+#include <ros/ros.h>
+#include <std_srvs/Empty.h>
+#include <sensor_msgs/LaserScan.h>
+#include <nav_msgs/Odometry.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
-#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "std_srvs/srv/empty.hpp"
-#include "sensor_msgs/msg/laser_scan.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-
-#include "bosch_locator_bridge/srv/client_map_list.hpp"
-#include "bosch_locator_bridge/srv/client_map_send.hpp"
-#include "bosch_locator_bridge/srv/client_map_set.hpp"
-#include "bosch_locator_bridge/srv/client_map_start.hpp"
-#include "bosch_locator_bridge/srv/start_recording.hpp"
+#include "bosch_locator_bridge/StartRecording.h"
+#include "bosch_locator_bridge/ClientMapStart.h"
+#include "bosch_locator_bridge/ClientMapSend.h"
+#include "bosch_locator_bridge/ClientMapSet.h"
+#include "bosch_locator_bridge/ClientMapList.h"
 
 // forward declarations
 class LocatorRPCInterface;
@@ -52,80 +47,63 @@ class ClientGlobalAlignVisualizationInterface;
 /**
  * This is the main ROS node. It binds together the ROS interface and the Locator API.
  */
-class LocatorBridgeNode : public rclcpp::Node
+class LocatorBridgeNode
 {
 public:
-  explicit LocatorBridgeNode(const std::string & nodeName);
+  LocatorBridgeNode();
   ~LocatorBridgeNode();
 
   void init();
 
 private:
-  bool check_module_versions(
-    const std::unordered_map<std::string, std::pair<int32_t,
-    int32_t>> & module_versions);
+  bool check_module_versions(const std::unordered_map<std::string, std::pair<int32_t, int32_t>>& module_versions);
 
-  void laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
-  void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
+  void laser_callback(const sensor_msgs::LaserScan& msg);
+  void odom_callback(const nav_msgs::Odometry& msg);
 
-  bool clientMapSendCb(
-    const std::shared_ptr<bosch_locator_bridge::srv::ClientMapSend::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientMapSend::Response> res);
-  bool clientMapSetCb(
-    const std::shared_ptr<bosch_locator_bridge::srv::ClientMapSet::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientMapSet::Response> res);
-  bool clientMapList(
-    const std::shared_ptr<bosch_locator_bridge::srv::ClientMapList::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientMapList::Response> res);
+  bool clientMapSendCb(bosch_locator_bridge::ClientMapSend::Request& req,
+                       bosch_locator_bridge::ClientMapSend::Response& res);
+  bool clientMapSetCb(bosch_locator_bridge::ClientMapSet::Request& req,
+                      bosch_locator_bridge::ClientMapSet::Response& res);
+  bool clientMapList(bosch_locator_bridge::ClientMapList::Request& req,
+                     bosch_locator_bridge::ClientMapList::Response& res);
 
-  bool clientLocalizationStartCb(
-    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
-    std::shared_ptr<std_srvs::srv::Empty::Response> res);
-  bool clientLocalizationStopCb(
-    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
-    std::shared_ptr<std_srvs::srv::Empty::Response> res);
+  bool clientLocalizationStartCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+  bool clientLocalizationStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 
-  void setSeedCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
+  void setSeedCallback(const geometry_msgs::PoseWithCovarianceStamped& msg);
 
-  bool clientRecordingStartVisualRecordingCb(
-    const std::shared_ptr<bosch_locator_bridge::srv::StartRecording::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::StartRecording::Response> res);
-  bool clientRecordingStopVisualRecordingCb(
-    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
-    std::shared_ptr<std_srvs::srv::Empty::Response> res);
+  bool clientRecordingStartVisualRecordingCb(bosch_locator_bridge::StartRecording::Request& req,
+                                             bosch_locator_bridge::StartRecording::Response& res);
+  bool clientRecordingStopVisualRecordingCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 
-  bool clientMapStartCb(
-    const std::shared_ptr<bosch_locator_bridge::srv::ClientMapStart::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientMapStart::Response> res);
-  bool clientMapStopCb(
-    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
-    std::shared_ptr<std_srvs::srv::Empty::Response> res);
+  bool clientMapStartCb(bosch_locator_bridge::ClientMapStart::Request& req,
+                        bosch_locator_bridge::ClientMapStart::Response& res);
+  bool clientMapStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
 
-  void setupBinaryReceiverInterfaces(const std::string & host);
+  void setupBinaryReceiverInterfaces(const std::string& host);
 
+  ros::NodeHandle nh_;
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;
 
-  rclcpp::TimerBase::SharedPtr session_refresh_timer_;
+  ros::Timer session_refresh_timer_;
 
-  std::vector<rclcpp::ServiceBase::SharedPtr> services_;
-  rclcpp::CallbackGroup::SharedPtr callback_group_services_;
+  std::vector<ros::ServiceServer> services_;
 
-  // Flag to indicate if the bridge should send odometry data to the locator.
-  // Value retrieved by the locator settings.
+  // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
   bool provide_odometry_data_;
-  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_sub_;
+  ros::Subscriber laser_sub_;
   std::unique_ptr<SendingInterface> laser_sending_interface_;
   Poco::Thread laser_sending_interface_thread_;
 
-  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr set_seed_sub_;
+  ros::Subscriber set_seed_sub_;
 
-  // Flag to indicate if the bridge should send odometry data to the locator.
-  // Value retrieved by the locator settings.
+  // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
   bool provide_laser_data_;
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+  ros::Subscriber odom_sub_;
   std::unique_ptr<SendingInterface> odom_sending_interface_;
   Poco::Thread odom_sending_interface_thread_;
 
@@ -138,24 +116,19 @@ private:
   Poco::Thread client_map_visualization_interface_thread_;
   std::unique_ptr<ClientRecordingMapInterface> client_recording_map_interface_;
   Poco::Thread client_recording_map_interface_thread_;
-  std::unique_ptr<ClientRecordingVisualizationInterface>
-  client_recording_visualization_interface_;
+  std::unique_ptr<ClientRecordingVisualizationInterface> client_recording_visualization_interface_;
   Poco::Thread client_recording_visualization_interface_thread_;
   std::unique_ptr<ClientLocalizationMapInterface> client_localization_map_interface_;
   Poco::Thread client_localization_map_interface_thread_;
-  std::unique_ptr<ClientLocalizationVisualizationInterface>
-  client_localization_visualization_interface_;
+  std::unique_ptr<ClientLocalizationVisualizationInterface> client_localization_visualization_interface_;
   Poco::Thread client_localization_visualization_interface_thread_;
   std::unique_ptr<ClientLocalizationPoseInterface> client_localization_pose_interface_;
   Poco::Thread client_localization_pose_interface_thread_;
-  std::unique_ptr<ClientGlobalAlignVisualizationInterface>
-  client_global_align_visualization_interface_;
+  std::unique_ptr<ClientGlobalAlignVisualizationInterface> client_global_align_visualization_interface_;
   Poco::Thread client_global_align_visualization_interface_thread_;
 
-  size_t scan_num_ {0};
-  size_t odom_num_ {0};
+  size_t scan_num_{ 0 };
+  size_t odom_num_{ 0 };
 
   std::string last_recording_name_;
 };
-
-#endif  // BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Timestamp of the update
-builtin_interfaces/Time stamp
+time stamp
 
 # This mode is in RUN-state while a map is calculated live during the recording
 uint8 visual_recording_state

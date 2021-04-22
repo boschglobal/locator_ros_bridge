@@ -15,17 +15,11 @@
 
 #include "sending_interface.hpp"
 
+#include <ros/ros.h>
+
 #include <Poco/Net/NetException.h>
 
-#include <utility>
-#include <vector>
-
-#include "rclcpp/rclcpp.hpp"
-
-SendingInterface::SendingInterface(uint16_t port, rclcpp::Node::SharedPtr node)
-: socket_(port),
-  running_(true),
-  node_(node)
+SendingInterface::SendingInterface(uint16_t port) : socket_(port), running_(true)
 {
   // configure server socket same as binary interface example
   socket_.setKeepAlive(true);
@@ -35,23 +29,24 @@ SendingInterface::SendingInterface(uint16_t port, rclcpp::Node::SharedPtr node)
 void SendingInterface::run()
 {
   Poco::Timespan timeout(2000000);
-  while (running_) {
-    if (socket_.poll(timeout, Poco::Net::Socket::SELECT_READ)) {
-      try {
+  while (running_)
+  {
+    if (socket_.poll(timeout, Poco::Net::Socket::SELECT_READ))
+    {
+      try
+      {
         Poco::Net::SocketAddress clientAddr;
         Poco::Net::StreamSocket sock = socket_.acceptConnection(clientAddr);
-        RCLCPP_INFO_STREAM(
-          node_->get_logger(),
-          "accepted connection from " << clientAddr << " at " << sock.address().toString());
+        ROS_INFO_STREAM("accepted connection from " << clientAddr << " at " << sock.address().toString());
         sock.setNoDelay(true);
         {
           std::lock_guard<std::mutex> lock(connections_mutex_);
           connections_.push_back(sock);
         }
-      } catch (const Poco::Exception & e) {
-        RCLCPP_ERROR_STREAM(
-          node_->get_logger(),
-          "caught exception in SendingInterface: " << e.what());
+      }
+      catch (const Poco::Exception& e)
+      {
+        ROS_ERROR_STREAM("caught exception in SendingInterface: " << e.what());
       }
     }
   }
@@ -62,45 +57,53 @@ SendingInterface::~SendingInterface()
   stop();
 }
 
-void SendingInterface::sendData(void * data, size_t size)
+void SendingInterface::sendData(void* data, size_t size)
 {
   std::lock_guard<std::mutex> lock(connections_mutex_);
   std::vector<Poco::Net::StreamSocket> good_connections;
-  if (connections_.size() == 0) {
-    RCLCPP_INFO_STREAM_THROTTLE(
-      node_->get_logger().get_child(std::to_string(size)), *node_->get_clock(), 10000,
-      "Cannot send data of size " << size << " to any peer (no connections available)");
+  if (connections_.size() == 0)
+  {
+    ROS_INFO_STREAM_THROTTLE_NAMED(10, std::to_string(size),
+                                   "Cannot send data of size " << size << " to any peer (no connections available)");
   }
-  for (size_t i = 0; i < connections_.size(); i++) {
-    try {
+  for (size_t i = 0; i < connections_.size(); i++)
+  {
+    try
+    {
       size_t total_sent = 0;
-      while (total_sent < size) {
+      while (total_sent < size)
+      {
         const auto sent = connections_[i].sendBytes(data, size);
-        if (sent <= 0) {
+        if (sent <= 0)
+        {
           break;
         }
         total_sent += sent;
       }
-      if (total_sent == size) {
+      if (total_sent == size)
+      {
         good_connections.push_back(connections_[i]);
-        RCLCPP_INFO_STREAM_THROTTLE(
-          node_->get_logger().get_child(std::to_string(size)), *node_->get_clock(), 10000,
-          size << " bytes successfully sent via " << connections_[i].address());
-      } else {
-        RCLCPP_ERROR_STREAM(node_->get_logger(), "could not sent datagram completely!");
+        ROS_INFO_STREAM_THROTTLE_NAMED(10, std::to_string(size),
+                                       size << " bytes successfully sent via " << connections_[i].address());
       }
-    } catch (const Poco::Net::ConnectionResetException & e) {
-      RCLCPP_ERROR_STREAM(node_->get_logger(), "caught connection reset exception: " << e.name());
-    } catch (const Poco::IOException & e) {
-      RCLCPP_ERROR_STREAM(
-        node_->get_logger(),
-        "caught io exception: " << e.name() << "  -  " << e.what());
+      else
+      {
+        ROS_ERROR_STREAM("could not sent datagram completely!");
+      }
+    }
+    catch (const Poco::Net::ConnectionResetException& e)
+    {
+      ROS_ERROR_STREAM("caught connection reset exception: " << e.name());
+    }
+    catch (const Poco::IOException& e)
+    {
+      ROS_ERROR_STREAM("caught io exception: " << e.name() << "  -  " << e.what());
     }
   }
   const auto discarded_connections = connections_.size() - good_connections.size();
-  if (discarded_connections > 0) {
-    RCLCPP_WARN_STREAM(
-      node_->get_logger(), "discarding " << discarded_connections << " connections!");
+  if (discarded_connections > 0)
+  {
+    ROS_WARN_STREAM("discarding " << discarded_connections << " connections!");
   }
   std::swap(connections_, good_connections);
 }
