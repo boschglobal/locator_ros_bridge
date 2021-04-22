@@ -4,9 +4,9 @@ This repository contains the **bosch_locator_bridge** package, which provides a 
 It translates ROS messages to the Locator API (as described in the Locator API documentation) and vice versa.
 It also allows to control the Locator software via ROS service calls.
 
-There are versions for ROS 1 and ROS 2:
-* [ROS 1 Noetic](../../tree/noetic)
-* [ROS 2 Foxy](../../tree/foxy)
+There are versions for the following ROS 1 and ROS 2 distributions:
+* ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
+* ROS 2: Foxy (branch [foxy](../../tree/main)), Rolling (this branch)
 
 ## Installation
 
