@@ -19,7 +19,7 @@ There are versions for ROS 1 and ROS 2:
 
 #### Building
 
-To build from source, make sure your colcon workspace is set up correctly. Then clone the latest version from this repository into your colcon workspace and compile the package using
+To build from source, make sure your colcon workspace is set up correctly. Then clone the latest version of this branch from the repository into your colcon workspace and compile the package using
 
     cd colcon_ws
     rosdep install --from-paths . --ignore-src
