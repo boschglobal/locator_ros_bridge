@@ -1,0 +1,256 @@
+General information about this repository, including legal information and build instructions are given in [README.md](../README.md) in the repository root.
+
+# bosch_locator_bridge
+
+## Overview
+
+This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software]. It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
+It also allows to control the Locator software via ROS 2 service calls.
+
+The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
+The bridge is compatible with Locator version 1.2.1.
+
+## Quick Start
+
+This section describes how to record your environment, create a map out of the record and localize yourself within it.
+
+#### Ensure the Locator software is reachable from your computer
+
+Make sure the Locator software is installed and running on a computer in your network. You can test this by running the following command in a terminal (replace `<LOCATOR_IP>` by the IP address of the computer running the Locator):
+```sh
+curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0","method":"aboutModulesList","params":{"query":{}},"id":1}' http://<LOCATOR_IP>:8080
+```
+
+#### Start Bridge Node
+
+Start the bridge node with
+
+    ros2 launch bosch_locator_bridge bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD> scan_topic:=<SCAN_TOPIC> enable_odometry:=<ENABLE_ODOM> odom_topic:=<ODOM_TOPIC>
+
+where
+- `<HOST_IP>` is the IP address of the computer the bridge is to be started
+- `<LOCATOR_IP>` is the IP address of the computer where the Locator software is running
+- `<USER>` and `<PASSWORD>` are the credentials to log into the Locator software
+- `<SCAN_TOPIC>` is the topic name of the laser scans
+- `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the Locator software
+- `<ODOM_TOPIC>` is the topic name of the odometry
+
+#### Start Visual Recording
+
+Then, make sure there are laser scans published on `<SCAN_TOPIC>`, and start the visual recording with e.g.
+
+    ros2 run rviz2 rviz2 -d $(ros2 pkg prefix bosch_locator_bridge)/share/bosch_locator_bridge/config/locator_bridge_visual_recording.rviz
+    ros2 service call /bridge_node/start_visual_recording bosch_locator_bridge/srv/StartRecording "name: 'ROS-Quickstart-$(date -Isecond)'"
+
+You should see the laser scans, the robot position and its previous path, and the recording  built up over time.
+
+#### Stop Visual Recording
+
+When you are done, you can stop recording with
+
+    ros2 service call /bridge_node/stop_visual_recording std_srvs/srv/Empty
+
+#### Create Map From Recording
+
+Now, create a map from your recording with
+
+    ros2 run rviz2 rviz2 -d $(ros2 pkg prefix bosch_locator_bridge)/share/bosch_locator_bridge/config/locator_bridge_map_creation.rviz
+    ros2 service call /bridge_node/start_map bosch_locator_bridge/srv/ClientMapStart
+
+
+#### Start Localization
+
+Finally, you can start the localization with
+
+    ros2 run rviz2 rviz2 -d $(ros2 pkg prefix bosch_locator_bridge)/share/bosch_locator_bridge/config/locator_bridge_localization.rviz
+    ros2 service call /bridge_node/start_localization std_srvs/srv/Empty
+
+You can set the initial pose of the robot by clicking the "2D Pose Estimate" button in RViz, and then set the pose in the map.
+
+#### Stop Localization
+
+When you are done, you can stop the localization with
+
+    ros2 service call /bridge_node/stop_localization std_srvs/srv/Empty
+
+## Nodes
+
+### bridge_node
+
+This is the main bridge interface node.
+
+#### Locator Configuration
+
+To correctly forward the laser scan data, it is important that `LaserComponent.laserType` is set to `simple`, and that `LaserComponent.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
+
+#### Subscribed Topics
+
+* **`/scan`** ([sensor_msgs/msg/LaserScan])
+
+	The laserscan topic to translate and forward to the Locator.
+
+* **`/odom`** ([nav_msgs/msg/Odometry])
+
+	The odometry topic to translate and forward to the Locator. Only used when `enable_odometry` is set to `true`.
+
+* **`/initialpose`** ([geometry_msgs/msg/PoseWithCovarianceStamped])
+
+	Set a seed pose to help localization.
+	RViz by default sends a message of this type and topic when the user clicks on the "2D Pose Estimate" button in the toolbar.
+
+#### Published Topics
+
+* **`/bridge_node/client_control_mode`** ([bosch_locator_bridge/msg/ClientControlMode](./msg/ClientControlMode.msg))
+
+	The state of the different modules. See Locator API Documentation, chapter 5 "Client Control Mode".
+
+##### Map Creation
+
+* **`/bridge_node/client_map_map`** ([sensor_msgs/msg/PointCloud2])
+
+	The map used for localization as point cloud.
+
+* **`/bridge_node/client_map_visualization`** ([bosch_locator_bridge/msg/ClientMapVisualization](./msg/ClientMapVisualization.msg))
+
+	Describes the current state of the map creation mode.
+
+* **`/bridge_node/client_map_visualization/pose`** ([geometry_msgs/msg/PoseStamped])
+
+	The current pose of the laser sensor during the map creation mode.
+
+* **`/bridge_node/client_map_visualization/scan`** ([sensor_msgs/msg/PointCloud2])
+
+	The current laser scan worked on during the map creation mode.
+
+* **`/bridge_node/client_map_visualization/path_poses`** ([geometry_msgs/msg/PoseArray])
+
+	The path of the laser sensor during the map creation mode.
+
+* **`/bridge_node/client_global_align_visualization`** ([bosch_locator_bridge/msg/ClientGlobalAlignVisualization](./msg/ClientGlobalAlignVisualization.msg))
+
+	Information on global alignment landmarks and their observations.
+
+* **`/bridge_node/client_global_align_visualization/poses`** ([geometry_msgs/msg/PoseArray])
+
+	Previous poses visited by the laser sensor.
+
+* **`/bridge_node/client_global_align_visualization/landmarks/poses`** ([geometry_msgs/msg/PoseArray])
+
+	Poses of the estimated landmarks.
+
+##### Map Recording
+
+* **`/bridge_node/client_recording_map`** ([sensor_msgs/msg/PointCloud2])
+
+	The map as point cloud during the recording mode.
+
+* **`/bridge_node/client_recording_visualization`** ([bosch_locator_bridge/msg/ClientRecordingVisualization](./msg/ClientRecordingVisualization.msg))
+
+	Visualization information for the recording process.
+
+* **`/bridge_node/client_recording_visualization/pose`** ([geometry_msgs/msg/PoseStamped])
+
+	Latest estimated pose of the laser sensor during the recording process.
+
+* **`/bridge_node/client_recording_visualization/scan`** ([sensor_msgs/msg/LaserScan])
+
+	Latest processed laser scan during the recording process.
+
+* **`/bridge_node/client_recording_visualization/path_poses`** ([geometry_msgs/msg/PoseArray])
+
+	Latest path of the laser sensor during the recording process.
+
+##### Localization
+
+* **`/bridge_node/client_localization_map`** ([sensor_msgs/msg/PointCloud2])
+
+	Map as point cloud used during localization.
+
+* **`/bridge_node/client_localization_visualization`** ([bosch_locator_bridge/msg/ClientLocalizationVisualization](./msg/ClientLocalizationVisualization.msg))
+
+	Visualization information for the localization process.
+
+* **`/bridge_node/client_localization_visualization/pose`** ([geometry_msgs/msg/PoseStamped])
+
+	Current estimated pose during localization process.
+
+* **`/bridge_node/client_localization_visualization/scan`** ([sensor_msgs/msg/PointCloud2])
+
+	Currently processed laser scan during localization.
+
+* **`/bridge_node/client_localization_pose`** ([bosch_locator_bridge/msg/ClientLocalizationPose](./msg/ClientLocalizationPose.msg))
+
+	Localization information.
+
+* **`/bridge_node/client_localization_pose/pose`** ([geometry_msgs/msg/PoseStamped])
+
+	6 DoF pose of the laser sensor during localization process.
+
+* **`/bridge_node/client_localization_pose/lidar_odo_pose`** ([geometry_msgs/msg/PoseStamped])
+
+	The current pose of the laser sensor, given in a relative reference frame.
+
+#### Services
+
+* **`/bridge_node/start_visual_recording`** ([bosch_locator_bridge/srv/StartRecording](./srv/StartRecording.srv))
+
+	Starts the visual map recording under the given map name.
+
+* **`/bridge_node/stop_visual_recording`** ([std_srvs/srv/Empty])
+
+	Stops visual map recording.
+
+* **`/bridge_node/start_map`** ([bosch_locator_bridge/srv/ClientMapStart](./srv/ClientMapStart.srv))
+
+	Start to create a map from the data contained within a recording.
+
+* **`/bridge_node/stop_map`** ([std_srvs/srv/Empty])
+
+	Stop map creation.
+
+* **`/bridge_node/send_map`** ([bosch_locator_bridge/srv/ClientMapSend](./srv/ClientMapSend.srv))
+
+	Send the given map to the map server. This is a prerequisite so that the map can be used for localization.
+
+* **`/bridge_node/set_map`** ([bosch_locator_bridge/srv/ClientMapSet](./srv/ClientMapSet.srv))
+
+	Set the given map to be used for localization.
+
+* **`/bridge_node/start_localization`** ([std_srvs/srv/Empty])
+
+	Start self-localization within the map.
+
+* **`/bridge_node/stop_localization`** ([std_srvs/srv/Empty])
+
+	Stop self-localization within the map.
+
+## Caveats
+
+### Locator closes connection
+
+The Locator software performs a strict input validation checks and closes the connection, if it receives data that is outside of its specified range.
+If you see error messages of this kind in the output of the ROS bridge:
+```
+Connection reset by peer
+```
+Double check the data sent and compare it with the acceptable values in the Locator API documentation.
+
+Also peek in the LocalizationClient's syslog file (see the Locator documentation) for hints (usually `validation of ... failed`).
+
+### Error message: SENSOR_NOT_AVAILABLE
+
+This can happen if you switch the Locator into a mode where it requires e.g. laser data, but none is available (e.g. no laser data is sent with a few hundred miliseconds after the mode switch).
+
+To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the Locator mode.
+
+
+[ROS 2]: https://docs.ros.org/en/rolling
+[Bosch Rexroth Locator Software]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
+[Poco]: https://pocoproject.org/
+[sensor_msgs/msg/LaserScan]: https://github.com/ros2/common_interfaces/blob/master/sensor_msgs/msg/LaserScan.msg
+[nav_msgs/msg/Odometry]: https://github.com/ros2/common_interfaces/blob/master/nav_msgs/msg/Odometry.msg
+[std_srvs/srv/Empty]: https://github.com/ros2/common_interfaces/blob/master/std_srvs/srv/Empty.srv
+[geometry_msgs/msg/PoseWithCovarianceStamped]: https://github.com/ros2/common_interfaces/blob/master/geometry_msgs/msg/PoseWithCovarianceStamped.msg
+[geometry_msgs/msg/PoseStamped]: https://github.com/ros2/common_interfaces/blob/master/geometry_msgs/msg/PoseStamped.msg
+[geometry_msgs/msg/PoseArray]: https://github.com/ros2/common_interfaces/blob/master/geometry_msgs/msg/PoseArray.msg
+[sensor_msgs/msg/PointCloud2]: https://github.com/ros2/common_interfaces/blob/master/sensor_msgs/msg/PointCloud2.msg
