@@ -4,20 +4,20 @@ General information about this repository, including legal information and build
 
 ## Overview
 
-This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software].
-It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
-It also allows to control the Locator software via ROS 2 service calls.
+This package provides a [ROS 2] interface to the [Rexroth ROKIT Locator].
+It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
+It also allows to control the ROKIT Locator software via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
-The bridge is compatible with Locator version 1.2.1.
+The bridge is compatible with ROKIT Locator version 1.2.1.
 
 ## Quick Start
 
 This section describes how to record your environment, create a map out of the record and localize yourself within it.
 
-#### Ensure the Locator software is reachable from your computer
+#### Ensure the ROKIT Locator software is reachable from your computer
 
-Make sure the Locator software is installed and running on a computer in your network. You can test this by running the following command in a terminal (replace `<LOCATOR_IP>` by the IP address of the computer running the Locator):
+Make sure the ROKIT Locator software is installed and running on a computer in your network. You can test this by running the following command in a terminal (replace `<LOCATOR_IP>` by the IP address of the computer running the ROKIT Locator):
 ```sh
 curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0","method":"aboutModulesList","params":{"query":{}},"id":1}' http://<LOCATOR_IP>:8080
 ```
@@ -30,10 +30,10 @@ Start the bridge node with
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
-- `<LOCATOR_IP>` is the IP address of the computer where the Locator software is running
-- `<USER>` and `<PASSWORD>` are the credentials to log into the Locator software
+- `<LOCATOR_IP>` is the IP address of the computer where the ROKIT Locator software is running
+- `<USER>` and `<PASSWORD>` are the credentials to log into the ROKIT Locator software
 - `<SCAN_TOPIC>` is the topic name of the laser scans
-- `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the Locator software
+- `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the ROKIT Locator software
 - `<ODOM_TOPIC>` is the topic name of the odometry
 
 #### Start Visual Recording
@@ -84,7 +84,7 @@ When you are done, you can stop the localization with
 
 This is the main bridge interface node.
 
-#### Locator Configuration
+#### ROKIT Locator Configuration
 
 To correctly forward the laser scan data, it is important that `LaserComponent.laserType` is set to `simple`, and that `LaserComponent.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
 
@@ -92,11 +92,11 @@ To correctly forward the laser scan data, it is important that `LaserComponent.l
 
 * **`/scan`** ([sensor_msgs/msg/LaserScan])
 
-	The laserscan topic to translate and forward to the Locator.
+	The laserscan topic to translate and forward to the ROKIT Locator.
 
 * **`/odom`** ([nav_msgs/msg/Odometry])
 
-	The odometry topic to translate and forward to the Locator. Only used when `enable_odometry` is set to `true`.
+	The odometry topic to translate and forward to the ROKIT Locator. Only used when `enable_odometry` is set to `true`.
 
 * **`/initialpose`** ([geometry_msgs/msg/PoseWithCovarianceStamped])
 
@@ -107,7 +107,7 @@ To correctly forward the laser scan data, it is important that `LaserComponent.l
 
 * **`/bridge_node/client_control_mode`** ([bosch_locator_bridge/msg/ClientControlMode](./msg/ClientControlMode.msg))
 
-	The state of the different modules. See Locator API Documentation, chapter 5 "Client Control Mode".
+	The state of the different modules. See ROKIT Locator API Documentation, chapter 5 "Client Control Mode".
 
 ##### Map Creation
 
@@ -231,26 +231,26 @@ To correctly forward the laser scan data, it is important that `LaserComponent.l
 
 ## Caveats
 
-### Locator closes connection
+### ROKIT Locator closes connection
 
-The Locator software performs a strict input validation checks and closes the connection, if it receives data that is outside of its specified range.
+The ROKIT Locator software performs a strict input validation checks and closes the connection, if it receives data that is outside of its specified range.
 If you see error messages of this kind in the output of the ROS bridge:
 ```
 Connection reset by peer
 ```
-Double check the data sent and compare it with the acceptable values in the Locator API documentation.
+Double check the data sent and compare it with the acceptable values in the ROKIT Locator API documentation.
 
-Also peek in the LocalizationClient's syslog file (see the Locator documentation) for hints (usually `validation of ... failed`).
+Also peek in the LocalizationClient's syslog file (see the ROKIT Locator documentation) for hints (usually `validation of ... failed`).
 
 ### Error message: SENSOR_NOT_AVAILABLE
 
-This can happen if you switch the Locator into a mode where it requires e.g. laser data, but none is available (e.g. no laser data is sent with a few hundred miliseconds after the mode switch).
+This can happen if you switch the ROKIT Locator into a mode where it requires e.g. laser data, but none is available (e.g. no laser data is sent with a few hundred miliseconds after the mode switch).
 
-To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the Locator mode.
+To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the ROKIT Locator mode.
 
 
 [ROS 2]: https://docs.ros.org/en/rolling
-[Bosch Rexroth Locator Software]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
+[Rexroth ROKIT Locator]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
 [Poco]: https://pocoproject.org/
 [sensor_msgs/msg/LaserScan]: https://github.com/ros2/common_interfaces/blob/master/sensor_msgs/msg/LaserScan.msg
 [nav_msgs/msg/Odometry]: https://github.com/ros2/common_interfaces/blob/master/nav_msgs/msg/Odometry.msg
