@@ -258,8 +258,10 @@ bool LocatorBridgeNode::clientMapSendCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientMapSend::Request> req,
   std::shared_ptr<bosch_locator_bridge::srv::ClientMapSend::Response>/*res*/)
 {
+  const std::string client_map_name = req->name.empty() ? last_map_name_ : req->name;
+
   auto query = loc_client_interface_->getSessionQuery();
-  query.set("clientMapName", req->name);
+  query.set("clientMapName", client_map_name);
   auto response = loc_client_interface_->call("clientMapSend", query);
   return true;
 }
@@ -268,8 +270,10 @@ bool LocatorBridgeNode::clientMapSetCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientMapSet::Request> req,
   std::shared_ptr<bosch_locator_bridge::srv::ClientMapSet::Response>/*res*/)
 {
+  const std::string active_map_name = req->name.empty() ? last_map_name_ : req->name;
+
   Poco::DynamicStruct config;
-  config.insert("application.localization.activeMapName", req->name);
+  config.insert("application.localization.activeMapName", active_map_name);
   loc_client_interface_->setConfigList(config);
   return true;
 }
@@ -365,6 +369,7 @@ bool LocatorBridgeNode::clientMapStartCb(
   auto query = loc_client_interface_->getSessionQuery();
   query.set("recordingName", recording_name);
   query.set("clientMapName", client_map_name);
+  last_map_name_ = client_map_name;
   auto response = loc_client_interface_->call("clientMapStart", query);
   return true;
 }
