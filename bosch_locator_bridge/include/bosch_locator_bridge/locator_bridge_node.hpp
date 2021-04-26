@@ -131,4 +131,5 @@ private:
   size_t odom_num_{ 0 };
 
   std::string last_recording_name_;
+  std::string last_map_name_;
 };

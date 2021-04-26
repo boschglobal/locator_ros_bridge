@@ -58,6 +58,10 @@ Now, create a map from your recording with
     rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_map_creation.rviz
     rosservice call /bridge_node/start_map "" ""
 
+When the map has been created, it must be sent to the map server and set as the active map.
+
+    rosservice call /bridge_node/send_map ""
+    rosservice call /bridge_node/set_map ""
 
 #### Start Localization
 

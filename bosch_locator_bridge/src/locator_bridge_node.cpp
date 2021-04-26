@@ -183,8 +183,10 @@ void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
 bool LocatorBridgeNode::clientMapSendCb(bosch_locator_bridge::ClientMapSend::Request& req,
                                         bosch_locator_bridge::ClientMapSend::Response& res)
 {
+  const std::string client_map_name = req.name.empty() ? last_map_name_ : req.name;
+
   auto query = loc_client_interface_->getSessionQuery();
-  query.set("clientMapName", req.name);
+  query.set("clientMapName", client_map_name);
   auto response = loc_client_interface_->call("clientMapSend", query);
   return true;
 }
@@ -192,8 +194,10 @@ bool LocatorBridgeNode::clientMapSendCb(bosch_locator_bridge::ClientMapSend::Req
 bool LocatorBridgeNode::clientMapSetCb(bosch_locator_bridge::ClientMapSet::Request& req,
                                        bosch_locator_bridge::ClientMapSet::Response& res)
 {
+  const std::string active_map_name = req.name.empty() ? last_map_name_ : req.name;
+
   Poco::DynamicStruct config;
-  config.insert("application.localization.activeMapName", req.name);
+  config.insert("application.localization.activeMapName", active_map_name);
   loc_client_interface_->setConfigList(config);
   return true;
 }
@@ -280,6 +284,7 @@ bool LocatorBridgeNode::clientMapStartCb(bosch_locator_bridge::ClientMapStart::R
   auto query = loc_client_interface_->getSessionQuery();
   query.set("recordingName", recording_name);
   query.set("clientMapName", client_map_name);
+  last_map_name_ = client_map_name;
   auto response = loc_client_interface_->call("clientMapStart", query);
   return true;
 }
