@@ -4,7 +4,8 @@ General information about this repository, including legal information and build
 
 ## Overview
 
-This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software]. It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
+This package provides a [ROS 2] interface to the [Bosch Rexroth Locator Software].
+It translates ROS 2 messages to the Locator API (as described in the Locator API documentation) and vice versa.
 It also allows to control the Locator software via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
@@ -57,6 +58,10 @@ Now, create a map from your recording with
     ros2 run rviz2 rviz2 -d $(ros2 pkg prefix bosch_locator_bridge)/share/bosch_locator_bridge/config/locator_bridge_map_creation.rviz
     ros2 service call /bridge_node/start_map bosch_locator_bridge/srv/ClientMapStart
 
+When the map has been created, it must be sent to the map server and set as the active map.
+
+    ros2 service call /bridge_node/send_map bosch_locator_bridge/srv/ClientMapSend
+    ros2 service call /bridge_node/set_map bosch_locator_bridge/srv/ClientMapSet
 
 #### Start Localization
 
