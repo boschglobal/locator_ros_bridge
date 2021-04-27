@@ -2,7 +2,7 @@
 
 This repository contains the **bosch_locator_bridge** package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
 It translates ROS messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
-It also allows to control the ROKIT Locator software via ROS service calls.
+It also allows to control the ROKIT Locator via ROS service calls.
 
 There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
