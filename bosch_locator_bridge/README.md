@@ -6,7 +6,7 @@ General information about this repository, including legal information and build
 
 This package provides a [ROS 2] interface to the [Rexroth ROKIT Locator].
 It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
-It also allows to control the ROKIT Locator software via ROS 2 service calls.
+It also allows to control the ROKIT Locator via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Foxy and Ubuntu 20.04.
 The bridge is compatible with ROKIT Locator version 1.2.1.
@@ -15,9 +15,9 @@ The bridge is compatible with ROKIT Locator version 1.2.1.
 
 This section describes how to record your environment, create a map out of the record and localize yourself within it.
 
-#### Ensure the ROKIT Locator software is reachable from your computer
+#### Ensure the ROKIT Locator is reachable from your computer
 
-Make sure the ROKIT Locator software is installed and running on a computer in your network. You can test this by running the following command in a terminal (replace `<LOCATOR_IP>` by the IP address of the computer running the ROKIT Locator):
+Make sure the ROKIT Locator is installed and running on a computer in your network. You can test this by running the following command in a terminal (replace `<LOCATOR_IP>` by the IP address of the computer running the ROKIT Locator):
 ```sh
 curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0","method":"aboutModulesList","params":{"query":{}},"id":1}' http://<LOCATOR_IP>:8080
 ```
@@ -30,10 +30,10 @@ Start the bridge node with
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
-- `<LOCATOR_IP>` is the IP address of the computer where the ROKIT Locator software is running
-- `<USER>` and `<PASSWORD>` are the credentials to log into the ROKIT Locator software
+- `<LOCATOR_IP>` is the IP address of the computer where the ROKIT Locator is running
+- `<USER>` and `<PASSWORD>` are the credentials to log into the ROKIT Locator
 - `<SCAN_TOPIC>` is the topic name of the laser scans
-- `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the ROKIT Locator software
+- `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the ROKIT Locator
 - `<ODOM_TOPIC>` is the topic name of the odometry
 
 #### Start Visual Recording
@@ -233,7 +233,7 @@ To correctly forward the laser scan data, it is important that `LaserComponent.l
 
 ### ROKIT Locator closes connection
 
-The ROKIT Locator software performs a strict input validation checks and closes the connection, if it receives data that is outside of its specified range.
+The ROKIT Locator performs a strict input validation checks and closes the connection, if it receives data that is outside of its specified range.
 If you see error messages of this kind in the output of the ROS bridge:
 ```
 Connection reset by peer
