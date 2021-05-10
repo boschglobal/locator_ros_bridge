@@ -94,7 +94,7 @@ target_link_libraries(${PROJECT_NAME}_node
 install(TARGETS ${PROJECT_NAME}_node
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-install(FILES config/locator_bridge.rviz config/locator_bridge_localization.rviz config/locator_bridge_map_creation.rviz
+install(FILES config/locator_bridge_localization.rviz config/locator_bridge_map_creation.rviz config/locator_bridge_visual_recording.rviz
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 )
 install(FILES launch/bridge.launch
