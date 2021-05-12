@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](LICENSE)
+[![Build action: Noetic](https://github.com/slaible/locator_ros_bridge/actions/workflows/build_noetic.yml/badge.svg?branch=noetic)](https://github.com/slaible/locator_ros_bridge/actions/workflows/build_noetic.yml)
+
 # locator_ros_bridge
 
 This repository contains the [bosch_locator_bridge](bosch_locator_bridge) package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
