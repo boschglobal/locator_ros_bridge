@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](LICENSE)
-[![Build action: Noetic](https://github.com/slaible/locator_ros_bridge/actions/workflows/build_noetic.yml/badge.svg?branch=noetic)](https://github.com/slaible/locator_ros_bridge/actions/workflows/build_noetic.yml)
+[![Build action: Noetic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml/badge.svg?branch=noetic)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml)
 
 # locator_ros_bridge
 
