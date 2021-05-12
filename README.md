@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](LICENSE)
+[![Build action: Rolling](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml)
+
 # locator_ros_bridge
 
 This repository contains the **bosch_locator_bridge** package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
