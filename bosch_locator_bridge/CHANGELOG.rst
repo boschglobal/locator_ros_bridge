@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.1 (2021-05-19)
+------------------
 * add tf2_geometry_msgs dependency
 * Contributors: Stefan Laible
 
