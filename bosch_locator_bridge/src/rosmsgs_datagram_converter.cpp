@@ -171,7 +171,7 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
 
   double age, stamp;
   binary_reader >> age >> stamp;
-  client_localization_pose.age = rclcpp::Duration(age * 1e9);
+  client_localization_pose.age = rclcpp::Duration::from_seconds(age);
   client_localization_pose.timestamp = rclcpp::Time(stamp * 1e9);
   binary_reader >> client_localization_pose.unique_id >> client_localization_pose.state;
 
