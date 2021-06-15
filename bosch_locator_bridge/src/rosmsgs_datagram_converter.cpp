@@ -25,7 +25,7 @@
 #include "pcl_conversions/pcl_conversions.h"
 #include "tf2/convert.h"
 #include "tf2/LinearMath/Quaternion.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 #include "bosch_locator_bridge/msg/client_global_align_landmark_observation_notice.hpp"
 #include "bosch_locator_bridge/msg/client_global_align_landmark_visualization_information.hpp"
