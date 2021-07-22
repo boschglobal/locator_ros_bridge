@@ -365,8 +365,8 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   writer << duration_beam;
   // duration_scan
   writer << duration_beam * static_cast<double>(msg.ranges.size());
-  // duration_rotate
-  writer << static_cast<double>(msg.scan_time);
+  // duration_rotate (has to be > 0 for motion correction of scans)
+  writer << static_cast<double>(msg.scan_time >= 1e-5f ? msg.scan_time : 1e-5f);
   // numBeams
   writer << static_cast<uint32_t>(msg.ranges.size());
   // angleStart
