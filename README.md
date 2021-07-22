@@ -21,6 +21,12 @@ The following video (click on image) gives more information about the Rexroth RO
 
 ## Installation
 
+### Installing from Debian Package
+
+You can install the `bosch_locator_bridge` package directly:
+
+    sudo apt install ros-noetic-bosch-locator-bridge
+
 ### Building from Source
 
 #### Dependencies
