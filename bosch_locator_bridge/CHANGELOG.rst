@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.2 (2021-07-22)
+------------------
 * guarantee that duration_rotate is greater zero
 * Contributors: Stefan Laible
 
