@@ -2,6 +2,11 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* guarantee that duration_rotate is greater zero
+* Contributors: Stefan Laible
+
 2.0.1 (2021-05-19)
 ------------------
 * add tf2_geometry_msgs dependency
