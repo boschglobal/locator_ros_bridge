@@ -2,7 +2,7 @@
 <package format="3">
   <name>bosch_locator_bridge</name>
   <version>2.1.1</version>
-  <description>The bosch_locator_bridge package</description>
+  <description>ROS interface to Rexroth ROKIT Locator</description>
 
   <maintainer email="stefan.laible@de.bosch.com">Stefan Laible</maintainer>
 
