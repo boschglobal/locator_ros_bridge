@@ -2,6 +2,11 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* guarantee that duration_rotate is greater zero
+* Contributors: Stefan Laible
+
 1.0.1 (2021-05-20)
 ------------------
 * bump minimum cmake version
