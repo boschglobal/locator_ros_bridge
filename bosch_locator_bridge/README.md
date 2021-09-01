@@ -86,7 +86,7 @@ This is the main bridge interface node.
 
 #### ROKIT Locator Configuration
 
-To correctly forward the laser scan data, it is important that `LaserComponent.laserType` is set to `simple`, and that `LaserComponent.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
+To correctly forward the laser scan data, it is important that `ClientSensor.laserType` is set to `simple`, and that `ClientSensor.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
 
 #### Subscribed Topics
 
