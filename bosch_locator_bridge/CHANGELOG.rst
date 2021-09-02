@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.3 (2021-09-02)
+------------------
 * update to ROKIT Locator version 1.3
 * Contributors: Stefan Laible
 
