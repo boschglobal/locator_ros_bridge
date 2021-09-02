@@ -37,21 +37,23 @@ using std::placeholders::_2;
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {4, 0}},
   {"Session", {3, 0}},
-  {"Diagnostic", {3, 0}},
-  {"LicensingFeature", {4, 0}},
-  {"Config", {3, 0}},
+  {"Diagnostic", {4, 0}},
+  {"Licensing", {6, 0}},
+  {"Config", {4, 0}},
   {"AboutBuild", {3, 0}},
   {"Certificates", {3, 0}},
-  {"System", {3, 0}},
-  {"ClientControl", {3, 0}},
+  {"System", {3, 1}},
+  {"ClientApplication", {1, 0}},
+  {"ClientControl", {3, 1}},
   {"ClientRecording", {3, 2}},
   {"ClientMap", {3, 3}},
-  {"ClientLocalization", {4, 0}},
+  {"ClientLocalization", {5, 0}},
   {"ClientManualAlign", {4, 1}},
   {"ClientGlobalAlign", {4, 0}},
-  {"ClientLaserMask", {3, 0}},
+  {"ClientLaserMask", {4, 0}},
+  {"ClientSensor", {4, 0}},
   {"ClientUser", {4, 0}},
-  {"ClientSensor", {3, 0}},
+  {"ClientExpandMap", {1, 0}},
 });
 
 LocatorBridgeNode::LocatorBridgeNode(const std::string & nodeName)
@@ -229,7 +231,8 @@ bool LocatorBridgeNode::check_module_versions(
       RCLCPP_WARN_STREAM(
         get_logger(),
         "---------8 module: " << module_name << " required version: " << required_version.first <<
-          "." << required_version.second);
+          "." << required_version.second << " (actual version: " << actual_version.first << "." <<
+          actual_version.second << ")");
       return false;
     }
   }
@@ -273,7 +276,7 @@ bool LocatorBridgeNode::clientMapSetCb(
   const std::string active_map_name = req->name.empty() ? last_map_name_ : req->name;
 
   Poco::DynamicStruct config;
-  config.insert("application.localization.activeMapName", active_map_name);
+  config.insert("ClientLocalization.activeMapName", active_map_name);
   loc_client_interface_->setConfigList(config);
   return true;
 }
@@ -392,62 +395,62 @@ void LocatorBridgeNode::syncConfig()
   // overwrite current locator config with ros params
 
   std::string laser_type;
-  declare_parameter("LaserComponent.laserType", laser_type);
-  get_parameter("LaserComponent.laserType", laser_type);
-  loc_client_config["LaserComponent.laserType"] = laser_type;
+  declare_parameter("ClientSensor.laserType", laser_type);
+  get_parameter("ClientSensor.laserType", laser_type);
+  loc_client_config["ClientSensor.laserType"] = laser_type;
 
   std::string laser_address;
-  declare_parameter("LaserComponent.laserAddress", laser_address);
-  get_parameter("LaserComponent.laserAddress", laser_address);
-  loc_client_config["LaserComponent.laserAddress"] = laser_address;
+  declare_parameter("ClientSensor.laserAddress", laser_address);
+  get_parameter("ClientSensor.laserAddress", laser_address);
+  loc_client_config["ClientSensor.laserAddress"] = laser_address;
 
   bool autostart = false;
-  declare_parameter("application.localization.autostart", autostart);
-  get_parameter("application.localization.autostart", autostart);
-  loc_client_config["application.localization.autostart"] = autostart;
+  declare_parameter("ClientLocalization.autostart", autostart);
+  get_parameter("ClientLocalization.autostart", autostart);
+  loc_client_config["ClientLocalization.autostart"] = autostart;
 
   bool odometry_enabled = false;
-  declare_parameter("ExternalSensorComponent.Odometry.enabled", odometry_enabled);
-  get_parameter("ExternalSensorComponent.Odometry.enabled", odometry_enabled);
-  loc_client_config["ExternalSensorComponent.Odometry.enabled"] = odometry_enabled;
+  declare_parameter("ClientSensor.enableOdometry", odometry_enabled);
+  get_parameter("ClientSensor.enableOdometry", odometry_enabled);
+  loc_client_config["ClientSensor.enableOdometry"] = odometry_enabled;
 
   bool odometry_tls = false;
-  declare_parameter("ExternalSensorComponent.Odometry.tls", odometry_tls);
-  get_parameter("ExternalSensorComponent.Odometry.tls", odometry_tls);
-  loc_client_config["ExternalSensorComponent.Odometry.tls"] = odometry_tls;
+  declare_parameter("ClientSensor.odometryEncryption", odometry_tls);
+  get_parameter("ClientSensor.odometryEncryption", odometry_tls);
+  loc_client_config["ClientSensor.odometryEncryption"] = odometry_tls;
 
   std::string odometry_address;
-  declare_parameter("ExternalSensorComponent.Odometry.address", odometry_address);
-  get_parameter("ExternalSensorComponent.Odometry.address", odometry_address);
-  loc_client_config["ExternalSensorComponent.Odometry.address"] = odometry_address;
+  declare_parameter("ClientSensor.odometryAddress", odometry_address);
+  get_parameter("ClientSensor.odometryAddress", odometry_address);
+  loc_client_config["ClientSensor.odometryAddress"] = odometry_address;
 
   RCLCPP_INFO_STREAM(get_logger(), "new loc client config: " << loc_client_config.toString());
   for (const auto & c : loc_client_config) {
     RCLCPP_INFO_STREAM(get_logger(), "- " << c.first << ": " << c.second.toString());
   }
 
-  if (loc_client_config["LaserComponent.laserType"].toString() == "simple") {
+  if (loc_client_config["ClientSensor.laserType"].toString() == "simple") {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "LaserComponent.laserType:" << loc_client_config["LaserComponent.laserType"].toString() <<
+      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
         ". Will provide laser data.");
     provide_laser_data_ = true;
   } else {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "LaserComponent.laserType:" << loc_client_config["LaserComponent.laserType"].toString() <<
+      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
         ". Laser data will not be provided.");
     provide_laser_data_ = false;
   }
 
-  if (loc_client_config["ExternalSensorComponent.Odometry.enabled"].toString() == "true") {
+  if (loc_client_config["ClientSensor.enableOdometry"].toString() == "true") {
     RCLCPP_INFO_STREAM(
-      get_logger(), "ExternalSensorComponent.Odometry enabled. Will provide odometry data.");
+      get_logger(), "ClientSensor.enableOdometry is set to true. Will provide odometry data.");
     provide_odometry_data_ = true;
   } else {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "ExternalSensorComponent.Odometry disabled. Odometry data will not be provided.");
+      "ClientSensor.enableOdometry is set to false. Odometry data will not be provided.");
     provide_odometry_data_ = false;
   }
 

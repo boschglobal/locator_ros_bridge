@@ -50,12 +50,12 @@ limitations under the License.-->
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
-    <param name="LaserComponent.laserType" value="simple"/>
-    <param name="LaserComponent.laserAddress" value="$(var bridge_ip):$(var laser_datagram_port)"/>
-    <param name="application.localization.autostart" value="false"/>
-    <param name="ExternalSensorComponent.Odometry.enabled" value="$(var enable_odometry)"/>
-    <param name="ExternalSensorComponent.Odometry.tls" value="false"/>
-    <param name="ExternalSensorComponent.Odometry.address" value="$(var bridge_ip):$(var odom_datagram_port)"/>
+    <param name="ClientSensor.laserType" value="simple"/>
+    <param name="ClientSensor.laserAddress" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+    <param name="ClientLocalization.autostart" value="false"/>
+    <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
+    <param name="ClientSensor.odometryEncryption" value="false"/>
+    <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
   </node>
 
   <executable cmd="ros2 bag play $(var bag)" output="screen" required="false"/>
