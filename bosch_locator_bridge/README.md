@@ -9,7 +9,8 @@ It translates ROS 1 messages to the ROKIT Locator API (as described in the ROKIT
 It also allows to control the ROKIT Locator via ROS 1 service calls.
 
 The package has been tested under [ROS 1] Noetic and Ubuntu 20.04.
-The bridge is compatible with ROKIT Locator version 1.2.10.
+The bridge is compatible with ROKIT Locator version 1.3.
+If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
 ## Quick Start
 
@@ -89,7 +90,7 @@ This is the main bridge interface node.
 The bridge looks for ROS parameters under **`/bridge_node/localization_client_config`** and sets these to the ROKIT Locator configuration. This is done only once, during the start of the `bridge_node`.
 See the ROKIT Locator API documentation section 8.5.4 for a list of possible options.
 
-To correctly forward the laser scan data, it is important that `LaserComponent.laserType` is set to `simple`, and that `LaserComponent.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
+To correctly forward the laser scan data, it is important that `ClientSensor.laserType` is set to `simple`, and that `ClientSensor.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
 
 #### Subscribed Topics
 
@@ -250,6 +251,12 @@ Also peek in the LocalizationClient's syslog file (see the ROKIT Locator documen
 This can happen if you switch the ROKIT Locator into a mode where it requires e.g. laser data, but none is available (e.g. no laser data is sent with a few hundred miliseconds after the mode switch).
 
 To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the ROKIT Locator mode.
+
+## Support of earlier versions of ROKIT Locator
+
+If you have version 1.2 of ROKIT Locator, checkout the corresponding tag:
+
+    git checkout 1.0.2 -b noetic-v1.2
 
 
 [ROS 1]: https://wiki.ros.org/noetic

@@ -28,21 +28,23 @@
 const static std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
     { "AboutModules", { 4, 0 } },
     { "Session", { 3, 0 } },
-    { "Diagnostic", { 3, 0 } },
-    { "LicensingFeature", { 4, 0 } },
-    { "Config", { 3, 0 } },
+    { "Diagnostic", { 4, 0 } },
+    { "Licensing", { 6, 0 } },
+    { "Config", { 4, 0 } },
     { "AboutBuild", { 3, 0 } },
     { "Certificates", { 3, 0 } },
-    { "System", { 3, 0 } },
-    { "ClientControl", { 3, 0 } },
+    { "System", { 3, 1 } },
+    { "ClientApplication", { 1, 0 } },
+    { "ClientControl", { 3, 1 } },
     { "ClientRecording", { 3, 2 } },
     { "ClientMap", { 3, 3 } },
-    { "ClientLocalization", { 4, 0 } },
+    { "ClientLocalization", { 5, 0 } },
     { "ClientManualAlign", { 4, 1 } },
     { "ClientGlobalAlign", { 4, 0 } },
-    { "ClientLaserMask", { 3, 0 } },
+    { "ClientLaserMask", { 4, 0 } },
+    { "ClientSensor", { 4, 0 } },
     { "ClientUser", { 4, 0 } },
-    { "ClientSensor", { 3, 0 } },
+    { "ClientExpandMap", { 1, 0 } },
 });
 
 LocatorBridgeNode::LocatorBridgeNode() : nh_("~")
@@ -161,7 +163,8 @@ bool LocatorBridgeNode::check_module_versions(
     else
     {
       ROS_WARN_STREAM("---------8 module: " << module_name << " required version: " << required_version.first << "."
-                                            << required_version.second);
+                                            << required_version.second << " (actual version: " << actual_version.first
+                                            << "." << actual_version.second << ")");
       return false;
     }
   }
@@ -197,7 +200,7 @@ bool LocatorBridgeNode::clientMapSetCb(bosch_locator_bridge::ClientMapSet::Reque
   const std::string active_map_name = req.name.empty() ? last_map_name_ : req.name;
 
   Poco::DynamicStruct config;
-  config.insert("application.localization.activeMapName", active_map_name);
+  config.insert("ClientLocalization.activeMapName", active_map_name);
   loc_client_interface_->setConfigList(config);
   return true;
 }
@@ -340,27 +343,27 @@ void LocatorBridgeNode::syncConfig()
     ROS_INFO_STREAM("- " << c.first << ": " << c.second.toString());
   }
 
-  if (loc_client_config["LaserComponent.laserType"].toString() == "simple")
+  if (loc_client_config["ClientSensor.laserType"].toString() == "simple")
   {
-    ROS_INFO_STREAM("LaserComponent.laserType:" << loc_client_config["LaserComponent.laserType"].toString()
+    ROS_INFO_STREAM("ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString()
                                                 << ". Will provide laser data.");
     provide_laser_data_ = true;
   }
   else
   {
-    ROS_INFO_STREAM("LaserComponent.laserType:" << loc_client_config["LaserComponent.laserType"].toString()
+    ROS_INFO_STREAM("ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString()
                                                 << ". Laser data will not be provided.");
     provide_laser_data_ = false;
   }
 
-  if (loc_client_config["ExternalSensorComponent.Odometry.enabled"].toString() == "true")
+  if (loc_client_config["ClientSensor.enableOdometry"].toString() == "true")
   {
-    ROS_INFO_STREAM("ExternalSensorComponent.Odometry enabled. Will provide odometry data.");
+    ROS_INFO_STREAM("ClientSensor.enableOdometry is set to true. Will provide odometry data.");
     provide_odometry_data_ = true;
   }
   else
   {
-    ROS_INFO_STREAM("ExternalSensorComponent.Odometry disabled. Odometry data will not be provided.");
+    ROS_INFO_STREAM("ClientSensor.enableOdometry is set to false. Odometry data will not be provided.");
     provide_odometry_data_ = false;
   }
 
