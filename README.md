@@ -8,7 +8,7 @@
 
 # locator_ros_bridge
 
-This repository contains the **bosch_locator_bridge** package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
+This repository contains the [bosch_locator_bridge](bosch_locator_bridge) package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
 It translates ROS messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
 It also allows to control the ROKIT Locator via ROS service calls.
 
@@ -36,11 +36,15 @@ You can install the `bosch_locator_bridge` package directly:
 
 #### Building
 
-To build from source, make sure your colcon workspace is set up correctly. Then clone the latest version from this repository into your colcon workspace and compile the package using
+To build from source, make sure your colcon workspace is set up correctly. Then clone the latest version of this branch from the repository into your colcon workspace and compile the package using
 
     cd colcon_ws
     rosdep install --from-paths . --ignore-src
     colcon build --symlink-install
+
+## How to Get Started
+
+To get started, take a look at the [README.md](bosch_locator_bridge/README.md) of the bosch_locator_bridge package.
 
 ## License
 

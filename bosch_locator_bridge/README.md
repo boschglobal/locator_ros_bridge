@@ -9,7 +9,8 @@ It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT
 It also allows to control the ROKIT Locator via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
-The bridge is compatible with ROKIT Locator version 1.2.10.
+The bridge is compatible with ROKIT Locator version 1.3.
+If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
 ## Quick Start
 
@@ -86,7 +87,7 @@ This is the main bridge interface node.
 
 #### ROKIT Locator Configuration
 
-To correctly forward the laser scan data, it is important that `LaserComponent.laserType` is set to `simple`, and that `LaserComponent.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
+To correctly forward the laser scan data, it is important that `ClientSensor.laserType` is set to `simple`, and that `ClientSensor.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
 
 #### Subscribed Topics
 
@@ -247,6 +248,12 @@ Also peek in the LocalizationClient's syslog file (see the ROKIT Locator documen
 This can happen if you switch the ROKIT Locator into a mode where it requires e.g. laser data, but none is available (e.g. no laser data is sent with a few hundred miliseconds after the mode switch).
 
 To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the ROKIT Locator mode.
+
+## Support of earlier versions of ROKIT Locator
+
+If you have version 1.2 of ROKIT Locator, checkout the corresponding tag:
+
+    git checkout 2.1.2 -b main-v1.2
 
 
 [ROS 2]: https://docs.ros.org/en/rolling
