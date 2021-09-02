@@ -2,6 +2,11 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update to ROKIT Locator version 1.3
+* Contributors: Stefan Laible
+
 2.0.2 (2021-07-22)
 ------------------
 * guarantee that duration_rotate is greater zero
