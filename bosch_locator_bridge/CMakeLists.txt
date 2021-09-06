@@ -87,7 +87,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   Poco
 )
 
-if($ENV{ROS_DISTRO} STREQUAL "galactic")
+if("$ENV{ROS_DISTRO}" STREQUAL "galactic")
   add_compile_definitions(ROS_GALACTIC)
   rosidl_target_interfaces(${PROJECT_NAME}_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
 else()
