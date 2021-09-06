@@ -22,7 +22,12 @@
 
 #include "tf2/convert.h"
 #include "tf2/LinearMath/Transform.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+
+#ifdef ROS_GALACTIC
+  #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#else
+  #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+#endif
 
 #include "locator_rpc_interface.hpp"
 #include "receiving_interface.hpp"
