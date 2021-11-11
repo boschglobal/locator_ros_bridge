@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Copyright (c) 2021 - for information on the respective copyright owner
+see the NOTICE file and/or the repository https://github.com/boschglobal/locator_ros_bridge.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.-->
+
+<launch>
+  <!-- ip of the computer on which the bridge is running -->
+  <arg name="bridge_ip" default="172.17.0.1"/>
+  <!-- ip of the computer, on which the locator software is running -->
+  <arg name="locator_ip" default="127.0.0.1"/>
+
+  <!-- login credentials for the locator software -->
+  <arg name="locator_user" default="admin"/>
+  <arg name="locator_password" default="admin"/>
+
+  <node pkg="bosch_locator_bridge" type="server_node" name="server_bridge_node" output="screen" required="true">
+    <param name="server_host" value="$(arg locator_ip)" />
+
+    <param name="user_name" value="$(arg locator_user)"/>
+    <param name="password" value="$(arg locator_password)"/>
+    
+    <rosparam ns="localization_server_config" subst_value="true">
+
+    </rosparam>
+  </node>
+
+</launch>

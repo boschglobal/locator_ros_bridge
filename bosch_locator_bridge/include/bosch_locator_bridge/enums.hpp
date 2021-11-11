@@ -46,7 +46,7 @@ enum ModuleIdentifier : uint16_t
   SUPPORT_RECOVERY = 0x0301,
 };
 
-std::string stringifyModuleId(ModuleIdentifier id)
+inline std::string stringifyModuleId(ModuleIdentifier id)
 {
   switch (id)
   {
@@ -114,7 +114,7 @@ enum CommonResponseCode : uint64_t
   ENTITY_IN_USE = 0x000000000000000e,
 };
 
-std::string stringifyCommonResponseCode(CommonResponseCode c)
+inline std::string stringifyCommonResponseCode(CommonResponseCode c)
 {
   switch (c)
   {
