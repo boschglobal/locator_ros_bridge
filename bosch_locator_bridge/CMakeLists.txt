@@ -94,10 +94,10 @@ target_link_libraries(${PROJECT_NAME}_node
 )
 
 add_executable(${PROJECT_NAME}_server_node
-  src/server/server_main.cpp
-  src/server/server_bridge_node.cpp
+  src/locator_rpc_interface.cpp
   src/rosmsgs_datagram_converter.cpp
-  src/locator_rpc_interface.cpp)
+  src/server/server_bridge_node.cpp
+  src/server/server_main.cpp)
 set_target_properties(${PROJECT_NAME}_server_node PROPERTIES OUTPUT_NAME server_node PREFIX "")
 add_dependencies(${PROJECT_NAME}_server_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME}_server_node
