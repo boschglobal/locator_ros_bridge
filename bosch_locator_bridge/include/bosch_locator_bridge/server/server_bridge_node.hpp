@@ -36,7 +36,7 @@ class LocatorRPCInterface;
 class ServerBridgeNode {
 public:
   ServerBridgeNode();
-  ~ServerBridgeNode();
+  virtual ~ServerBridgeNode();
 
   void init();
 
