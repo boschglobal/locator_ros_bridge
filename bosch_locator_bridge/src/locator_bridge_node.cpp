@@ -102,6 +102,13 @@ void LocatorBridgeNode::init()
 
   callback_group_services_ = create_callback_group(
     rclcpp::callback_group::CallbackGroupType::MutuallyExclusive);
+
+  services_.push_back(
+    create_service<bosch_locator_bridge::srv::ClientConfigGetEntry>(
+      "~/get_config_entry",
+      std::bind(&LocatorBridgeNode::clientConfigGetEntryCb, this, _1, _2),
+      rmw_qos_profile_services_default, callback_group_services_));
+
   services_.push_back(
     create_service<bosch_locator_bridge::srv::StartRecording>(
       "~/start_visual_recording",
@@ -255,6 +262,22 @@ void LocatorBridgeNode::odom_callback(const nav_msgs::msg::Odometry::SharedPtr m
     ++odom_num_,
     shared_from_this());
   odom_sending_interface_->sendData(odom_datagram.begin(), odom_datagram.size());
+}
+
+bool LocatorBridgeNode::clientConfigGetEntryCb(
+  const std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Request> req,
+  std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Response> res)
+{
+  const auto & loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    res->value = loc_client_config[req->name].toString();
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << req->name << ".");
+    return false;
+  }
+
+  return true;
 }
 
 bool LocatorBridgeNode::clientMapSendCb(

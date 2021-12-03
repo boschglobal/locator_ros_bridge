@@ -30,6 +30,7 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 
+#include "bosch_locator_bridge/srv/client_config_get_entry.hpp"
 #include "bosch_locator_bridge/srv/client_map_list.hpp"
 #include "bosch_locator_bridge/srv/client_map_send.hpp"
 #include "bosch_locator_bridge/srv/client_map_set.hpp"
@@ -67,6 +68,10 @@ private:
 
   void laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
+
+  bool clientConfigGetEntryCb(
+    const std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Request> req,
+    std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Response> res);
 
   bool clientMapSendCb(
     const std::shared_ptr<bosch_locator_bridge::srv::ClientMapSend::Request> req,
