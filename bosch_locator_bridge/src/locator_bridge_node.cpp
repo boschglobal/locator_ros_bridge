@@ -89,6 +89,9 @@ void LocatorBridgeNode::init()
   syncConfig();
 
   services_.push_back(
+      nh_.advertiseService("get_config_entry", &LocatorBridgeNode::clientConfigGetEntryCb, this));
+
+  services_.push_back(
       nh_.advertiseService("start_visual_recording", &LocatorBridgeNode::clientRecordingStartVisualRecordingCb, this));
   services_.push_back(
       nh_.advertiseService("stop_visual_recording", &LocatorBridgeNode::clientRecordingStopVisualRecordingCb, this));
@@ -181,6 +184,21 @@ void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
 {
   Poco::Buffer<char> odom_datagram = RosMsgsDatagramConverter::convertOdometry2DataGram(msg, ++odom_num_);
   odom_sending_interface_->sendData(odom_datagram.begin(), odom_datagram.size());
+}
+
+bool LocatorBridgeNode::clientConfigGetEntryCb(bosch_locator_bridge::ClientConfigGetEntry::Request& req,
+                                               bosch_locator_bridge::ClientConfigGetEntry::Response& res)
+{
+  const auto & loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    res.value = loc_client_config[req.name].toString();
+  } catch (const Poco::NotFoundException & error) {
+    ROS_ERROR_STREAM("Could not find config entry " << req.name << ".");
+    return false;
+  }
+
+  return true;
 }
 
 bool LocatorBridgeNode::clientMapSendCb(bosch_locator_bridge::ClientMapSend::Request& req,

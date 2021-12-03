@@ -19,17 +19,18 @@
 
 #include <Poco/Thread.h>
 
-#include <ros/ros.h>
-#include <std_srvs/Empty.h>
-#include <sensor_msgs/LaserScan.h>
-#include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <nav_msgs/Odometry.h>
+#include <ros/ros.h>
+#include <sensor_msgs/LaserScan.h>
+#include <std_srvs/Empty.h>
 
-#include "bosch_locator_bridge/StartRecording.h"
-#include "bosch_locator_bridge/ClientMapStart.h"
+#include "bosch_locator_bridge/ClientConfigGetEntry.h"
+#include "bosch_locator_bridge/ClientMapList.h"
 #include "bosch_locator_bridge/ClientMapSend.h"
 #include "bosch_locator_bridge/ClientMapSet.h"
-#include "bosch_locator_bridge/ClientMapList.h"
+#include "bosch_locator_bridge/ClientMapStart.h"
+#include "bosch_locator_bridge/StartRecording.h"
 
 // forward declarations
 class LocatorRPCInterface;
@@ -60,6 +61,9 @@ private:
 
   void laser_callback(const sensor_msgs::LaserScan& msg);
   void odom_callback(const nav_msgs::Odometry& msg);
+
+  bool clientConfigGetEntryCb(bosch_locator_bridge::ClientConfigGetEntry::Request& req,
+                              bosch_locator_bridge::ClientConfigGetEntry::Response& res);
 
   bool clientMapSendCb(bosch_locator_bridge::ClientMapSend::Request& req,
                        bosch_locator_bridge::ClientMapSend::Response& res);

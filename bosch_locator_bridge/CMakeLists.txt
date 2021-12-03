@@ -3,16 +3,16 @@ project(bosch_locator_bridge)
 
 find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
-        message_generation
-        nav_msgs
-        pcl_conversions
-        roscpp
-        sensor_msgs
-        std_msgs
-        std_srvs
-        tf2
-        tf2_geometry_msgs
-        tf2_ros
+    message_generation
+    nav_msgs
+    pcl_conversions
+    roscpp
+    sensor_msgs
+    std_msgs
+    std_srvs
+    tf2
+    tf2_geometry_msgs
+    tf2_ros
 )
 
 find_package(Poco REQUIRED COMPONENTS Foundation Net JSON)
@@ -40,6 +40,7 @@ add_message_files(
 
 add_service_files(
   FILES
+    ClientConfigGetEntry.srv
     ClientMapList.srv
     ClientMapSend.srv
     ClientMapSet.srv
