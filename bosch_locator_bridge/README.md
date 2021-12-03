@@ -200,7 +200,7 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 * **`/bridge_node/get_config_entry`** ([bosch_locator_bridge/srv/ClientConfigGetEntry](./srv/ClientConfigGetEntry.srv))
 
-    Returns the value of the config entry with the given name.
+	Returns the value of the config entry with the given name.
 
 * **`/bridge_node/start_visual_recording`** ([bosch_locator_bridge/srv/StartRecording](./srv/StartRecording.srv))
 
