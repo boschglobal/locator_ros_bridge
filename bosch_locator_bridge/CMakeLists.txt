@@ -45,6 +45,7 @@ set(msg_files
 )
 
 set(srv_files
+    "srv/ClientConfigGetEntry.srv"
     "srv/ClientMapList.srv"
     "srv/ClientMapSend.srv"
     "srv/ClientMapSet.srv"
