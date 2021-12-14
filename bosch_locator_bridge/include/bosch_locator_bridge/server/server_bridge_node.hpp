@@ -14,11 +14,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <unordered_map>
+#ifndef BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_
+#define BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_
 
 #include <Poco/Thread.h>
+
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_srvs/srv/empty.hpp"
@@ -30,27 +35,29 @@
 class LocatorRPCInterface;
 
 /**
- * This is the main ROS node. It binds together the ROS interface and the
- * Locator API.
+ * This is the server bridge node. It binds together the ROS interface and the
+ * Locator API of the map server.
  */
-class ServerBridgeNode :public rclcpp::Node {
+class ServerBridgeNode : public rclcpp::Node
+{
 public:
-  ServerBridgeNode(const std::string & nodeName);
+  explicit ServerBridgeNode(const std::string & nodeName);
   virtual ~ServerBridgeNode();
 
   void init();
 
 private:
   bool check_module_versions(
-      const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
-          &module_versions);
+    const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
+    & module_versions);
 
-  bool serverMapListCb(const std::shared_ptr<bosch_locator_bridge::srv::ServerMapList::Request> req,
-                       std::shared_ptr<bosch_locator_bridge::srv::ServerMapList::Response> res);
+  bool serverMapListCb(
+    const std::shared_ptr<bosch_locator_bridge::srv::ServerMapList::Request> req,
+    std::shared_ptr<bosch_locator_bridge::srv::ServerMapList::Response> res);
 
   bool serverMapGetImageWithResolutionCb(
-      const std::shared_ptr<bosch_locator_bridge::srv::ServerMapGetImageWithResolution::Request> req,
-      std::shared_ptr<bosch_locator_bridge::srv::ServerMapGetImageWithResolution::Response> res);
+    const std::shared_ptr<bosch_locator_bridge::srv::ServerMapGetImageWithResolution::Request> req,
+    std::shared_ptr<bosch_locator_bridge::srv::ServerMapGetImageWithResolution::Response> res);
 
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
@@ -61,3 +68,5 @@ private:
 
   std::vector<rclcpp::ServiceBase::SharedPtr> services_;
 };
+
+#endif  // BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_
