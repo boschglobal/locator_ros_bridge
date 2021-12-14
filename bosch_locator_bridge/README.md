@@ -83,7 +83,7 @@ When you are done, you can stop the localization with
 
 ### bridge_node
 
-This is the main bridge interface node.
+This node provides an interface to the localization client.
 
 #### ROKIT Locator Configuration
 
@@ -233,6 +233,31 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 * **`/bridge_node/stop_localization`** ([std_srvs/srv/Empty])
 
 	Stop self-localization within the map.
+
+### server_bridge_node
+
+This node provides an interface to the map server.
+
+#### Start Server Bridge Node
+
+Start the server bridge node with
+
+    ros2 launch bosch_locator_bridge server_bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD>
+
+where
+- `<HOST_IP>` is the IP address of the computer the bridge is to be started
+- `<LOCATOR_IP>` is the IP address of the computer where the ROKIT Locator is running
+- `<USER>` and `<PASSWORD>` are the credentials to log into the ROKIT Locator
+
+#### Services
+
+* **`/server_bridge_node/get_map_with_resolution`** ([bosch_locator_bridge/srv/ServerMapGetImageWithResolution](./srv/ServerMapGetImageWithResolution.srv))
+
+	Stores the requested map in a pair of files (YAML and PNG), as is usual with ROS.
+
+* **`/server_bridge_node/list_server_maps`** ([bosch_locator_bridge/srv/ServerMapList](./srv/ServerMapList.srv))
+
+	Returns list of maps on map server.
 
 ## Caveats
 

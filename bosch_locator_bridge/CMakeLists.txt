@@ -51,6 +51,8 @@ set(srv_files
     "srv/ClientMapSet.srv"
     "srv/ClientMapStart.srv"
     "srv/StartRecording.srv"
+    "srv/ServerMapGetImageWithResolution.srv"
+    "srv/ServerMapList.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -96,8 +98,31 @@ else()
   target_link_libraries(${PROJECT_NAME}_node "${cpp_typesupport_target}")
 endif()
 
+add_executable(${PROJECT_NAME}_server_node
+  src/rosmsgs_datagram_converter.cpp
+  src/locator_rpc_interface.cpp
+  src/server/server_bridge_node.cpp
+  src/server/server_main.cpp)
+set_target_properties(${PROJECT_NAME}_server_node PROPERTIES OUTPUT_NAME server_node PREFIX "")
+target_include_directories(${PROJECT_NAME}_server_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+target_link_libraries(${PROJECT_NAME}_server_node  ${Boost_LIBRARIES})
+ament_target_dependencies(${PROJECT_NAME}_server_node
+  rclcpp
+  std_srvs
+  Poco
+)
 
-install(TARGETS ${PROJECT_NAME}_node
+if("$ENV{ROS_DISTRO}" STREQUAL "galactic")
+  add_compile_definitions(ROS_GALACTIC)
+  rosidl_target_interfaces(${PROJECT_NAME}_server_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+else()
+  rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+  target_link_libraries(${PROJECT_NAME}_server_node "${cpp_typesupport_target}")
+endif()
+
+install(TARGETS ${PROJECT_NAME}_node ${PROJECT_NAME}_server_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
