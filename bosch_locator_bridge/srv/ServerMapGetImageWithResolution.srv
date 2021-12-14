@@ -1,0 +1,4 @@
+string file_name #destination to save png and yaml to (do not specify a file extension)
+uint32 resolution #pixel per meter
+string map_name #map name on map server
+---
