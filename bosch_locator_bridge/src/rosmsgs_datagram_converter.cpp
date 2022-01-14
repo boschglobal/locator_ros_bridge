@@ -406,7 +406,7 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(
   writer << static_cast<uint32_t>(msg->ranges.size());
   // ranges.elements
   for (const auto r : msg->ranges) {
-    writer << static_cast<float>(clamp_range(r, -1e4f, 1e4f));
+    writer << static_cast<float>(std::isnan(r) ? -1e4f : clamp_range(r, -1e4f, 1e4f));
   }
   writer << static_cast<char>(!msg->intensities.empty());
   // FIXME intensities ranges not in sensor_msgs/LaserScan. Where to get from?
