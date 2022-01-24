@@ -229,6 +229,26 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2
   binary_reader >> client_localization_visualization.delay;
   convertMapDatagram2Message(binary_reader, client_localization_visualization.timestamp, scan);
 
+  // Get sensor offsets
+  uint32_t sensor_offsets_length;
+  binary_reader >> sensor_offsets_length;
+
+  std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
+  for (unsigned int i = 0; i < sensor_offsets_length; i++) {
+    binary_reader >> sensor_offsets[i];
+  }
+
+  // Get intensities
+  bool has_intensities;
+  float min_intensity, max_intensity;
+  uint32_t intensities_length;
+  binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
+
+  std::vector<float> intensities(intensities_length);
+  for (unsigned int i = 0; i < intensities_length; i++) {
+    binary_reader >> intensities[i];
+  }
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -277,6 +297,27 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   for (unsigned int i = 0; i < path_types_length; i++) {
     binary_reader >> client_map_visualization.path_types[i];
   }
+
+  // Get sensor offsets
+  uint32_t sensor_offsets_length;
+  binary_reader >> sensor_offsets_length;
+
+  std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
+  for (unsigned int i = 0; i < sensor_offsets_length; i++) {
+    binary_reader >> sensor_offsets[i];
+  }
+
+  // Get intensities
+  bool has_intensities;
+  float min_intensity, max_intensity;
+  uint32_t intensities_length;
+  binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
+
+  std::vector<float> intensities(intensities_length);
+  for (unsigned int i = 0; i < intensities_length; i++) {
+    binary_reader >> intensities[i];
+  }
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -328,6 +369,27 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   for (unsigned int i = 0; i < path_types_length; i++) {
     binary_reader >> client_recording_visualization.path_types[i];
   }
+
+  // Get sensor offsets
+  uint32_t sensor_offsets_length;
+  binary_reader >> sensor_offsets_length;
+
+  std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
+  for (unsigned int i = 0; i < sensor_offsets_length; i++) {
+    binary_reader >> sensor_offsets[i];
+  }
+
+  // Get intensities
+  bool has_intensities;
+  float min_intensity, max_intensity;
+  uint32_t intensities_length;
+  binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
+
+  std::vector<float> intensities(intensities_length);
+  for (unsigned int i = 0; i < intensities_length; i++) {
+    binary_reader >> intensities[i];
+  }
+
   return datagram.size() - binary_reader.available();
 }
 
