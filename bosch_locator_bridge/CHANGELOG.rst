@@ -2,6 +2,13 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* handle NaNs in range values
+* add service for getting config entries
+* add server interface
+* Contributors: Stefan Laible, robertwil
+
 2.1.3 (2021-09-02)
 ------------------
 * update to ROKIT Locator version 1.3
