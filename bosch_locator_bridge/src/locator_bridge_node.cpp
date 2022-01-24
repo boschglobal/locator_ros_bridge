@@ -41,7 +41,7 @@ using std::placeholders::_2;
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
-  {"Session", {3, 0}},
+  {"Session", {3, 1}},
   {"Diagnostic", {4, 0}},
   {"Licensing", {6, 0}},
   {"Config", {5, 0}},
