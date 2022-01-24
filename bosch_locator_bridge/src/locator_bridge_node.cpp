@@ -40,13 +40,13 @@ using std::placeholders::_2;
 
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
-  {"AboutModules", {4, 0}},
+  {"AboutModules", {5, 0}},
   {"Session", {3, 0}},
   {"Diagnostic", {4, 0}},
   {"Licensing", {6, 0}},
-  {"Config", {4, 0}},
+  {"Config", {5, 0}},
   {"AboutBuild", {3, 0}},
-  {"Certificates", {3, 0}},
+  {"Certificate", {3, 0}},
   {"System", {3, 1}},
   {"ClientApplication", {1, 0}},
   {"ClientControl", {3, 1}},
@@ -55,8 +55,8 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
   {"ClientLocalization", {5, 0}},
   {"ClientManualAlign", {4, 1}},
   {"ClientGlobalAlign", {4, 0}},
-  {"ClientLaserMask", {4, 0}},
-  {"ClientSensor", {4, 0}},
+  {"ClientLaserMask", {5, 0}},
+  {"ClientSensor", {5, 0}},
   {"ClientUser", {4, 0}},
   {"ClientExpandMap", {1, 0}},
 });
@@ -423,14 +423,14 @@ void LocatorBridgeNode::syncConfig()
   // overwrite current locator config with ros params
 
   std::string laser_type;
-  declare_parameter("ClientSensor.laserType", laser_type);
-  get_parameter("ClientSensor.laserType", laser_type);
-  loc_client_config["ClientSensor.laserType"] = laser_type;
+  declare_parameter("ClientSensor.laser.type", laser_type);
+  get_parameter("ClientSensor.laser.type", laser_type);
+  loc_client_config["ClientSensor.laser.type"] = laser_type;
 
   std::string laser_address;
-  declare_parameter("ClientSensor.laserAddress", laser_address);
-  get_parameter("ClientSensor.laserAddress", laser_address);
-  loc_client_config["ClientSensor.laserAddress"] = laser_address;
+  declare_parameter("ClientSensor.laser.address", laser_address);
+  get_parameter("ClientSensor.laser.address", laser_address);
+  loc_client_config["ClientSensor.laser.address"] = laser_address;
 
   bool autostart = false;
   declare_parameter("ClientLocalization.autostart", autostart);
@@ -457,16 +457,16 @@ void LocatorBridgeNode::syncConfig()
     RCLCPP_INFO_STREAM(get_logger(), "- " << c.first << ": " << c.second.toString());
   }
 
-  if (loc_client_config["ClientSensor.laserType"].toString() == "simple") {
+  if (loc_client_config["ClientSensor.laser.type"].toString() == "simple") {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
+      "ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString() <<
         ". Will provide laser data.");
     provide_laser_data_ = true;
   } else {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
+      "ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString() <<
         ". Laser data will not be provided.");
     provide_laser_data_ = false;
   }

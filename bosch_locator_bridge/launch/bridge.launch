@@ -45,8 +45,8 @@ limitations under the License.-->
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
-    <param name="ClientSensor.laserType" value="simple"/>
-    <param name="ClientSensor.laserAddress" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+    <param name="ClientSensor.laser.type" value="simple"/>
+    <param name="ClientSensor.laser.address" value="$(var bridge_ip):$(var laser_datagram_port)"/>
     <param name="ClientLocalization.autostart" value="false"/>
     <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
     <param name="ClientSensor.odometryEncryption" value="false"/>
