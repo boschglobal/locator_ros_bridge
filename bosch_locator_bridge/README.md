@@ -27,7 +27,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc"
 
 Start the bridge node with
 
-    ros2 launch bosch_locator_bridge bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD> scan_topic:=<SCAN_TOPIC> enable_odometry:=<ENABLE_ODOM> odom_topic:=<ODOM_TOPIC>
+    ros2 launch bosch_locator_bridge bridge.launch.xml bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD> scan_topic:=<SCAN_TOPIC> enable_odometry:=<ENABLE_ODOM> odom_topic:=<ODOM_TOPIC>
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
@@ -242,7 +242,7 @@ This node provides an interface to the map server.
 
 Start the server bridge node with
 
-    ros2 launch bosch_locator_bridge server_bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD>
+    ros2 launch bosch_locator_bridge server_bridge.launch.xml bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD>
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started

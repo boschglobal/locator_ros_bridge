@@ -29,6 +29,7 @@ limitations under the License.-->
   <arg name="enable_odometry" default="false"/>
 
   <arg name="laser_datagram_port" default="4242"/>
+  <arg name="laser2_datagram_port" default="2113"/>
   <arg name="odom_datagram_port" default="1111"/>
 
   <arg name="scan_topic" default="/scan"/>
@@ -37,6 +38,7 @@ limitations under the License.-->
   <node pkg="bosch_locator_bridge" exec="node" name="bridge_node" output="screen">
     <param name="locator_host" value="$(var locator_ip)" />
     <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
+    <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
     <param name="odom_datagram_port" value="$(var odom_datagram_port)"/>
     <param name="user_name" value="$(var locator_user)"/>
     <param name="password" value="$(var locator_password)"/>
@@ -51,6 +53,16 @@ limitations under the License.-->
     <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
     <param name="ClientSensor.odometryEncryption" value="false"/>
     <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
+
+    <param name="ClientSensor.enableLaser2" value="false"/>
+    <param name="ClientSensor.laser2.type" value="simple"/>
+    <param name="ClientSensor.laser2.address" value="$(var bridge_ip):$(var laser2_datagram_port)"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="-0.897"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="0.0"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.z" value="-0.043"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.roll" value="0.0"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.pitch" value="0.0"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="180.0"/>
   </node>
 
 </launch>
