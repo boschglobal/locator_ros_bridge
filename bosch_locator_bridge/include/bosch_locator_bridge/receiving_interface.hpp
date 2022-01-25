@@ -27,7 +27,6 @@
 #include "geometry_msgs/msg/pose_array.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "tf2_ros/transform_broadcaster.h"
 
@@ -187,7 +186,6 @@ public:
 
 private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr client_localization_map_pub_;
-  rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr client_localization_gridmap_pub_;
 };
 
 class ClientLocalizationVisualizationInterface : public ReceivingInterface
