@@ -211,6 +211,10 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2
   binary_reader >> client_localization_visualization.delay;
   convertMapDatagram2Message(binary_reader, client_localization_visualization.timestamp, scan);
 
+  // Get sensor offsets and intensities
+  readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -257,6 +261,11 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   {
     binary_reader >> client_map_visualization.path_types[i];
   }
+
+  // Get sensor offsets and intensities
+  readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -305,6 +314,11 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   {
     binary_reader >> client_recording_visualization.path_types[i];
   }
+
+  // Get sensor offsets and intensities
+  readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -456,4 +470,31 @@ Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::Pos
   obj.set("y", pose.y);
   obj.set("a", pose.theta);
   return obj;
+}
+
+
+void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader& binary_reader)
+{
+  bool has_intensities;
+  float min_intensity, max_intensity;
+  uint32_t intensities_length;
+  binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
+
+  std::vector<float> intensities(intensities_length);
+  for (unsigned int i = 0; i < intensities_length; i++)
+  {
+    binary_reader >> intensities[i];
+  }
+}
+
+void RosMsgsDatagramConverter::readSensorOffsets(Poco::BinaryReader& binary_reader)
+{
+  uint32_t sensor_offsets_length;
+  binary_reader >> sensor_offsets_length;
+
+  std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
+  for (unsigned int i = 0; i < sensor_offsets_length; i++)
+  {
+    binary_reader >> sensor_offsets[i];
+  }
 }
