@@ -51,8 +51,8 @@ limitations under the License.-->
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
     <rosparam ns="localization_client_config" subst_value="true">
-      ClientSensor.laserType: simple
-      ClientSensor.laserAddress: $(arg bridge_ip):$(arg laser_datagram_port)
+      ClientSensor.laser.type: simple
+      ClientSensor.laser.address: $(arg bridge_ip):$(arg laser_datagram_port)
       ClientLocalization.autostart: false
       ClientSensor.enableOdometry: $(arg enable_odometry)
       ClientSensor.odometryEncryption: false

@@ -26,13 +26,13 @@
 
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 const static std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
-    { "AboutModules", { 4, 0 } },
-    { "Session", { 3, 0 } },
+    { "AboutModules", { 5, 0 } },
+    { "Session", { 3, 1 } },
     { "Diagnostic", { 4, 0 } },
     { "Licensing", { 6, 0 } },
-    { "Config", { 4, 0 } },
+    { "Config", { 5, 0 } },
     { "AboutBuild", { 3, 0 } },
-    { "Certificates", { 3, 0 } },
+    { "Certificate", { 3, 0 } },
     { "System", { 3, 1 } },
     { "ClientApplication", { 1, 0 } },
     { "ClientControl", { 3, 1 } },
@@ -41,8 +41,8 @@ const static std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
     { "ClientLocalization", { 5, 0 } },
     { "ClientManualAlign", { 4, 1 } },
     { "ClientGlobalAlign", { 4, 0 } },
-    { "ClientLaserMask", { 4, 0 } },
-    { "ClientSensor", { 4, 0 } },
+    { "ClientLaserMask", { 5, 0 } },
+    { "ClientSensor", { 5, 0 } },
     { "ClientUser", { 4, 0 } },
     { "ClientExpandMap", { 1, 0 } },
 });
@@ -361,15 +361,15 @@ void LocatorBridgeNode::syncConfig()
     ROS_INFO_STREAM("- " << c.first << ": " << c.second.toString());
   }
 
-  if (loc_client_config["ClientSensor.laserType"].toString() == "simple")
+  if (loc_client_config["ClientSensor.laser.type"].toString() == "simple")
   {
-    ROS_INFO_STREAM("ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString()
+    ROS_INFO_STREAM("ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString()
                                                 << ". Will provide laser data.");
     provide_laser_data_ = true;
   }
   else
   {
-    ROS_INFO_STREAM("ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString()
+    ROS_INFO_STREAM("ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString()
                                                 << ". Laser data will not be provided.");
     provide_laser_data_ = false;
   }
