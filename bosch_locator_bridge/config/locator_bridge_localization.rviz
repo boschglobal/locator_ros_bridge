@@ -88,6 +88,7 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Transient Local
+        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /bridge_node/client_localization_map
@@ -104,7 +105,7 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz_default_plugins/PointCloud2
       Color: 239; 41; 41
-      Color Transformer: FlatColor
+      Color Transformer: RGB8
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -112,7 +113,7 @@ Visualization Manager:
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: scan
+      Name: scans
       Position Transformer: XYZ
       Selectable: true
       Size (Pixels): 3
@@ -121,6 +122,7 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Volatile
+        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /bridge_node/client_localization_visualization/scan
@@ -159,6 +161,12 @@ Visualization Manager:
         laser_frame:
           Value: true
         laser_link:
+          Value: true
+        laser_rear_base_link:
+          Value: true
+        laser_rear_frame:
+          Value: true
+        laser_rear_link:
           Value: true
         lift_link:
           Value: true
@@ -217,6 +225,7 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Volatile
+        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /bridge_node/client_localization_pose/pose
@@ -236,6 +245,9 @@ Visualization Manager:
     - Class: rviz_default_plugins/Measure
       Line color: 128; 128; 0
     - Class: rviz_default_plugins/SetInitialPose
+      Covariance x: 0.25
+      Covariance y: 0.25
+      Covariance yaw: 0.06853891909122467
       Topic:
         Depth: 5
         Durability Policy: Volatile
