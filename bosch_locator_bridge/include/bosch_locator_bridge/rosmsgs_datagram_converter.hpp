@@ -191,6 +191,8 @@ private:
   static size_t convertMapDatagram2Message(
     Poco::BinaryReader & binary_reader, const rclcpp::Time & stamp,
     sensor_msgs::msg::PointCloud2 & out_pointcloud);
+  static void readIntensities(Poco::BinaryReader & binary_reader);
+  static void readSensorOffsets(Poco::BinaryReader & binary_reader);
 
   /// clamp scan data to specified range
   static float clamp_range(float r, float min, float max)
