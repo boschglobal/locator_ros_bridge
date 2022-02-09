@@ -40,13 +40,13 @@ using std::placeholders::_2;
 
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
-  {"AboutModules", {4, 0}},
-  {"Session", {3, 0}},
+  {"AboutModules", {5, 0}},
+  {"Session", {3, 1}},
   {"Diagnostic", {4, 0}},
   {"Licensing", {6, 0}},
-  {"Config", {4, 0}},
+  {"Config", {5, 0}},
   {"AboutBuild", {3, 0}},
-  {"Certificates", {3, 0}},
+  {"Certificate", {3, 0}},
   {"System", {3, 1}},
   {"ClientApplication", {1, 0}},
   {"ClientControl", {3, 1}},
@@ -55,8 +55,8 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
   {"ClientLocalization", {5, 0}},
   {"ClientManualAlign", {4, 1}},
   {"ClientGlobalAlign", {4, 0}},
-  {"ClientLaserMask", {4, 0}},
-  {"ClientSensor", {4, 0}},
+  {"ClientLaserMask", {5, 0}},
+  {"ClientSensor", {5, 0}},
   {"ClientUser", {4, 0}},
   {"ClientExpandMap", {1, 0}},
 });
@@ -70,6 +70,12 @@ LocatorBridgeNode::~LocatorBridgeNode()
 {
   laser_sending_interface_->stop();
   laser_sending_interface_thread_.join();
+
+  if (laser2_sending_interface_) {
+    laser2_sending_interface_->stop();
+    laser2_sending_interface_thread_.join();
+  }
+
   if (odom_sending_interface_) {
     odom_sending_interface_->stop();
     odom_sending_interface_thread_.join();
@@ -189,6 +195,32 @@ void LocatorBridgeNode::init()
       std::bind(&LocatorBridgeNode::laser_callback, this, _1));
   }
 
+  // Create interface to send binary laser2 data if requested
+  if (provide_laser2_data_) {
+    int laser2_datagram_port;
+    declare_parameter("laser2_datagram_port", laser2_datagram_port);
+    get_parameter("laser2_datagram_port", laser2_datagram_port);
+
+    laser2_sending_interface_.reset(new SendingInterface(laser2_datagram_port, shared_from_this()));
+    laser2_sending_interface_thread_.start(*laser2_sending_interface_);
+
+    // Create subscriber to laser2 data
+
+    std::string scan2_topic = "/scan2";
+    declare_parameter("scan2_topic", scan2_topic);
+    get_parameter("scan2_topic", scan2_topic);
+
+    rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
+    auto qos = rclcpp::QoS(
+      rclcpp::QoSInitialization(
+        qos_profile.history,
+        qos_profile.depth), qos_profile);
+    laser2_sub_ =
+      create_subscription<sensor_msgs::msg::LaserScan>(
+      scan2_topic, qos,
+      std::bind(&LocatorBridgeNode::laser2_callback, this, _1));
+  }
+
   // Create interface to send binary odometry data if requested
   if (provide_odometry_data_) {
     int odom_datagram_port;
@@ -253,11 +285,38 @@ bool LocatorBridgeNode::check_module_versions(
 
 void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
 {
+  // If scan_time is not set, use timestamp difference to set it.
+  if (!msg->scan_time) {
+    rclcpp::Time laser_timestamp = msg->header.stamp;
+    if (prev_laser_timestamp_.seconds() != 0.0) {
+      msg->scan_time = (laser_timestamp - prev_laser_timestamp_).seconds();
+    }
+    prev_laser_timestamp_ = laser_timestamp;
+  }
+
   Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(
     msg,
     ++scan_num_,
     shared_from_this());
   laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+}
+
+void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
+{
+  // If scan_time is not set, use timestamp difference to set it.
+  if (!msg->scan_time) {
+    rclcpp::Time laser_timestamp = msg->header.stamp;
+    if (prev_laser2_timestamp_.seconds() != 0.0) {
+      msg->scan_time = (laser_timestamp - prev_laser2_timestamp_).seconds();
+    }
+    prev_laser2_timestamp_ = laser_timestamp;
+  }
+
+  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(
+    msg,
+    ++scan2_num_,
+    shared_from_this());
+  laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
 }
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
@@ -423,14 +482,83 @@ void LocatorBridgeNode::syncConfig()
   // overwrite current locator config with ros params
 
   std::string laser_type;
-  declare_parameter("ClientSensor.laserType", laser_type);
-  get_parameter("ClientSensor.laserType", laser_type);
-  loc_client_config["ClientSensor.laserType"] = laser_type;
+  declare_parameter("ClientSensor.laser.type", laser_type);
+  get_parameter("ClientSensor.laser.type", laser_type);
+  loc_client_config["ClientSensor.laser.type"] = laser_type;
 
   std::string laser_address;
-  declare_parameter("ClientSensor.laserAddress", laser_address);
-  get_parameter("ClientSensor.laserAddress", laser_address);
-  loc_client_config["ClientSensor.laserAddress"] = laser_address;
+  declare_parameter("ClientSensor.laser.address", laser_address);
+  get_parameter("ClientSensor.laser.address", laser_address);
+  loc_client_config["ClientSensor.laser.address"] = laser_address;
+
+  bool laser_mirror_laser_scans = false;
+  declare_parameter("ClientSensor.laser.mirrorLaserScans", laser_mirror_laser_scans);
+  get_parameter("ClientSensor.laser.mirrorLaserScans", laser_mirror_laser_scans);
+  loc_client_config["ClientSensor.laser.mirrorLaserScans"] = laser_mirror_laser_scans;
+
+  double laser_vehicle_transform_laser_x = 0.0;
+  declare_parameter("ClientSensor.laser.vehicleTransformLaser.x", laser_vehicle_transform_laser_x);
+  get_parameter("ClientSensor.laser.vehicleTransformLaser.x", laser_vehicle_transform_laser_x);
+  loc_client_config["ClientSensor.laser.vehicleTransformLaser.x"] = laser_vehicle_transform_laser_x;
+
+  double laser_vehicle_transform_laser_y = 0.0;
+  declare_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
+  get_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
+  loc_client_config["ClientSensor.laser.vehicleTransformLaser.y"] = laser_vehicle_transform_laser_y;
+
+  double laser_vehicle_transform_laser_yaw = 0.0;
+  declare_parameter(
+    "ClientSensor.laser.vehicleTransformLaser.yaw",
+    laser_vehicle_transform_laser_yaw);
+  get_parameter("ClientSensor.laser.vehicleTransformLaser.yaw", laser_vehicle_transform_laser_yaw);
+  loc_client_config["ClientSensor.laser.vehicleTransformLaser.yaw"] =
+    laser_vehicle_transform_laser_yaw;
+
+  bool enable_laser2 = false;
+  declare_parameter("ClientSensor.enableLaser2", enable_laser2);
+  get_parameter("ClientSensor.enableLaser2", enable_laser2);
+  loc_client_config["ClientSensor.enableLaser2"] = enable_laser2;
+
+  std::string laser2_type;
+  declare_parameter("ClientSensor.laser2.type", laser2_type);
+  get_parameter("ClientSensor.laser2.type", laser2_type);
+  loc_client_config["ClientSensor.laser2.type"] = laser2_type;
+
+  std::string laser2_address;
+  declare_parameter("ClientSensor.laser2.address", laser2_address);
+  get_parameter("ClientSensor.laser2.address", laser2_address);
+  loc_client_config["ClientSensor.laser2.address"] = laser2_address;
+
+  bool laser2_mirror_laser_scans = false;
+  declare_parameter("ClientSensor.laser2.mirrorLaserScans", laser2_mirror_laser_scans);
+  get_parameter("ClientSensor.laser2.mirrorLaserScans", laser2_mirror_laser_scans);
+  loc_client_config["ClientSensor.laser2.mirrorLaserScans"] = laser2_mirror_laser_scans;
+
+  double laser2_vehicle_transform_laser_x = 0.0;
+  declare_parameter(
+    "ClientSensor.laser2.vehicleTransformLaser.x",
+    laser2_vehicle_transform_laser_x);
+  get_parameter("ClientSensor.laser2.vehicleTransformLaser.x", laser2_vehicle_transform_laser_x);
+  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.x"] =
+    laser2_vehicle_transform_laser_x;
+
+  double laser2_vehicle_transform_laser_y = 0.0;
+  declare_parameter(
+    "ClientSensor.laser2.vehicleTransformLaser.y",
+    laser2_vehicle_transform_laser_y);
+  get_parameter("ClientSensor.laser2.vehicleTransformLaser.y", laser2_vehicle_transform_laser_y);
+  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.y"] =
+    laser2_vehicle_transform_laser_y;
+
+  double laser2_vehicle_transform_laser_yaw = 0.0;
+  declare_parameter(
+    "ClientSensor.laser2.vehicleTransformLaser.yaw",
+    laser2_vehicle_transform_laser_yaw);
+  get_parameter(
+    "ClientSensor.laser2.vehicleTransformLaser.yaw",
+    laser2_vehicle_transform_laser_yaw);
+  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.yaw"] =
+    laser2_vehicle_transform_laser_yaw;
 
   bool autostart = false;
   declare_parameter("ClientLocalization.autostart", autostart);
@@ -457,18 +585,34 @@ void LocatorBridgeNode::syncConfig()
     RCLCPP_INFO_STREAM(get_logger(), "- " << c.first << ": " << c.second.toString());
   }
 
-  if (loc_client_config["ClientSensor.laserType"].toString() == "simple") {
+  if (loc_client_config["ClientSensor.laser.type"].toString() == "simple") {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
+      "ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString() <<
         ". Will provide laser data.");
     provide_laser_data_ = true;
   } else {
     RCLCPP_INFO_STREAM(
       get_logger(),
-      "ClientSensor.laserType:" << loc_client_config["ClientSensor.laserType"].toString() <<
+      "ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString() <<
         ". Laser data will not be provided.");
     provide_laser_data_ = false;
+  }
+
+  if (loc_client_config["ClientSensor.enableLaser2"].toString() == "true" &&
+    loc_client_config["ClientSensor.laser2.type"].toString() == "simple")
+  {
+    RCLCPP_INFO_STREAM(
+      get_logger(),
+      "ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString() <<
+        ". Will provide laser2 data.");
+    provide_laser2_data_ = true;
+  } else {
+    RCLCPP_INFO_STREAM(
+      get_logger(),
+      "ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString() <<
+        ". Laser2 data will not be provided.");
+    provide_laser2_data_ = false;
   }
 
   if (loc_client_config["ClientSensor.enableOdometry"].toString() == "true") {

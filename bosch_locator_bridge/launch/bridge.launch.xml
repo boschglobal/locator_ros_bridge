@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.-->
 
 <launch>
-  <!-- This launch file plays a bag file on start and is used for debugging. -->
-
   <!-- ip of the computer on which the bridge is running -->
   <arg name="bridge_ip" default="172.17.0.1"/>
   <!-- ip of the computer, on which the locator software is running -->
@@ -30,34 +28,57 @@ limitations under the License.-->
   <!-- whether for forward odometry data from ROS to locator -->
   <arg name="enable_odometry" default="false"/>
 
-  <!-- bag file to play -->
-  <arg name="bag" default=""/>
-
   <arg name="laser_datagram_port" default="4242"/>
+  <arg name="laser_mirror_scans" default="false"/>
+  <arg name="laser_x" default="0.0"/>
+  <arg name="laser_y" default="0.0"/>
+  <arg name="laser_yaw" default="0.0"/>
+
+  <arg name="laser2_enable" default="false"/>
+  <arg name="laser2_datagram_port" default="2113"/>
+  <arg name="laser2_mirror_scans" default="false"/>
+  <arg name="laser2_x" default="0.0"/>
+  <arg name="laser2_y" default="0.0"/>
+  <arg name="laser2_yaw" default="0.0"/>
+
   <arg name="odom_datagram_port" default="1111"/>
 
   <arg name="scan_topic" default="/scan"/>
+  <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
 
   <node pkg="bosch_locator_bridge" exec="node" name="bridge_node" output="screen">
     <param name="locator_host" value="$(var locator_ip)" />
     <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
+    <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
     <param name="odom_datagram_port" value="$(var odom_datagram_port)"/>
     <param name="user_name" value="$(var locator_user)"/>
     <param name="password" value="$(var locator_password)"/>
     <param name="scan_topic" value="$(var scan_topic)"/>
+    <param name="scan2_topic" value="$(var scan2_topic)"/>
     <param name="odom_topic" value="$(var odom_topic)"/>
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
-    <param name="ClientSensor.laserType" value="simple"/>
-    <param name="ClientSensor.laserAddress" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+    <param name="ClientSensor.laser.type" value="simple"/>
+    <param name="ClientSensor.laser.address" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+    <param name="ClientSensor.laser.mirrorLaserScans" value="$(var laser_mirror_scans)"/>
+    <param name="ClientSensor.laser.vehicleTransformLaser.x" value="$(var laser_x)"/>
+    <param name="ClientSensor.laser.vehicleTransformLaser.y" value="$(var laser_y)"/>
+    <param name="ClientSensor.laser.vehicleTransformLaser.yaw" value="$(var laser_yaw)"/>
+
+    <param name="ClientSensor.enableLaser2" value="$(var laser2_enable)"/>
+    <param name="ClientSensor.laser2.type" value="simple"/>
+    <param name="ClientSensor.laser2.address" value="$(var bridge_ip):$(var laser2_datagram_port)"/>
+    <param name="ClientSensor.laser2.mirrorLaserScans" value="$(var laser2_mirror_scans)"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="$(var laser2_x)"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="$(var laser2_y)"/>
+    <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="$(var laser2_yaw)"/>
+
     <param name="ClientLocalization.autostart" value="false"/>
     <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
     <param name="ClientSensor.odometryEncryption" value="false"/>
     <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
   </node>
-
-  <executable cmd="ros2 bag play $(var bag)" output="screen"/>
 
 </launch>

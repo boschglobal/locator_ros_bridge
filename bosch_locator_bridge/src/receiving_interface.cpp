@@ -266,11 +266,6 @@ ClientLocalizationMapInterface::ClientLocalizationMapInterface(
   // Setup publisher (use QoS settings to emulate a latched topic (ROS 1))
   client_localization_map_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
     "~/client_localization_map", rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
-  client_localization_gridmap_pub_ =
-    node->create_publisher<nav_msgs::msg::OccupancyGrid>(
-    "/map", rclcpp::QoS(
-      rclcpp::KeepLast(
-        1)).transient_local().reliable());
 }
 
 size_t ClientLocalizationMapInterface::tryToParseData(
