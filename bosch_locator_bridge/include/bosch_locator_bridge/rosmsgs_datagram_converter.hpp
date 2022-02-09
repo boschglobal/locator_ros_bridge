@@ -27,6 +27,8 @@
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/pose2_d.hpp"
 #include "nav_msgs/msg/odometry.hpp"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -191,8 +193,14 @@ private:
   static size_t convertMapDatagram2Message(
     Poco::BinaryReader & binary_reader, const rclcpp::Time & stamp,
     sensor_msgs::msg::PointCloud2 & out_pointcloud);
+  static size_t convertMapDatagram2PointCloud(
+    Poco::BinaryReader & binary_reader,
+    pcl::PointCloud<pcl::PointXYZRGB> & out_pointcloud);
+  static void colorizePointCloud(
+    pcl::PointCloud<pcl::PointXYZRGB> & point_cloud,
+    const std::vector<uint64_t> & sensor_offsets);
   static void readIntensities(Poco::BinaryReader & binary_reader);
-  static void readSensorOffsets(Poco::BinaryReader & binary_reader);
+  static std::vector<uint64_t> readSensorOffsets(Poco::BinaryReader & binary_reader);
 
   /// clamp scan data to specified range
   static float clamp_range(float r, float min, float max)
