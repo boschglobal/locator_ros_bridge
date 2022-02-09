@@ -9,7 +9,7 @@ It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT
 It also allows to control the ROKIT Locator via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Foxy and Ubuntu 20.04.
-The bridge is compatible with ROKIT Locator version 1.3.
+The bridge is compatible with ROKIT Locator version 1.4.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
 ## Quick Start
@@ -27,7 +27,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc"
 
 Start the bridge node with
 
-    ros2 launch bosch_locator_bridge bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD> scan_topic:=<SCAN_TOPIC> enable_odometry:=<ENABLE_ODOM> odom_topic:=<ODOM_TOPIC>
+    ros2 launch bosch_locator_bridge bridge.launch.xml bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD> scan_topic:=<SCAN_TOPIC> enable_odometry:=<ENABLE_ODOM> odom_topic:=<ODOM_TOPIC>
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
@@ -36,6 +36,8 @@ where
 - `<SCAN_TOPIC>` is the topic name of the laser scans
 - `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the ROKIT Locator
 - `<ODOM_TOPIC>` is the topic name of the odometry
+
+For additional parameters please refer to the launch file [bridge.launch.xml](./launch/bridge.launch.xml).
 
 #### Start Visual Recording
 
@@ -87,13 +89,17 @@ This node provides an interface to the localization client.
 
 #### ROKIT Locator Configuration
 
-To correctly forward the laser scan data, it is important that `ClientSensor.laserType` is set to `simple`, and that `ClientSensor.laserAddress` is set to the IP address (with port) of the computer the bridge is running.
+To correctly forward the laser scan data, it is important that `ClientSensor.laser.type` is set to `simple`, and that `ClientSensor.laser.address` is set to the IP address (with port) of the computer the bridge is running.
 
 #### Subscribed Topics
 
 * **`/scan`** ([sensor_msgs/msg/LaserScan])
 
-	The laserscan topic to translate and forward to the ROKIT Locator.
+	The laserscan topic of the first laser to translate and forward to the ROKIT Locator.
+
+* **`/scan2`** ([sensor_msgs/msg/LaserScan])
+
+	The laserscan topic of the second laser to translate and forward to the ROKIT Locator.
 
 * **`/odom`** ([nav_msgs/msg/Odometry])
 
@@ -242,7 +248,7 @@ This node provides an interface to the map server.
 
 Start the server bridge node with
 
-    ros2 launch bosch_locator_bridge server_bridge.launch bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD>
+    ros2 launch bosch_locator_bridge server_bridge.launch.xml bridge_ip:=<HOST_IP> locator_ip:=<LOCATOR_IP> locator_user:=<USER> locator_password:=<PASSWORD>
 
 where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
@@ -280,7 +286,11 @@ To avoid this, make sure `LaserScan` messages are sent to the bridge before swit
 
 ## Support of earlier versions of ROKIT Locator
 
-If you have version 1.2 of ROKIT Locator, checkout the corresponding tag:
+If you have version 1.3 of ROKIT Locator, checkout the corresponding tag:
+
+    git checkout 2.0.4 -b foxy-v1.3
+
+And if you have version 1.2:
 
     git checkout 2.0.2 -b foxy-v1.2
 

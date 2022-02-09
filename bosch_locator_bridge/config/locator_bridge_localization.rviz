@@ -104,7 +104,7 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz_default_plugins/PointCloud2
       Color: 239; 41; 41
-      Color Transformer: FlatColor
+      Color Transformer: RGB8
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -112,7 +112,7 @@ Visualization Manager:
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: scan
+      Name: scans
       Position Transformer: XYZ
       Selectable: true
       Size (Pixels): 3
@@ -159,6 +159,12 @@ Visualization Manager:
         laser_frame:
           Value: true
         laser_link:
+          Value: true
+        laser_rear_base_link:
+          Value: true
+        laser_rear_frame:
+          Value: true
+        laser_rear_link:
           Value: true
         lift_link:
           Value: true
