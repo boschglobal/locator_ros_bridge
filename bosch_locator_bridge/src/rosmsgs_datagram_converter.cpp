@@ -403,12 +403,14 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(
   // uniqueId
   writer << static_cast<uint64_t>(0);
   // duration_beam
-  double duration_beam = static_cast<double>(fabs(msg->time_increment));
+  double duration_beam =
+    static_cast<double>(msg->time_increment != 0.0f ? fabs(msg->time_increment) :
+    (msg->angle_max - msg->angle_min) * msg->scan_time / (2.0 * M_PI * (msg->ranges.size() - 1)));
   writer << duration_beam;
   // duration_scan
-  writer << duration_beam * static_cast<double>(msg->ranges.size());
+  writer << duration_beam * static_cast<double>(msg->ranges.size() - 1);
   // duration_rotate (has to be > 0 for motion correction of scans)
-  writer << static_cast<double>(msg->scan_time >= 1e-5f ? msg->scan_time : 1e-5f);
+  writer << static_cast<double>(msg->scan_time);
   // numBeams
   writer << static_cast<uint32_t>(msg->ranges.size());
   // angleStart
@@ -507,7 +509,7 @@ Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::msg
   return obj;
 }
 
-void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader &binary_reader)
+void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader & binary_reader)
 {
   bool has_intensities;
   float min_intensity, max_intensity;
@@ -520,7 +522,7 @@ void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader &binary_reader
   }
 }
 
-void RosMsgsDatagramConverter::readSensorOffsets(Poco::BinaryReader &binary_reader)
+void RosMsgsDatagramConverter::readSensorOffsets(Poco::BinaryReader & binary_reader)
 {
   uint32_t sensor_offsets_length;
   binary_reader >> sensor_offsets_length;

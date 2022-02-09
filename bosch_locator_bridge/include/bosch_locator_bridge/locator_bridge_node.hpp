@@ -67,6 +67,7 @@ private:
     int32_t>> & module_versions);
 
   void laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+  void laser2_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
 
   bool clientConfigGetEntryCb(
@@ -124,12 +125,16 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_sub_;
   std::unique_ptr<SendingInterface> laser_sending_interface_;
   Poco::Thread laser_sending_interface_thread_;
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser2_sub_;
+  std::unique_ptr<SendingInterface> laser2_sending_interface_;
+  Poco::Thread laser2_sending_interface_thread_;
 
   rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr set_seed_sub_;
 
   // Flag to indicate if the bridge should send odometry data to the locator.
   // Value retrieved by the locator settings.
   bool provide_laser_data_;
+  bool provide_laser2_data_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
   std::unique_ptr<SendingInterface> odom_sending_interface_;
   Poco::Thread odom_sending_interface_thread_;
@@ -158,10 +163,14 @@ private:
   Poco::Thread client_global_align_visualization_interface_thread_;
 
   size_t scan_num_ {0};
+  size_t scan2_num_ {0};
   size_t odom_num_ {0};
 
   std::string last_recording_name_;
   std::string last_map_name_;
+
+  rclcpp::Time prev_laser_timestamp_;
+  rclcpp::Time prev_laser2_timestamp_;
 };
 
 #endif  // BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
