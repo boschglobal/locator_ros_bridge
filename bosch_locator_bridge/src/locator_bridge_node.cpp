@@ -55,6 +55,13 @@ LocatorBridgeNode::~LocatorBridgeNode()
 {
   laser_sending_interface_->stop();
   laser_sending_interface_thread_.join();
+
+  if (laser2_sending_interface_)
+  {
+    laser2_sending_interface_->stop();
+    laser2_sending_interface_thread_.join();
+  }
+
   if (odom_sending_interface_)
   {
     odom_sending_interface_->stop();
@@ -123,6 +130,20 @@ void LocatorBridgeNode::init()
     laser_sub_ = nh_.subscribe(scan_topic, 1, &LocatorBridgeNode::laser_callback, this);
   }
 
+  // Create interface to send binary laser2 data if requested
+  if (provide_laser2_data_)
+  {
+    int laser2_datagram_port;
+    nh_.getParam("laser2_datagram_port", laser2_datagram_port);
+
+    laser2_sending_interface_.reset(new SendingInterface(laser2_datagram_port));
+    laser2_sending_interface_thread_.start(*laser2_sending_interface_);
+    // Create subscriber to laser2 data
+    std::string scan2_topic = "";
+    nh_.getParam("scan2_topic", scan2_topic);
+    laser2_sub_ = nh_.subscribe(scan2_topic, 1, &LocatorBridgeNode::laser2_callback, this);
+  }
+
   // Create interface to send binary odometry data if requested
   if (provide_odometry_data_)
   {
@@ -176,8 +197,36 @@ bool LocatorBridgeNode::check_module_versions(
 
 void LocatorBridgeNode::laser_callback(const sensor_msgs::LaserScan& msg)
 {
-  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_);
+  // If scan_time is not set, use timestamp difference to set it.
+  float scan_time = 0.0f;
+  if (!msg.scan_time)
+  {
+    ros::Time laser_timestamp = msg.header.stamp;
+    if (prev_laser_timestamp_.toSec() != 0.0) {
+      scan_time = (laser_timestamp - prev_laser_timestamp_).toSec();
+    }
+    prev_laser_timestamp_ = laser_timestamp;
+  }
+
+  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_, scan_time);
   laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+}
+
+void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
+{
+  // If scan_time is not set, use timestamp difference to set it.
+  float scan_time = 0.0f;
+  if (!msg.scan_time)
+  {
+    ros::Time laser_timestamp = msg.header.stamp;
+    if (prev_laser2_timestamp_.toSec() != 0.0) {
+      scan_time = (laser_timestamp - prev_laser2_timestamp_).toSec();
+    }
+    prev_laser2_timestamp_ = laser_timestamp;
+  }
+
+  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan2_num_, scan_time);
+  laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
 }
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
@@ -372,6 +421,19 @@ void LocatorBridgeNode::syncConfig()
     ROS_INFO_STREAM("ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString()
                                                 << ". Laser data will not be provided.");
     provide_laser_data_ = false;
+  }
+
+  if (loc_client_config["ClientSensor.laser2.type"].toString() == "simple")
+  {
+    ROS_INFO_STREAM("ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString()
+                                                << ". Will provide laser2 data.");
+    provide_laser2_data_ = true;
+  }
+  else
+  {
+    ROS_INFO_STREAM("ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString()
+                                                << ". Laser2 data will not be provided.");
+    provide_laser2_data_ = false;
   }
 
   if (loc_client_config["ClientSensor.enableOdometry"].toString() == "true")

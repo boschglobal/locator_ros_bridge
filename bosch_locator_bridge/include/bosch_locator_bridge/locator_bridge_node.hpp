@@ -60,6 +60,7 @@ private:
   bool check_module_versions(const std::unordered_map<std::string, std::pair<int32_t, int32_t>>& module_versions);
 
   void laser_callback(const sensor_msgs::LaserScan& msg);
+  void laser2_callback(const sensor_msgs::LaserScan& msg);
   void odom_callback(const nav_msgs::Odometry& msg);
 
   bool clientConfigGetEntryCb(bosch_locator_bridge::ClientConfigGetEntry::Request& req,
@@ -102,11 +103,15 @@ private:
   ros::Subscriber laser_sub_;
   std::unique_ptr<SendingInterface> laser_sending_interface_;
   Poco::Thread laser_sending_interface_thread_;
+  ros::Subscriber laser2_sub_;
+  std::unique_ptr<SendingInterface> laser2_sending_interface_;
+  Poco::Thread laser2_sending_interface_thread_;
 
   ros::Subscriber set_seed_sub_;
 
   // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
   bool provide_laser_data_;
+  bool provide_laser2_data_;
   ros::Subscriber odom_sub_;
   std::unique_ptr<SendingInterface> odom_sending_interface_;
   Poco::Thread odom_sending_interface_thread_;
@@ -132,8 +137,12 @@ private:
   Poco::Thread client_global_align_visualization_interface_thread_;
 
   size_t scan_num_{ 0 };
+  size_t scan2_num_{ 0 };
   size_t odom_num_{ 0 };
 
   std::string last_recording_name_;
   std::string last_map_name_;
+
+  ros::Time prev_laser_timestamp_;
+  ros::Time prev_laser2_timestamp_;
 };
