@@ -22,8 +22,6 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2/convert.h>
 
-#include <pcl_conversions/pcl_conversions.h>
-
 #include <Poco/BinaryWriter.h>
 #include <Poco/MemoryStream.h>
 
