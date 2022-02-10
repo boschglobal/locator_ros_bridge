@@ -16,15 +16,16 @@
 #pragma once
 
 #include <iostream>
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/PoseArray.h>
+
 #include <geometry_msgs/Pose2D.h>
-
-#include <sensor_msgs/LaserScan.h>
+#include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
-
+#include <pcl_conversions/pcl_conversions.h>
+#include <ros/ros.h>
+#include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/PointCloud2.h>
+
 #include "bosch_locator_bridge/ClientControlMode.h"
 #include "bosch_locator_bridge/ClientRecordingVisualization.h"
 #include "bosch_locator_bridge/ClientMapVisualization.h"
@@ -154,16 +155,17 @@ public:
    * @brief convertLaserScan2DataGram Converts a sensor_msgs::LaserScan message from ros and converts
    *                                  it to the datagram structure required for the binary interface of the locator.
    * @param msg The laser scan message
-   * @oaram scan_num The current scan number
+   * @param scan_num The current scan number
+   * @param scan_time Time between scans [seconds], if not specified in scan message
    * @return The data shaped into the datagram structure required by the locator
    */
-  static Poco::Buffer<char> convertLaserScan2DataGram(const sensor_msgs::LaserScan& msg, size_t scan_num);
+  static Poco::Buffer<char> convertLaserScan2DataGram(const sensor_msgs::LaserScan& msg, size_t scan_num, float scan_time = 0.0f);
 
   /**
    * @brief convertOdometry2DataGram Converts a nav_msgs::Odometry message from ros and converts
    *                                  it to the datagram structure required for the binary interface of the locator.
    * @param msg The odometry message
-   * @oaram odom_num The current odomerty observation number
+   * @param odom_num The current odomerty observation number
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num);
@@ -173,6 +175,12 @@ public:
 private:
   static size_t convertMapDatagram2Message(Poco::BinaryReader& binary_reader, const ros::Time& stamp,
                                            sensor_msgs::PointCloud2& out_pointcloud);
+  static size_t convertMapDatagram2PointCloud(Poco::BinaryReader& binary_reader,
+                                              pcl::PointCloud<pcl::PointXYZRGB>& out_pointcloud);
+  static void colorizePointCloud(pcl::PointCloud<pcl::PointXYZRGB>& point_cloud,
+                                 const std::vector<uint64_t>& sensor_offsets);
+  static void readIntensities(Poco::BinaryReader& binary_reader);
+  static std::vector<uint64_t> readSensorOffsets(Poco::BinaryReader& binary_reader);
 
   /// clamp scan data to specified range
   static float clamp_range(float r, float min, float max)

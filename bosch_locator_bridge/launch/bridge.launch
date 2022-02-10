@@ -29,25 +29,53 @@ limitations under the License.-->
   <arg name="enable_odometry" default="false"/>
 
   <arg name="laser_datagram_port" default="4242"/>
+  <arg name="laser_mirror_scans" default="false"/>
+  <arg name="laser_x" default="0.0"/>
+  <arg name="laser_y" default="0.0"/>
+  <arg name="laser_yaw" default="0.0"/>
+
+  <arg name="laser2_enable" default="false"/>
+  <arg name="laser2_datagram_port" default="2113"/>
+  <arg name="laser2_mirror_scans" default="false"/>
+  <arg name="laser2_x" default="0.0"/>
+  <arg name="laser2_y" default="0.0"/>
+  <arg name="laser2_yaw" default="0.0"/>
+
   <arg name="odom_datagram_port" default="1111"/>
 
   <arg name="scan_topic" default="/scan"/>
+  <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
 
   <node pkg="bosch_locator_bridge" type="node" name="bridge_node" output="screen" required="true">
     <param name="locator_host" value="$(arg locator_ip)" />
     <param name="laser_datagram_port" value="$(arg laser_datagram_port)"/>
+    <param name="laser2_datagram_port" value="$(arg laser2_datagram_port)"/>
     <param name="odom_datagram_port" value="$(arg odom_datagram_port)"/>
     <param name="user_name" value="$(arg locator_user)"/>
     <param name="password" value="$(arg locator_password)"/>
     <param name="scan_topic" value="$(arg scan_topic)"/>
+    <param name="scan2_topic" value="$(arg scan2_topic)"/>
     <param name="odom_topic" value="$(arg odom_topic)"/>
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
     <rosparam ns="localization_client_config" subst_value="true">
-      ClientSensor.laserType: simple
-      ClientSensor.laserAddress: $(arg bridge_ip):$(arg laser_datagram_port)
+      ClientSensor.laser.type: simple
+      ClientSensor.laser.address: $(arg bridge_ip):$(arg laser_datagram_port)
+      ClientSensor.laser.mirrorLaserScans: $(arg laser_mirror_scans)
+      ClientSensor.laser.vehicleTransformLaser.x: $(arg laser_x)
+      ClientSensor.laser.vehicleTransformLaser.y: $(arg laser_y)
+      ClientSensor.laser.vehicleTransformLaser.yaw: $(arg laser_yaw)
+
+      ClientSensor.enableLaser2: $(arg laser2_enable)
+      ClientSensor.laser2.type: simple
+      ClientSensor.laser2.address: $(arg bridge_ip):$(arg laser2_datagram_port)
+      ClientSensor.laser2.mirrorLaserScans: $(arg laser2_mirror_scans)
+      ClientSensor.laser2.vehicleTransformLaser.x: $(arg laser2_x)
+      ClientSensor.laser2.vehicleTransformLaser.y: $(arg laser2_y)
+      ClientSensor.laser2.vehicleTransformLaser.yaw: $(arg laser2_yaw)
+
       ClientLocalization.autostart: false
       ClientSensor.enableOdometry: $(arg enable_odometry)
       ClientSensor.odometryEncryption: false

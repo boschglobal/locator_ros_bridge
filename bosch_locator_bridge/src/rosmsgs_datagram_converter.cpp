@@ -22,8 +22,6 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2/convert.h>
 
-#include <pcl_conversions/pcl_conversions.h>
-
 #include <Poco/BinaryWriter.h>
 #include <Poco/MemoryStream.h>
 
@@ -79,6 +77,25 @@ size_t RosMsgsDatagramConverter::convertMapDatagram2Message(Poco::BinaryReader& 
   pcl::toROSMsg(point_cloud, out_pointcloud);
   out_pointcloud.header.frame_id = MAP_FRAME_ID;
   out_pointcloud.header.stamp = stamp;
+
+  return bytes_parsed;
+}
+
+size_t RosMsgsDatagramConverter::convertMapDatagram2PointCloud(Poco::BinaryReader& binary_reader,
+                                                               pcl::PointCloud<pcl::PointXYZRGB>& out_pointcloud)
+{
+  // Convert datagram to point cloud
+  uint32_t map_length;
+  binary_reader >> map_length;
+  size_t bytes_parsed = 4;
+
+  for (unsigned int i = 0; i < map_length; i++)
+  {
+    pcl::PointXYZRGB pt(0.f, 0.f, 0.f);
+    binary_reader >> pt.x >> pt.y;
+    bytes_parsed += 8;
+    out_pointcloud.push_back(pt);
+  }
 
   return bytes_parsed;
 }
@@ -209,7 +226,20 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2
   convertPose2DDoubleDatagram2Message(binary_reader, pose.pose);
 
   binary_reader >> client_localization_visualization.delay;
-  convertMapDatagram2Message(binary_reader, client_localization_visualization.timestamp, scan);
+  pcl::PointCloud<pcl::PointXYZRGB> point_cloud;
+  convertMapDatagram2PointCloud(binary_reader, point_cloud);
+
+  // Get sensor offsets and read intensities
+  std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
+  // Use sensor offsets to colorize point cloud
+  colorizePointCloud(point_cloud, sensor_offsets);
+
+  // Create point cloud message
+  pcl::toROSMsg(point_cloud, scan);
+  scan.header.frame_id = MAP_FRAME_ID;
+  scan.header.stamp = client_localization_visualization.timestamp;
 
   return datagram.size() - binary_reader.available();
 }
@@ -233,7 +263,8 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
 
   binary_reader >> client_map_visualization.distanceToLastLC >> client_map_visualization.delay >>
       client_map_visualization.progress;
-  convertMapDatagram2Message(binary_reader, client_map_visualization.timestamp, scan);
+  pcl::PointCloud<pcl::PointXYZRGB> point_cloud;
+  convertMapDatagram2PointCloud(binary_reader, point_cloud);
 
   // Get path poses
   path_poses.header.stamp = client_map_visualization.timestamp;
@@ -257,6 +288,19 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   {
     binary_reader >> client_map_visualization.path_types[i];
   }
+
+  // Get sensor offsets and read intensities
+  std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
+  // Use sensor offsets to colorize point cloud
+  colorizePointCloud(point_cloud, sensor_offsets);
+
+  // Create point cloud message
+  pcl::toROSMsg(point_cloud, scan);
+  scan.header.frame_id = MAP_FRAME_ID;
+  scan.header.stamp = client_map_visualization.timestamp;
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -281,7 +325,8 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
 
   binary_reader >> client_recording_visualization.distanceToLastLC >> client_recording_visualization.delay >>
       client_recording_visualization.progress;
-  convertMapDatagram2Message(binary_reader, client_recording_visualization.timestamp, scan);
+  pcl::PointCloud<pcl::PointXYZRGB> point_cloud;
+  convertMapDatagram2PointCloud(binary_reader, point_cloud);
 
   // Get path poses
   path_poses.header.stamp = client_recording_visualization.timestamp;
@@ -305,6 +350,19 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   {
     binary_reader >> client_recording_visualization.path_types[i];
   }
+
+  // Get sensor offsets and read intensities
+  std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
+  readIntensities(binary_reader);
+
+  // Use sensor offsets to colorize point cloud
+  colorizePointCloud(point_cloud, sensor_offsets);
+
+  // Create point cloud message
+  pcl::toROSMsg(point_cloud, scan);
+  scan.header.frame_id = MAP_FRAME_ID;
+  scan.header.stamp = client_recording_visualization.timestamp;
+
   return datagram.size() - binary_reader.available();
 }
 
@@ -338,7 +396,7 @@ size_t RosMsgsDatagramConverter::convertPose2DSingleDatagram2Message(Poco::Binar
 }
 
 Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sensor_msgs::LaserScan& msg,
-                                                                       size_t scan_num)
+                                                                       size_t scan_num, float scan_time)
 {
   // convert the ROS message to a locator ClientSensorLaserDatagram
   const size_t resulting_msg_size = 2        // scanNum
@@ -361,12 +419,14 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   // uniqueId
   writer << static_cast<uint64_t>(0);
   // duration_beam
-  double duration_beam = static_cast<double>(fabs(msg.time_increment));
+  double duration_beam = static_cast<double>(msg.time_increment != 0.0f ?
+        fabs(msg.time_increment) :
+        (msg.angle_max - msg.angle_min) * (scan_time != 0.0f ? scan_time : msg.scan_time) / (2.0 * M_PI * (msg.ranges.size() - 1)));
   writer << duration_beam;
   // duration_scan
-  writer << duration_beam * static_cast<double>(msg.ranges.size());
+  writer << duration_beam * static_cast<double>(msg.ranges.size() - 1);
   // duration_rotate (has to be > 0 for motion correction of scans)
-  writer << static_cast<double>(msg.scan_time >= 1e-5f ? msg.scan_time : 1e-5f);
+  writer << static_cast<double>(scan_time != 0.0f ? scan_time : msg.scan_time);
   // numBeams
   writer << static_cast<uint32_t>(msg.ranges.size());
   // angleStart
@@ -456,4 +516,53 @@ Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::Pos
   obj.set("y", pose.y);
   obj.set("a", pose.theta);
   return obj;
+}
+
+void RosMsgsDatagramConverter::colorizePointCloud(pcl::PointCloud<pcl::PointXYZRGB>& point_cloud,
+                                                  const std::vector<uint64_t>& sensor_offsets)
+{
+  for (unsigned int i = sensor_offsets[0];
+    i < (sensor_offsets.size() == 2 ? sensor_offsets[1] : point_cloud.size()); i++)
+  {
+    point_cloud[i].r = 239;
+    point_cloud[i].g = 41;
+    point_cloud[i].b = 41;
+  }
+  if (sensor_offsets.size() == 2)
+  {
+    for (unsigned int i = sensor_offsets[1]; i < point_cloud.size(); i++)
+    {
+      point_cloud[i].r = 114;
+      point_cloud[i].g = 159;
+      point_cloud[i].b = 207;
+    }
+  }
+}
+
+void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader& binary_reader)
+{
+  bool has_intensities;
+  float min_intensity, max_intensity;
+  uint32_t intensities_length;
+  binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
+
+  std::vector<float> intensities(intensities_length);
+  for (unsigned int i = 0; i < intensities_length; i++)
+  {
+    binary_reader >> intensities[i];
+  }
+}
+
+std::vector<uint64_t> RosMsgsDatagramConverter::readSensorOffsets(Poco::BinaryReader& binary_reader)
+{
+  uint32_t sensor_offsets_length;
+  binary_reader >> sensor_offsets_length;
+
+  std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
+  for (unsigned int i = 0; i < sensor_offsets_length; i++)
+  {
+    binary_reader >> sensor_offsets[i];
+  }
+
+  return sensor_offsets;
 }
