@@ -423,7 +423,8 @@ void LocatorBridgeNode::syncConfig()
     provide_laser_data_ = false;
   }
 
-  if (loc_client_config["ClientSensor.laser2.type"].toString() == "simple")
+  if (loc_client_config["ClientSensor.enableLaser2"].toString() == "true" &&
+      loc_client_config["ClientSensor.laser2.type"].toString() == "simple")
   {
     ROS_INFO_STREAM("ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString()
                                                 << ". Will provide laser2 data.");
