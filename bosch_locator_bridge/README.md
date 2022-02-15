@@ -37,6 +37,8 @@ where
 - `<ENABLE_ODOM>` is a boolean that describes whether you want to forward odometry ROS messages to the ROKIT Locator
 - `<ODOM_TOPIC>` is the topic name of the odometry
 
+Since the Laser Localization Software is running in docker, the `<HOST_IP>` has to be set to docker0 ip address (172.17.0.1) instead of localhost ip address (127.0.0.1) when the user program providing the laser data runs on the same machine.
+
 For additional parameters please refer to the launch file [bridge.launch.xml](./launch/bridge.launch.xml).
 
 #### Start Visual Recording

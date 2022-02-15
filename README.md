@@ -27,6 +27,8 @@ You can install the `bosch_locator_bridge` package directly:
 
     sudo apt install ros-foxy-bosch-locator-bridge
 
+Note that the installed package my contain an older software version, which corresponds to the latest tag 2.0.x here: [tags]
+
 ### Building from Source
 
 #### Dependencies
