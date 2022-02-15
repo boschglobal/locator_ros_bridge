@@ -56,3 +56,4 @@ locator_ros_bridge is open-sourced under the Apache-2.0 license. See the [LICENS
 [ROS]: https://www.ros.org/
 [Poco]: https://pocoproject.org/
 [Rexroth ROKIT Locator]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
+[tags]: https://github.com/boschglobal/locator_ros_bridge/tags
