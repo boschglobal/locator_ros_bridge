@@ -27,7 +27,7 @@ You can install the `bosch_locator_bridge` package directly:
 
     sudo apt install ros-rolling-bosch-locator-bridge
 
-Note that the installed package my contain an older software version, which corresponds to the latest tag 2.1.x here: [tags]
+Note that the installed package may contain an older software version, which corresponds to the latest tag 2.1.x here: [tags]
 
 ### Building from Source
 
