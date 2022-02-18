@@ -65,7 +65,7 @@ ament_export_dependencies(rosidl_default_runtime)
 
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(PCL REQUIRED)
-include_directories(${PCL_INCLUDE_DIRS})
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}_node
   src/main.cpp
