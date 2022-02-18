@@ -2,6 +2,11 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove ``required`` attribute from launch files
+* Contributors: Stefan Laible
+
 2.0.5 (2022-02-15)
 ------------------
 * update to ROKIT Locator version 1.4
