@@ -25,7 +25,7 @@ limitations under the License.-->
   <arg name="locator_user" default="admin"/>
   <arg name="locator_password" default="admin"/>
 
-  <node pkg="bosch_locator_bridge" exec="server_node" name="server_bridge_node" output="screen" required="true">
+  <node pkg="bosch_locator_bridge" exec="server_node" name="server_bridge_node" output="screen">
     <param name="server_host" value="$(var locator_ip)" />
     <param name="user_name" value="$(var locator_user)"/>
     <param name="password" value="$(var locator_password)"/>  </node>

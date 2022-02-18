@@ -47,7 +47,7 @@ limitations under the License.-->
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
 
-  <node pkg="bosch_locator_bridge" exec="node" name="bridge_node" output="screen" required="true">
+  <node pkg="bosch_locator_bridge" exec="node" name="bridge_node" output="screen">
     <param name="locator_host" value="$(var locator_ip)" />
     <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
     <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
