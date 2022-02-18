@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.6 (2022-02-18)
+------------------
 * Remove ``required`` attribute from launch files
 * Contributors: Stefan Laible
 
