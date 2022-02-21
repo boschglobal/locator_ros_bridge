@@ -38,6 +38,7 @@ limitations under the License.-->
   <arg name="laser_x" default="0.0"/>
   <arg name="laser_y" default="0.0"/>
   <arg name="laser_yaw" default="0.0"/>
+  <arg name="laser_use_intensities" default="true"/>
 
   <arg name="laser2_enable" default="false"/>
   <arg name="laser2_datagram_port" default="2113"/>
@@ -45,6 +46,7 @@ limitations under the License.-->
   <arg name="laser2_x" default="0.0"/>
   <arg name="laser2_y" default="0.0"/>
   <arg name="laser2_yaw" default="0.0"/>
+  <arg name="laser2_use_intensities" default="true"/>
 
   <arg name="odom_datagram_port" default="1111"/>
 
@@ -72,6 +74,7 @@ limitations under the License.-->
       ClientSensor.laser.vehicleTransformLaser.x: $(arg laser_x)
       ClientSensor.laser.vehicleTransformLaser.y: $(arg laser_y)
       ClientSensor.laser.vehicleTransformLaser.yaw: $(arg laser_yaw)
+      ClientSensor.laser.useIntensities: $(arg laser_use_intensities)
 
       ClientSensor.enableLaser2: $(arg laser2_enable)
       ClientSensor.laser2.type: simple
@@ -80,6 +83,7 @@ limitations under the License.-->
       ClientSensor.laser2.vehicleTransformLaser.x: $(arg laser2_x)
       ClientSensor.laser2.vehicleTransformLaser.y: $(arg laser2_y)
       ClientSensor.laser2.vehicleTransformLaser.yaw: $(arg laser2_yaw)
+      ClientSensor.laser2.useIntensities: $(arg laser2_use_intensities)
 
       ClientLocalization.autostart: false
       ClientSensor.enableOdometry: $(arg enable_odometry)
