@@ -33,6 +33,7 @@ limitations under the License.-->
   <arg name="laser_x" default="0.0"/>
   <arg name="laser_y" default="0.0"/>
   <arg name="laser_yaw" default="0.0"/>
+  <arg name="laser_use_intensities" default="true"/>
 
   <arg name="laser2_enable" default="false"/>
   <arg name="laser2_datagram_port" default="2113"/>
@@ -40,6 +41,7 @@ limitations under the License.-->
   <arg name="laser2_x" default="0.0"/>
   <arg name="laser2_y" default="0.0"/>
   <arg name="laser2_yaw" default="0.0"/>
+  <arg name="laser2_use_intensities" default="true"/>
 
   <arg name="odom_datagram_port" default="1111"/>
 
@@ -66,6 +68,7 @@ limitations under the License.-->
     <param name="ClientSensor.laser.vehicleTransformLaser.x" value="$(var laser_x)"/>
     <param name="ClientSensor.laser.vehicleTransformLaser.y" value="$(var laser_y)"/>
     <param name="ClientSensor.laser.vehicleTransformLaser.yaw" value="$(var laser_yaw)"/>
+    <param name="ClientSensor.laser.useIntensities" value="$(var laser_use_intensities)"/>
 
     <param name="ClientSensor.enableLaser2" value="$(var laser2_enable)"/>
     <param name="ClientSensor.laser2.type" value="simple"/>
@@ -74,6 +77,7 @@ limitations under the License.-->
     <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="$(var laser2_x)"/>
     <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="$(var laser2_y)"/>
     <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="$(var laser2_yaw)"/>
+    <param name="ClientSensor.laser2.useIntensities" value="$(var laser2_use_intensities)"/>
 
     <param name="ClientLocalization.autostart" value="false"/>
     <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
