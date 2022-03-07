@@ -378,7 +378,7 @@ void LocatorBridgeNode::syncConfig()
   {
     const auto& key = iter.first;
     auto& value = iter.second;
-    if (!localization_client_rosconfig.hasMember(key))
+    if (!loc_client_config.contains(key))
     {
       ROS_WARN_STREAM("invalid locator rosparam found: " << key << ", " << value);
       continue;
