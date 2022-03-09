@@ -22,6 +22,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 find_package(geometry_msgs REQUIRED)
+find_package(message_filters REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -82,6 +83,7 @@ target_link_libraries(${PROJECT_NAME}_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   geometry_msgs
+  message_filters
   nav_msgs
   std_srvs
   tf2_geometry_msgs
