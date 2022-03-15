@@ -33,7 +33,7 @@ limitations under the License.-->
   <arg name="laser_x" default="0.0"/>
   <arg name="laser_y" default="0.0"/>
   <arg name="laser_yaw" default="0.0"/>
-  <arg name="laser_use_intensities" default="true"/>
+  <arg name="laser_use_intensities" default="false"/>
 
   <arg name="laser2_enable" default="false"/>
   <arg name="laser2_datagram_port" default="2113"/>
@@ -41,7 +41,7 @@ limitations under the License.-->
   <arg name="laser2_x" default="0.0"/>
   <arg name="laser2_y" default="0.0"/>
   <arg name="laser2_yaw" default="0.0"/>
-  <arg name="laser2_use_intensities" default="true"/>
+  <arg name="laser2_use_intensities" default="false"/>
 
   <arg name="odom_datagram_port" default="1111"/>
 
