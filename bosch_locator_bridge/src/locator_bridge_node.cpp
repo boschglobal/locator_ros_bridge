@@ -514,7 +514,7 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser.vehicleTransformLaser.yaw"] =
     laser_vehicle_transform_laser_yaw;
 
-  bool laser_use_intensites = true;
+  bool laser_use_intensites = false;
   declare_parameter("ClientSensor.laser.useIntensities", laser_use_intensites);
   get_parameter("ClientSensor.laser.useIntensities", laser_use_intensites);
   loc_client_config["ClientSensor.laser.useIntensities"] = laser_use_intensites;
@@ -565,7 +565,7 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser2.vehicleTransformLaser.yaw"] =
     laser2_vehicle_transform_laser_yaw;
 
-  bool laser2_use_intensites = true;
+  bool laser2_use_intensites = false;
   declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
   get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
   loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensites;
