@@ -46,6 +46,7 @@ REQUIRED_MODULE_VERSIONS({
   {"System", {3, 1}},
   {"ServerMap", {5, 0}},
   {"ServerUser", {4, 0}},
+//  {"User", {4, 0}},
   {"ServerInternal", {2, 0}},
 });
 
