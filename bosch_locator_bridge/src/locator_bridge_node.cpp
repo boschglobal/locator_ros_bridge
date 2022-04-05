@@ -53,6 +53,7 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
   {"ClientLaserMask", {5, 0}},
   {"ClientSensor", {5, 0}},
   {"ClientUser", {4, 0}},
+//  {"User", {4, 0}},
   {"ClientExpandMap", {1, 0}},
 });
 
@@ -564,6 +565,11 @@ void LocatorBridgeNode::syncConfig()
   declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
   get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
   loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensites;
+
+  bool enable_reflector_markers = false;
+  declare_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
+  get_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
+//  loc_client_config["ClientSensor.enableReflectorMarkers"] = enable_reflector_markers;
 
   bool autostart = false;
   declare_parameter("ClientLocalization.autostart", autostart);
