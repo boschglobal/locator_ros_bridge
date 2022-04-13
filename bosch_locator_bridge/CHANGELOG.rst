@@ -2,6 +2,13 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix check of locator config params
+* Change version numbers for compatibility with v1.4.0
+* Add parameters for using intensities
+* Contributors: Stefan Laible
+
 1.0.5 (2022-02-15)
 ------------------
 * update to ROKIT Locator version 1.4
