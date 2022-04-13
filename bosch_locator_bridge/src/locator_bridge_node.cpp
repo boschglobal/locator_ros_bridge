@@ -501,7 +501,7 @@ void LocatorBridgeNode::syncConfig()
   get_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
   loc_client_config["ClientSensor.laser.vehicleTransformLaser.y"] = laser_vehicle_transform_laser_y;
 
-  double laser_vehicle_transform_laser_yaw = 0.0;
+  double laser_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
   declare_parameter(
     "ClientSensor.laser.vehicleTransformLaser.yaw",
     laser_vehicle_transform_laser_yaw);
@@ -550,7 +550,7 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser2.vehicleTransformLaser.y"] =
     laser2_vehicle_transform_laser_y;
 
-  double laser2_vehicle_transform_laser_yaw = 0.0;
+  double laser2_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
   declare_parameter(
     "ClientSensor.laser2.vehicleTransformLaser.yaw",
     laser2_vehicle_transform_laser_yaw);
