@@ -28,7 +28,7 @@
 const static std::unordered_map<std::string, std::pair<int32_t, int32_t>>
     REQUIRED_MODULE_VERSIONS({
         {"AboutModules", {5, 0}},
-        {"Session", {3, 1}},
+        {"Session", {3, 0}},
         {"Diagnostic", {4, 0}},
         {"Licensing", {6, 0}},
         {"Config", {5, 0}},
