@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.6 (2022-04-13)
+------------------
 * Fix check of locator config params
 * Change version numbers for compatibility with v1.4.0
 * Add parameters for using intensities
