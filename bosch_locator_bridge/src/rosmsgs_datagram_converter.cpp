@@ -27,6 +27,23 @@
 
 #include <fstream>
 
+namespace {
+size_t discardExtension(Poco::BinaryReader& binary_reader)
+{
+  uint32_t extensionSize {0u};
+  binary_reader >> extensionSize;
+
+  const auto bytesToDiscard = extensionSize - 4u;
+  std::vector<char> dataToDiscard(bytesToDiscard);
+  
+  binary_reader.readRaw(dataToDiscard.data(), bytesToDiscard);
+
+  return extensionSize;
+}
+}
+
+
+
 size_t
 RosMsgsDatagramConverter::convertClientControlMode2Message(const std::vector<char>& datagram, const ros::Time& stamp,
                                                            bosch_locator_bridge::ClientControlMode& client_control_mode)
@@ -73,6 +90,10 @@ size_t RosMsgsDatagramConverter::convertMapDatagram2Message(Poco::BinaryReader& 
     bytes_parsed += 8;
     point_cloud.push_back(pt);
   }
+
+  // Discard the extension part of the datagram
+  bytes_parsed += discardExtension(binary_reader);
+
   // Create message
   pcl::toROSMsg(point_cloud, out_pointcloud);
   out_pointcloud.header.frame_id = MAP_FRAME_ID;
@@ -233,6 +254,9 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2
   std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
   readIntensities(binary_reader);
 
+  // Discard the extension part of the datagram
+  discardExtension(binary_reader);
+
   // Use sensor offsets to colorize point cloud
   colorizePointCloud(point_cloud, sensor_offsets);
 
@@ -292,6 +316,9 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   // Get sensor offsets and read intensities
   std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
   readIntensities(binary_reader);
+
+  // Discard the extension part of the datagram
+  discardExtension(binary_reader);
 
   // Use sensor offsets to colorize point cloud
   colorizePointCloud(point_cloud, sensor_offsets);
@@ -354,6 +381,9 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   // Get sensor offsets and read intensities
   std::vector<uint64_t> sensor_offsets = readSensorOffsets(binary_reader);
   readIntensities(binary_reader);
+
+  // Discard the extension part of the datagram
+  discardExtension(binary_reader);
 
   // Use sensor offsets to colorize point cloud
   colorizePointCloud(point_cloud, sensor_offsets);
