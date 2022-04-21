@@ -97,7 +97,7 @@ void SendingInterface::sendData(void* data, size_t size)
     }
     catch (const Poco::IOException& e)
     {
-      ROS_ERROR_STREAM("caught io exception: " << e.name() << "  -  " << e.what());
+      ROS_ERROR_STREAM("caught io exception: " << e.displayText());
     }
   }
   const auto discarded_connections = connections_.size() - good_connections.size();
