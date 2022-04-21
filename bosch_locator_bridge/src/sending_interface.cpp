@@ -94,7 +94,7 @@ void SendingInterface::sendData(void * data, size_t size)
     } catch (const Poco::IOException & e) {
       RCLCPP_ERROR_STREAM(
         node_->get_logger(),
-        "caught io exception: " << e.name() << "  -  " << e.what());
+        "caught io exception: " << e.displayText());
     }
   }
   const auto discarded_connections = connections_.size() - good_connections.size();
