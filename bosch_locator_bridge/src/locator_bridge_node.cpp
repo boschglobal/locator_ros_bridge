@@ -574,7 +574,7 @@ void LocatorBridgeNode::syncConfig()
   bool enable_reflector_markers = false;
   declare_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
   get_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
-//  loc_client_config["ClientSensor.enableReflectorMarkers"] = enable_reflector_markers;
+  loc_client_config["ClientSensor.enableReflectorMarkers"] = enable_reflector_markers;
 
   bool autostart = false;
   declare_parameter("ClientLocalization.autostart", autostart);
