@@ -35,23 +35,6 @@
 #include "bosch_locator_bridge/msg/client_global_align_landmark_observation_notice.hpp"
 #include "bosch_locator_bridge/msg/client_global_align_landmark_visualization_information.hpp"
 
-namespace {
-size_t discardExtension(Poco::BinaryReader& binary_reader)
-{
-  uint32_t extensionSize {0u};
-  binary_reader >> extensionSize;
-
-  const auto bytesToDiscard = extensionSize - 4u;
-  std::vector<char> dataToDiscard(bytesToDiscard);
-  
-  binary_reader.readRaw(dataToDiscard.data(), bytesToDiscard);
-
-  return extensionSize;
-}
-}
-
-
-
 size_t
 RosMsgsDatagramConverter::convertClientControlMode2Message(
   const std::vector<char> & datagram, const rclcpp::Time & stamp,
@@ -603,6 +586,19 @@ void RosMsgsDatagramConverter::colorizePointCloud(
       point_cloud[i].b = 207;
     }
   }
+}
+
+size_t RosMsgsDatagramConverter::discardExtension(Poco::BinaryReader & binary_reader)
+{
+  uint32_t extensionSize {0u};
+  binary_reader >> extensionSize;
+
+  const auto bytesToDiscard = extensionSize - 4u;
+  std::vector<char> dataToDiscard(bytesToDiscard);
+
+  binary_reader.readRaw(dataToDiscard.data(), bytesToDiscard);
+
+  return extensionSize;
 }
 
 void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader & binary_reader)
