@@ -39,7 +39,7 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
   {"Session", {3, 1}},
 //  {"Diagnostic", {4, 0}},
   {"Licensing", {6, 1}},
-  {"Config", {5, 1}},
+  {"Config", {5, 0}},
   {"AboutBuild", {3, 0}},
   {"Certificate", {3, 0}},
   {"System", {3, 1}},
