@@ -27,23 +27,6 @@
 
 #include <fstream>
 
-namespace {
-size_t discardExtension(Poco::BinaryReader& binary_reader)
-{
-  uint32_t extensionSize {0u};
-  binary_reader >> extensionSize;
-
-  const auto bytesToDiscard = extensionSize - 4u;
-  std::vector<char> dataToDiscard(bytesToDiscard);
-  
-  binary_reader.readRaw(dataToDiscard.data(), bytesToDiscard);
-
-  return extensionSize;
-}
-}
-
-
-
 size_t
 RosMsgsDatagramConverter::convertClientControlMode2Message(const std::vector<char>& datagram, const ros::Time& stamp,
                                                            bosch_locator_bridge::ClientControlMode& client_control_mode)
@@ -567,6 +550,19 @@ void RosMsgsDatagramConverter::colorizePointCloud(pcl::PointCloud<pcl::PointXYZR
       point_cloud[i].b = 207;
     }
   }
+}
+
+size_t RosMsgsDatagramConverter::discardExtension(Poco::BinaryReader& binary_reader)
+{
+  uint32_t extensionSize {0u};
+  binary_reader >> extensionSize;
+
+  const auto bytesToDiscard = extensionSize - 4u;
+  std::vector<char> dataToDiscard(bytesToDiscard);
+
+  binary_reader.readRaw(dataToDiscard.data(), bytesToDiscard);
+
+  return extensionSize;
 }
 
 void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader& binary_reader)
