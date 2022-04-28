@@ -95,6 +95,9 @@ void LocatorBridgeNode::init()
   declare_parameter("password", pwd);
   get_parameter("password", pwd);
 
+  callback_group_services_ = create_callback_group(
+    rclcpp::CallbackGroupType::MutuallyExclusive);
+
   // NOTE for now, we only have a session management with the localization client
   // Same thing is likely needed for the map server
   loc_client_interface_.reset(new LocatorRPCInterface(host, 8080));
@@ -103,7 +106,8 @@ void LocatorBridgeNode::init()
     30s, [&]() {
       RCLCPP_INFO_STREAM(get_logger(), "refreshing session!");
       loc_client_interface_->refresh();
-    });
+    },
+    callback_group_services_);
 
   const auto module_versions = loc_client_interface_->getAboutModules();
   if (!check_module_versions(module_versions)) {
@@ -111,9 +115,6 @@ void LocatorBridgeNode::init()
   }
 
   syncConfig();
-
-  callback_group_services_ = create_callback_group(
-    rclcpp::CallbackGroupType::MutuallyExclusive);
 
   services_.push_back(
     create_service<bosch_locator_bridge::srv::ClientConfigGetEntry>(
