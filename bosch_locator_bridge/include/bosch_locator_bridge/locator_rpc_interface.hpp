@@ -19,7 +19,6 @@
 #include <Poco/JSON/Object.h>
 #include <Poco/Net/HTTPClientSession.h>
 
-#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -51,7 +50,6 @@ protected:
   Poco::JSON::Object json_rpc_call(
     Poco::Net::HTTPClientSession & session, const std::string & method,
     const Poco::JSON::Object & query_obj);
-  std::mutex json_rpc_call_mutex_;
   Poco::Net::HTTPClientSession session_;
   std::string session_id_;
   size_t query_id_;
