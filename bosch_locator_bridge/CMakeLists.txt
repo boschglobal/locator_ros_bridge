@@ -26,6 +26,7 @@ find_package(message_filters REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -85,6 +86,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   geometry_msgs
   message_filters
   nav_msgs
+  sensor_msgs
   std_srvs
   tf2_geometry_msgs
   tf2_ros
@@ -111,8 +113,12 @@ target_include_directories(${PROJECT_NAME}_server_node PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(${PROJECT_NAME}_server_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_server_node
+  tf2_geometry_msgs
+  tf2_ros
   rclcpp
+  sensor_msgs
   std_srvs
+  pcl_conversions
   Poco
 )
 
