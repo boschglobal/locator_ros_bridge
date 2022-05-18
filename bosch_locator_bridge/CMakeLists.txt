@@ -103,7 +103,6 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME}_server_node
-  src/rosmsgs_datagram_converter.cpp
   src/locator_rpc_interface.cpp
   src/server/server_bridge_node.cpp
   src/server/server_main.cpp)
@@ -113,12 +112,8 @@ target_include_directories(${PROJECT_NAME}_server_node PUBLIC
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(${PROJECT_NAME}_server_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_server_node
-  tf2_geometry_msgs
-  tf2_ros
   rclcpp
-  sensor_msgs
   std_srvs
-  pcl_conversions
   Poco
 )
 
