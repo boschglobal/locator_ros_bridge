@@ -25,6 +25,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -65,7 +66,7 @@ ament_export_dependencies(rosidl_default_runtime)
 
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(PCL REQUIRED)
-include_directories(${PCL_INCLUDE_DIRS})
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}_node
   src/main.cpp
@@ -83,6 +84,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   geometry_msgs
   nav_msgs
+  sensor_msgs
   std_srvs
   tf2_geometry_msgs
   tf2_ros
@@ -93,7 +95,6 @@ ament_target_dependencies(${PROJECT_NAME}_node
 rosidl_target_interfaces(${PROJECT_NAME}_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 add_executable(${PROJECT_NAME}_server_node
-  src/rosmsgs_datagram_converter.cpp
   src/locator_rpc_interface.cpp
   src/server/server_bridge_node.cpp
   src/server/server_main.cpp)
