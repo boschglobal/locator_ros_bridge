@@ -340,8 +340,7 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::Shared
       RCLCPP_ERROR_STREAM_THROTTLE(
         get_logger(), *get_clock(), 2000,
         "The parameter ClientSensor.laser.useIntensities is set to true even though the data does "
-        "not include intensities. It is now set to false.");
-      set_config_entry("ClientSensor.laser.useIntensities", false);
+        "not include intensities. You would have to set it to false, please.");
     }
   }
 }
@@ -373,8 +372,7 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::Share
       RCLCPP_ERROR_STREAM_THROTTLE(
         get_logger(), *get_clock(), 2000,
         "The parameter ClientSensor.laser2.useIntensities is set to true even though the data does "
-        "not include intensities. It is now set to false.");
-      set_config_entry("ClientSensor.laser2.useIntensities", false);
+        "not include intensities. You would have to set it to false, please.");
     }
   }
 }
