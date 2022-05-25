@@ -677,7 +677,7 @@ void LocatorBridgeNode::checkLaserScan(
   {
     RCLCPP_ERROR_STREAM(
       get_logger(),
-      "LaserscanMsg is INVALID: " << msg->angle_min << " (angle_min) + " <<
+      "LaserScan message is INVALID: " << msg->angle_min << " (angle_min) + " <<
       (msg->ranges.size() - 1) << " (ranges.size - 1) * " << msg->angle_increment <<
         " (angle_increment) = " <<
       (msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment) << ", expected " <<
@@ -691,7 +691,7 @@ void LocatorBridgeNode::checkLaserScan(
     {
       RCLCPP_ERROR_STREAM(
         get_logger(),
-        "LaserscanMsg is INVALID: " << param_name << " is true, but ranges.size (" <<
+        "LaserScan message is INVALID: " << param_name << " is true, but ranges.size (" <<
           msg->ranges.size() << ") unequal intensities.size (" << msg->intensities.size() << ")");
     }
   }
