@@ -331,17 +331,7 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::Shared
   if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
     SendingInterface::IO_EXCEPTION)
   {
-    // Check why laser data could not be sent
-    std::string laser_use_intensities;
-    if (msg->intensities.empty() &&
-      get_config_entry("ClientSensor.laser.useIntensities", laser_use_intensities) &&
-      laser_use_intensities == "true")
-    {
-      RCLCPP_ERROR_STREAM_THROTTLE(
-        get_logger(), *get_clock(), 2000,
-        "The parameter ClientSensor.laser.useIntensities is set to true even though the data does "
-        "not include intensities. You would have to set it to false, please.");
-    }
+    checkLaserScan(msg, "laser");
   }
 }
 
@@ -363,17 +353,7 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::Share
   if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
     SendingInterface::IO_EXCEPTION)
   {
-    // Check why laser2 data could not be sent
-    std::string laser2_use_intensities;
-    if (msg->intensities.empty() &&
-      get_config_entry("ClientSensor.laser2.useIntensities", laser2_use_intensities) &&
-      laser2_use_intensities == "true")
-    {
-      RCLCPP_ERROR_STREAM_THROTTLE(
-        get_logger(), *get_clock(), 2000,
-        "The parameter ClientSensor.laser2.useIntensities is set to true even though the data does "
-        "not include intensities. You would have to set it to false, please.");
-    }
+    checkLaserScan(msg, "laser2");
   }
 }
 
@@ -686,6 +666,35 @@ void LocatorBridgeNode::syncConfig()
   }
 
   loc_client_interface_->setConfigList(loc_client_config);
+}
+
+void LocatorBridgeNode::checkLaserScan(
+  const sensor_msgs::msg::LaserScan::SharedPtr msg,
+  const std::string & laser) const
+{
+  if (fabs(msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment - msg->angle_max) >
+    fabs(0.5 * msg->angle_increment))
+  {
+    RCLCPP_ERROR_STREAM(
+      get_logger(),
+      "LaserscanMsg is INVALID: " << msg->angle_min << " (angle_min) + " <<
+      (msg->ranges.size() - 1) << " (ranges.size - 1) * " << msg->angle_increment <<
+        " (angle_increment) = " <<
+      (msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment) << ", expected " <<
+        msg->angle_max << " (angle_max)");
+  } else {
+    const std::string param_name = "ClientSensor." + laser + ".useIntensities";
+    std::string laser_use_intensities;
+    if (get_config_entry(
+        param_name, laser_use_intensities) &&
+      laser_use_intensities == "true" && msg->ranges.size() != msg->intensities.size())
+    {
+      RCLCPP_ERROR_STREAM(
+        get_logger(),
+        "LaserscanMsg is INVALID: " << param_name << " is true, but ranges.size (" <<
+          msg->ranges.size() << ") unequal intensities.size (" << msg->intensities.size() << ")");
+    }
+  }
 }
 
 void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string & host)

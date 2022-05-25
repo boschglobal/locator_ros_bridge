@@ -113,6 +113,10 @@ private:
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
 
+  /// Check if laser scan message is valid
+  void checkLaserScan(
+    const sensor_msgs::msg::LaserScan::SharedPtr msg,
+    const std::string & laser) const;
   void setupBinaryReceiverInterfaces(const std::string & host);
 
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;
