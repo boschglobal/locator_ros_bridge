@@ -48,6 +48,8 @@ limitations under the License.-->
   <arg name="laser2_yaw" default="0.0"/>  <!-- angle in degrees -->
   <arg name="laser2_use_intensities" default="false"/>
 
+  <arg name="enable_reflector_markers" default="false"/>
+
   <arg name="odom_datagram_port" default="1111"/>
 
   <arg name="scan_topic" default="/scan"/>
@@ -84,6 +86,8 @@ limitations under the License.-->
       ClientSensor.laser2.vehicleTransformLaser.y: $(arg laser2_y)
       ClientSensor.laser2.vehicleTransformLaser.yaw: $(arg laser2_yaw)
       ClientSensor.laser2.useIntensities: $(arg laser2_use_intensities)
+
+      ClientSensor.enableReflectorMarkers: $(arg enable_reflector_markers)
 
       ClientLocalization.autostart: false
       ClientSensor.enableOdometry: $(arg enable_odometry)
