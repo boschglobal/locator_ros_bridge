@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.6 (2022-06-13)
+------------------
 * Change version numbers in server_bridge_node for compatibility with v1.4.0 (`#13 <https://github.com/boschglobal/locator_ros_bridge/issues/13>`_)
 * Make units of vehicleTransformLaser.yaw clear
 * Set laser*_use_intensities to false by default
