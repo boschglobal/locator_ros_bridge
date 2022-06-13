@@ -2,6 +2,15 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Change version numbers in server_bridge_node for compatibility with v1.4.0 (`#13 <https://github.com/boschglobal/locator_ros_bridge/issues/13>`_)
+* Make units of vehicleTransformLaser.yaw clear
+* Set laser*_use_intensities to false by default
+* Change version numbers for compatibility with v1.4.0
+* Add parameters for using intensities
+* Contributors: Fabian König, Stefan Laible
+
 2.1.5 (2022-02-16)
 ------------------
 * update to ROKIT Locator version 1.4
