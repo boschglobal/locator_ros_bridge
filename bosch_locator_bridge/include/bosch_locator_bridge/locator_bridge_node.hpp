@@ -65,6 +65,9 @@ private:
   bool check_module_versions(
     const std::unordered_map<std::string, std::pair<int32_t,
     int32_t>> & module_versions);
+  bool get_config_entry(const std::string & name, std::string & value) const;
+  template<typename T>
+  bool set_config_entry(const std::string & name, const T & value) const;
 
   void laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
   void laser2_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
@@ -110,6 +113,10 @@ private:
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
 
+  /// Check if laser scan message is valid
+  void checkLaserScan(
+    const sensor_msgs::msg::LaserScan::SharedPtr msg,
+    const std::string & laser) const;
   void setupBinaryReceiverInterfaces(const std::string & host);
 
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;

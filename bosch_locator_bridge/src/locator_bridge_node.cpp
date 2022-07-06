@@ -280,6 +280,36 @@ bool LocatorBridgeNode::check_module_versions(
   return true;
 }
 
+bool LocatorBridgeNode::get_config_entry(const std::string & name, std::string & value) const
+{
+  const auto & loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    value = loc_client_config[name].toString();
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
+    return false;
+  }
+
+  return true;
+}
+
+template<typename T>
+bool LocatorBridgeNode::set_config_entry(const std::string & name, const T & value) const
+{
+  auto loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    loc_client_config[name] = value;
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
+    return false;
+  }
+
+  loc_client_interface_->setConfigList(loc_client_config);
+  return true;
+}
+
 void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
 {
   // If scan_time is not set, use timestamp difference to set it.
@@ -295,7 +325,11 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::Shared
     msg,
     ++scan_num_,
     shared_from_this());
-  laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
+    SendingInterface::IO_EXCEPTION)
+  {
+    checkLaserScan(msg, "laser");
+  }
 }
 
 void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
@@ -313,7 +347,11 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::Share
     msg,
     ++scan2_num_,
     shared_from_this());
-  laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
+    SendingInterface::IO_EXCEPTION)
+  {
+    checkLaserScan(msg, "laser2");
+  }
 }
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
@@ -329,16 +367,7 @@ bool LocatorBridgeNode::clientConfigGetEntryCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Request> req,
   std::shared_ptr<bosch_locator_bridge::srv::ClientConfigGetEntry::Response> res)
 {
-  const auto & loc_client_config = loc_client_interface_->getConfigList();
-
-  try {
-    res->value = loc_client_config[req->name].toString();
-  } catch (const Poco::NotFoundException & error) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << req->name << ".");
-    return false;
-  }
-
-  return true;
+  return get_config_entry(req->name, res->value);
 }
 
 bool LocatorBridgeNode::clientMapSendCb(
@@ -511,10 +540,10 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser.vehicleTransformLaser.yaw"] =
     laser_vehicle_transform_laser_yaw;
 
-  bool laser_use_intensites = false;
-  declare_parameter("ClientSensor.laser.useIntensities", laser_use_intensites);
-  get_parameter("ClientSensor.laser.useIntensities", laser_use_intensites);
-  loc_client_config["ClientSensor.laser.useIntensities"] = laser_use_intensites;
+  bool laser_use_intensities = false;
+  declare_parameter("ClientSensor.laser.useIntensities", laser_use_intensities);
+  get_parameter("ClientSensor.laser.useIntensities", laser_use_intensities);
+  loc_client_config["ClientSensor.laser.useIntensities"] = laser_use_intensities;
 
   bool enable_laser2 = false;
   declare_parameter("ClientSensor.enableLaser2", enable_laser2);
@@ -562,10 +591,10 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser2.vehicleTransformLaser.yaw"] =
     laser2_vehicle_transform_laser_yaw;
 
-  bool laser2_use_intensites = false;
-  declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
-  get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensites);
-  loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensites;
+  bool laser2_use_intensities = false;
+  declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
+  get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
+  loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensities;
 
   bool enable_reflector_markers = false;
   declare_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
@@ -639,6 +668,35 @@ void LocatorBridgeNode::syncConfig()
   }
 
   loc_client_interface_->setConfigList(loc_client_config);
+}
+
+void LocatorBridgeNode::checkLaserScan(
+  const sensor_msgs::msg::LaserScan::SharedPtr msg,
+  const std::string & laser) const
+{
+  if (fabs(msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment - msg->angle_max) >
+    fabs(0.5 * msg->angle_increment))
+  {
+    RCLCPP_ERROR_STREAM(
+      get_logger(),
+      "LaserScan message is INVALID: " << msg->angle_min << " (angle_min) + " <<
+      (msg->ranges.size() - 1) << " (ranges.size - 1) * " << msg->angle_increment <<
+        " (angle_increment) = " <<
+      (msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment) << ", expected " <<
+        msg->angle_max << " (angle_max)");
+  } else {
+    const std::string param_name = "ClientSensor." + laser + ".useIntensities";
+    std::string laser_use_intensities;
+    if (get_config_entry(
+        param_name, laser_use_intensities) &&
+      laser_use_intensities == "true" && msg->ranges.size() != msg->intensities.size())
+    {
+      RCLCPP_ERROR_STREAM(
+        get_logger(),
+        "LaserScan message is INVALID: " << param_name << " is true, but ranges.size (" <<
+          msg->ranges.size() << ") unequal intensities.size (" << msg->intensities.size() << ")");
+    }
+  }
 }
 
 void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string & host)
