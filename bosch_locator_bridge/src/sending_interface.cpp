@@ -57,14 +57,17 @@ SendingInterface::~SendingInterface()
   stop();
 }
 
-void SendingInterface::sendData(void* data, size_t size)
+SendingInterface::SendingStatus SendingInterface::sendData(void* data, size_t size)
 {
+  SendingStatus ret = SUCCESS;
+
   std::lock_guard<std::mutex> lock(connections_mutex_);
   std::vector<Poco::Net::StreamSocket> good_connections;
   if (connections_.size() == 0)
   {
     ROS_INFO_STREAM_THROTTLE_NAMED(10, std::to_string(size),
                                    "Cannot send data of size " << size << " to any peer (no connections available)");
+    ret = NO_CONNECTIONS;
   }
   for (size_t i = 0; i < connections_.size(); i++)
   {
@@ -89,6 +92,7 @@ void SendingInterface::sendData(void* data, size_t size)
       else
       {
         ROS_ERROR_STREAM("could not sent datagram completely!");
+        ret = NOT_COMPLETED;
       }
     }
     catch (const Poco::Net::ConnectionResetException& e)
@@ -98,6 +102,7 @@ void SendingInterface::sendData(void* data, size_t size)
     catch (const Poco::IOException& e)
     {
       ROS_ERROR_STREAM("caught io exception: " << e.displayText());
+      ret = IO_EXCEPTION;
     }
   }
   const auto discarded_connections = connections_.size() - good_connections.size();
@@ -106,6 +111,8 @@ void SendingInterface::sendData(void* data, size_t size)
     ROS_WARN_STREAM("discarding " << discarded_connections << " connections!");
   }
   std::swap(connections_, good_connections);
+
+  return ret;
 }
 
 void SendingInterface::stop()
