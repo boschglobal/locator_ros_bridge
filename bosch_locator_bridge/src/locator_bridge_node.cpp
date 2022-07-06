@@ -41,24 +41,25 @@ using std::placeholders::_2;
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
-  {"Session", {3, 0}},
-  {"Diagnostic", {4, 0}},
-  {"Licensing", {6, 0}},
+  {"Session", {3, 1}},
+//  {"Diagnostic", {4, 0}},
+  {"Licensing", {6, 1}},
   {"Config", {5, 0}},
   {"AboutBuild", {3, 0}},
   {"Certificate", {3, 0}},
   {"System", {3, 1}},
-  {"ClientApplication", {1, 0}},
+//  {"ClientApplication", {1, 0}},
   {"ClientControl", {3, 1}},
-  {"ClientRecording", {3, 2}},
-  {"ClientMap", {3, 3}},
-  {"ClientLocalization", {5, 1}},
-  {"ClientManualAlign", {4, 1}},
+  {"ClientRecording", {4, 0}},
+  {"ClientMap", {4, 0}},
+  {"ClientLocalization", {6, 0}},
+//  {"ClientManualAlign", {5, 0}},
   {"ClientGlobalAlign", {4, 0}},
-  {"ClientLaserMask", {5, 0}},
-  {"ClientSensor", {5, 0}},
-  {"ClientUser", {4, 0}},
-  {"ClientExpandMap", {1, 0}},
+//  {"ClientLaserMask", {5, 0}},
+  {"ClientSensor", {5, 1}},
+//  {"ClientUser", {4, 0}},
+//  {"User", {1, 0}},
+//  {"ClientExpandMap", {2, 0}},
 });
 
 LocatorBridgeNode::LocatorBridgeNode(const std::string & nodeName)
@@ -94,6 +95,9 @@ void LocatorBridgeNode::init()
   declare_parameter("password", pwd);
   get_parameter("password", pwd);
 
+  callback_group_services_ = create_callback_group(
+    rclcpp::CallbackGroupType::MutuallyExclusive);
+
   // NOTE for now, we only have a session management with the localization client
   // Same thing is likely needed for the map server
   loc_client_interface_.reset(new LocatorRPCInterface(host, 8080));
@@ -102,7 +106,8 @@ void LocatorBridgeNode::init()
     30s, [&]() {
       RCLCPP_INFO_STREAM(get_logger(), "refreshing session!");
       loc_client_interface_->refresh();
-    });
+    },
+    callback_group_services_);
 
   const auto module_versions = loc_client_interface_->getAboutModules();
   if (!check_module_versions(module_versions)) {
@@ -110,9 +115,6 @@ void LocatorBridgeNode::init()
   }
 
   syncConfig();
-
-  callback_group_services_ = create_callback_group(
-    rclcpp::CallbackGroupType::MutuallyExclusive);
 
   services_.push_back(
     create_service<bosch_locator_bridge::srv::ClientConfigGetEntry>(
@@ -535,7 +537,7 @@ void LocatorBridgeNode::syncConfig()
   get_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
   loc_client_config["ClientSensor.laser.vehicleTransformLaser.y"] = laser_vehicle_transform_laser_y;
 
-  double laser_vehicle_transform_laser_yaw = 0.0;
+  double laser_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
   declare_parameter(
     "ClientSensor.laser.vehicleTransformLaser.yaw",
     laser_vehicle_transform_laser_yaw);
@@ -584,7 +586,7 @@ void LocatorBridgeNode::syncConfig()
   loc_client_config["ClientSensor.laser2.vehicleTransformLaser.y"] =
     laser2_vehicle_transform_laser_y;
 
-  double laser2_vehicle_transform_laser_yaw = 0.0;
+  double laser2_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
   declare_parameter(
     "ClientSensor.laser2.vehicleTransformLaser.yaw",
     laser2_vehicle_transform_laser_yaw);
@@ -598,6 +600,11 @@ void LocatorBridgeNode::syncConfig()
   declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
   get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
   loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensities;
+
+  bool enable_reflector_markers = false;
+  declare_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
+  get_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
+  loc_client_config["ClientSensor.enableReflectorMarkers"] = enable_reflector_markers;
 
   bool autostart = false;
   declare_parameter("ClientLocalization.autostart", autostart);

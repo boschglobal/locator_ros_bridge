@@ -1,4 +1,4 @@
-name: "Build action: Rolling"
+name: "Build action: Humble"
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       matrix:
         # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
         os: [ ubuntu-22.04 ]
-        ros_distribution: [ rolling ]
+        ros_distribution: [ humble ]
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.3

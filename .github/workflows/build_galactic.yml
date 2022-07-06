@@ -1,4 +1,4 @@
-name: "Build action: Rolling"
+name: "Build action: Galactic"
 
 on:
   push:
@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
-        os: [ ubuntu-22.04 ]
-        ros_distribution: [ rolling ]
+        os: [ ubuntu-20.04 ]
+        ros_distribution: [ galactic ]
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.3
@@ -33,5 +33,5 @@ jobs:
             "build": {
               "mixin": ["coverage-gcc"]
             }
-          }       
+          } 
         colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml

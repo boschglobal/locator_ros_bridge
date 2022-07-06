@@ -98,7 +98,7 @@ SendingInterface::SendingStatus SendingInterface::sendData(void * data, size_t s
     } catch (const Poco::IOException & e) {
       RCLCPP_ERROR_STREAM(
         node_->get_logger(),
-        "caught io exception: " << e.name() << "  -  " << e.what());
+        "caught io exception: " << e.displayText());
       ret = IO_EXCEPTION;
     }
   }
