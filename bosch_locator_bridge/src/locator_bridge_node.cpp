@@ -685,9 +685,9 @@ void LocatorBridgeNode::checkLaserScan(
     RCLCPP_ERROR_STREAM(
       get_logger(),
       "LaserScan message is INVALID: " << msg->angle_min << " (angle_min) + " <<
-        (msg->ranges.size() - 1) << " (ranges.size - 1) * " << msg->angle_increment <<
+        "" << (msg->ranges.size() - 1) << " (ranges.size - 1) * " << msg->angle_increment <<
         " (angle_increment) = " <<
-        (msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment) << ", expected " <<
+        "" << (msg->angle_min + (msg->ranges.size() - 1) * msg->angle_increment) << ", expected " <<
         msg->angle_max << " (angle_max)");
   } else {
     const std::string param_name = "ClientSensor." + laser + ".useIntensities";
