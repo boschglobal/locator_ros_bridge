@@ -35,7 +35,7 @@ public:
   void run();
   virtual ~SendingInterface();
 
-  enum SendingStatus {SUCCESS, NO_CONNECTIONS, NOT_COMPLETED, RESET_EXCEPTION, IO_EXCEPTION};
+  enum class SendingStatus {SUCCESS, NO_CONNECTIONS, NOT_COMPLETED, RESET_EXCEPTION, IO_EXCEPTION};
 
   /**
    * Send the given data blob to all connected clients.

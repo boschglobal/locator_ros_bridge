@@ -64,7 +64,7 @@ SendingInterface::~SendingInterface()
 
 SendingInterface::SendingStatus SendingInterface::sendData(void * data, size_t size)
 {
-  SendingStatus ret = SUCCESS;
+  SendingStatus ret = SendingStatus::SUCCESS;
 
   std::lock_guard<std::mutex> lock(connections_mutex_);
   std::vector<Poco::Net::StreamSocket> good_connections;
@@ -72,7 +72,7 @@ SendingInterface::SendingStatus SendingInterface::sendData(void * data, size_t s
     RCLCPP_INFO_STREAM_THROTTLE(
       node_->get_logger().get_child(std::to_string(size)), *node_->get_clock(), 10000,
       "Cannot send data of size " << size << " to any peer (no connections available)");
-    ret = NO_CONNECTIONS;
+    ret = SendingStatus::NO_CONNECTIONS;
   }
   for (size_t i = 0; i < connections_.size(); i++) {
     try {
@@ -91,7 +91,7 @@ SendingInterface::SendingStatus SendingInterface::sendData(void * data, size_t s
           size << " bytes successfully sent via " << connections_[i].address());
       } else {
         RCLCPP_ERROR_STREAM(node_->get_logger(), "could not sent datagram completely!");
-        ret = NOT_COMPLETED;
+        ret = SendingStatus::NOT_COMPLETED;
       }
     } catch (const Poco::Net::ConnectionResetException & e) {
       RCLCPP_ERROR_STREAM(node_->get_logger(), "caught connection reset exception: " << e.name());
@@ -99,7 +99,7 @@ SendingInterface::SendingStatus SendingInterface::sendData(void * data, size_t s
       RCLCPP_ERROR_STREAM(
         node_->get_logger(),
         "caught io exception: " << e.displayText());
-      ret = IO_EXCEPTION;
+      ret = SendingStatus::IO_EXCEPTION;
     }
   }
   const auto discarded_connections = connections_.size() - good_connections.size();

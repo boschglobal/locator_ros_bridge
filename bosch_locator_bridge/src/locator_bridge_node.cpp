@@ -326,7 +326,7 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::Shared
     ++scan_num_,
     shared_from_this());
   if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
-    SendingInterface::IO_EXCEPTION)
+    SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser");
   }
@@ -348,7 +348,7 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::msg::LaserScan::Share
     ++scan2_num_,
     shared_from_this());
   if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) ==
-    SendingInterface::IO_EXCEPTION)
+    SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser2");
   }
