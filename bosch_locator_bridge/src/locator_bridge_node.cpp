@@ -24,7 +24,6 @@
 #include "tf2/LinearMath/Transform.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
-#include "locator_rpc_interface.hpp"
 #include "receiving_interface.hpp"
 #include "rosmsgs_datagram_converter.hpp"
 #include "sending_interface.hpp"
@@ -291,22 +290,6 @@ bool LocatorBridgeNode::get_config_entry(const std::string & name, std::string &
     return false;
   }
 
-  return true;
-}
-
-template<typename T>
-bool LocatorBridgeNode::set_config_entry(const std::string & name, const T & value) const
-{
-  auto loc_client_config = loc_client_interface_->getConfigList();
-
-  try {
-    loc_client_config[name] = value;
-  } catch (const Poco::NotFoundException & error) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
-    return false;
-  }
-
-  loc_client_interface_->setConfigList(loc_client_config);
   return true;
 }
 
