@@ -37,6 +37,8 @@
 #include "bosch_locator_bridge/srv/client_map_start.hpp"
 #include "bosch_locator_bridge/srv/start_recording.hpp"
 
+#include "locator_rpc_interface.hpp"
+
 // forward declarations
 class LocatorRPCInterface;
 class SendingInterface;
@@ -179,5 +181,21 @@ private:
   rclcpp::Time prev_laser_timestamp_;
   rclcpp::Time prev_laser2_timestamp_;
 };
+
+template<typename T>
+bool LocatorBridgeNode::set_config_entry(const std::string & name, const T & value) const
+{
+  auto loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    loc_client_config[name] = value;
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
+    return false;
+  }
+
+  loc_client_interface_->setConfigList(loc_client_config);
+  return true;
+}
 
 #endif  // BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
