@@ -284,20 +284,6 @@ bool LocatorBridgeNode::check_module_versions(
   return true;
 }
 
-bool LocatorBridgeNode::get_config_entry(const std::string & name, std::string & value) const
-{
-  const auto & loc_client_config = loc_client_interface_->getConfigList();
-
-  try {
-    value = loc_client_config[name].toString();
-  } catch (const Poco::NotFoundException & error) {
-    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
-    return false;
-  }
-
-  return true;
-}
-
 void LocatorBridgeNode::laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
 {
   // If scan_time is not set, use timestamp difference to set it.
