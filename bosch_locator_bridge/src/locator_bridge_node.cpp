@@ -246,7 +246,7 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::LaserScan& msg)
   }
 
   Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_, scan_time);
-  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::IO_EXCEPTION)
+  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser");
   }
@@ -266,7 +266,7 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
   }
 
   Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan2_num_, scan_time);
-  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::IO_EXCEPTION)
+  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser2");
   }
