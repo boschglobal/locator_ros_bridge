@@ -15,7 +15,6 @@
 
 #include "locator_bridge_node.hpp"
 
-#include "locator_rpc_interface.hpp"
 #include "sending_interface.hpp"
 #include "receiving_interface.hpp"
 #include "rosmsgs_datagram_converter.hpp"
@@ -210,7 +209,10 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::LaserScan& msg)
   }
 
   Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_, scan_time);
-  laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
+  {
+    checkLaserScan(msg, "laser");
+  }
 }
 
 void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
@@ -227,7 +229,10 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
   }
 
   Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan2_num_, scan_time);
-  laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size());
+  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
+  {
+    checkLaserScan(msg, "laser2");
+  }
 }
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
@@ -239,16 +244,7 @@ void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
 bool LocatorBridgeNode::clientConfigGetEntryCb(bosch_locator_bridge::ClientConfigGetEntry::Request& req,
                                                bosch_locator_bridge::ClientConfigGetEntry::Response& res)
 {
-  const auto & loc_client_config = loc_client_interface_->getConfigList();
-
-  try {
-    res.value = loc_client_config[req.name].toString();
-  } catch (const Poco::NotFoundException & error) {
-    ROS_ERROR_STREAM("Could not find config entry " << req.name << ".");
-    return false;
-  }
-
-  return true;
+  return get_config_entry(req.name, res.value);
 }
 
 bool LocatorBridgeNode::clientMapSendCb(bosch_locator_bridge::ClientMapSend::Request& req,
@@ -450,6 +446,34 @@ void LocatorBridgeNode::syncConfig()
   }
 
   loc_client_interface_->setConfigList(loc_client_config);
+}
+
+void LocatorBridgeNode::checkLaserScan(const sensor_msgs::LaserScan& msg,
+                                       const std::string& laser) const
+{
+  if (fabs(msg.angle_min + (msg.ranges.size() - 1) * msg.angle_increment - msg.angle_max) >
+    fabs(0.5 * msg.angle_increment))
+  {
+    ROS_ERROR_STREAM(
+      "LaserScan message is INVALID: " << msg.angle_min << " (angle_min) + " <<
+      (msg.ranges.size() - 1) << " (ranges.size - 1) * " << msg.angle_increment <<
+        " (angle_increment) = " <<
+      (msg.angle_min + (msg.ranges.size() - 1) * msg.angle_increment) << ", expected " <<
+        msg.angle_max << " (angle_max)");
+  }
+  else
+  {
+    const std::string param_name = "ClientSensor." + laser + ".useIntensities";
+    std::string laser_use_intensities;
+    if (get_config_entry(
+        param_name, laser_use_intensities) &&
+      laser_use_intensities == "true" && msg.ranges.size() != msg.intensities.size())
+    {
+      ROS_ERROR_STREAM(
+        "LaserScan message is INVALID: " << param_name << " is true, but ranges.size (" <<
+          msg.ranges.size() << ") unequal intensities.size (" << msg.intensities.size() << ")");
+    }
+  }
 }
 
 void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host)

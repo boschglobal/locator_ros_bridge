@@ -31,10 +31,12 @@ public:
   void run();
   virtual ~SendingInterface();
 
+  enum class SendingStatus {SUCCESS, NO_CONNECTIONS, NOT_COMPLETED, RESET_EXCEPTION, IO_EXCEPTION};
+
   /**
    * Send the given data blob to all connected clients.
    */
-  void sendData(void* data, size_t size);
+  SendingStatus sendData(void* data, size_t size);
 
   void stop();
 
