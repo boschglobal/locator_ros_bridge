@@ -59,7 +59,8 @@ public:
 
 private:
   bool check_module_versions(const std::unordered_map<std::string, std::pair<int32_t, int32_t>>& module_versions);
-  bool get_config_entry(const std::string& name, std::string& value) const;
+  template<typename T>
+  bool get_config_entry(const std::string& name, T& value) const;
   template<typename T>
   bool set_config_entry(const std::string& name, const T& value) const;
 
@@ -153,6 +154,24 @@ private:
   ros::Time prev_laser_timestamp_;
   ros::Time prev_laser2_timestamp_;
 };
+
+template<typename T>
+bool LocatorBridgeNode::get_config_entry(const std::string& name, T& value) const
+{
+  const auto & loc_client_config = loc_client_interface_->getConfigList();
+
+  try
+  {
+    loc_client_config[name].convert(value);
+  }
+  catch (const Poco::NotFoundException & error)
+  {
+    ROS_ERROR_STREAM("Could not find config entry " << name << ".");
+    return false;
+  }
+
+  return true;
+}
 
 template<typename T>
 bool LocatorBridgeNode::set_config_entry(const std::string& name, const T& value) const
