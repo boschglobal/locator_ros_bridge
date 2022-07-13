@@ -31,6 +31,7 @@
 #include "bosch_locator_bridge/ClientMapSet.h"
 #include "bosch_locator_bridge/ClientMapStart.h"
 #include "bosch_locator_bridge/StartRecording.h"
+#include "locator_rpc_interface.hpp"
 
 // forward declarations
 class LocatorRPCInterface;
@@ -152,3 +153,22 @@ private:
   ros::Time prev_laser_timestamp_;
   ros::Time prev_laser2_timestamp_;
 };
+
+template<typename T>
+bool LocatorBridgeNode::set_config_entry(const std::string& name, const T& value) const
+{
+  auto loc_client_config = loc_client_interface_->getConfigList();
+
+  try
+  {
+    loc_client_config[name] = value;
+  }
+  catch (const Poco::NotFoundException & error)
+  {
+    ROS_ERROR_STREAM("Could not find config entry " << name << ".");
+    return false;
+  }
+
+  loc_client_interface_->setConfigList(loc_client_config);
+  return true;
+}

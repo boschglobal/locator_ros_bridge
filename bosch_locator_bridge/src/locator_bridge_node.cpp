@@ -15,7 +15,6 @@
 
 #include "locator_bridge_node.hpp"
 
-#include "locator_rpc_interface.hpp"
 #include "sending_interface.hpp"
 #include "receiving_interface.hpp"
 #include "rosmsgs_datagram_converter.hpp"
@@ -210,25 +209,6 @@ bool LocatorBridgeNode::get_config_entry(const std::string& name, std::string& v
     return false;
   }
 
-  return true;
-}
-
-template<typename T>
-bool LocatorBridgeNode::set_config_entry(const std::string& name, const T& value) const
-{
-  auto loc_client_config = loc_client_interface_->getConfigList();
-
-  try
-  {
-    loc_client_config[name] = value;
-  }
-  catch (const Poco::NotFoundException & error)
-  {
-    ROS_ERROR_STREAM("Could not find config entry " << name << ".");
-    return false;
-  }
-
-  loc_client_interface_->setConfigList(loc_client_config);
   return true;
 }
 
