@@ -37,6 +37,8 @@
 #include "bosch_locator_bridge/srv/client_map_start.hpp"
 #include "bosch_locator_bridge/srv/start_recording.hpp"
 
+#include "locator_rpc_interface.hpp"
+
 // forward declarations
 class LocatorRPCInterface;
 class SendingInterface;
@@ -65,6 +67,10 @@ private:
   bool check_module_versions(
     const std::unordered_map<std::string, std::pair<int32_t,
     int32_t>> & module_versions);
+  template<typename T>
+  bool get_config_entry(const std::string & name, T & value) const;
+  template<typename T>
+  bool set_config_entry(const std::string & name, const T & value) const;
 
   void laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
   void laser2_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
@@ -110,6 +116,10 @@ private:
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
 
+  /// Check if laser scan message is valid
+  void checkLaserScan(
+    const sensor_msgs::msg::LaserScan::SharedPtr msg,
+    const std::string & laser) const;
   void setupBinaryReceiverInterfaces(const std::string & host);
 
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;
@@ -172,5 +182,36 @@ private:
   rclcpp::Time prev_laser_timestamp_;
   rclcpp::Time prev_laser2_timestamp_;
 };
+
+template<typename T>
+bool LocatorBridgeNode::get_config_entry(const std::string & name, T & value) const
+{
+  const auto & loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    loc_client_config[name].convert(value);
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
+    return false;
+  }
+
+  return true;
+}
+
+template<typename T>
+bool LocatorBridgeNode::set_config_entry(const std::string & name, const T & value) const
+{
+  auto loc_client_config = loc_client_interface_->getConfigList();
+
+  try {
+    loc_client_config[name] = value;
+  } catch (const Poco::NotFoundException & error) {
+    RCLCPP_ERROR_STREAM(get_logger(), "Could not find config entry " << name << ".");
+    return false;
+  }
+
+  loc_client_interface_->setConfigList(loc_client_config);
+  return true;
+}
 
 #endif  // BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
