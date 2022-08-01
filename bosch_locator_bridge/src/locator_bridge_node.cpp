@@ -395,7 +395,41 @@ void LocatorBridgeNode::syncConfig()
       case XmlRpc::XmlRpcValue::TypeString:
         loc_client_config[key] = static_cast<std::string>(value);
         break;
-      // TODO: add missing parameters
+      case XmlRpc::XmlRpcValue::TypeArray:
+        if (value.size() == 0)
+        {
+          ROS_WARN_STREAM("empty array for " << key);
+        }
+        else
+        {
+          switch (value[0].getType())
+          {
+            case XmlRpc::XmlRpcValue::TypeBoolean:
+            {
+              loc_client_config[key] = convert_value_array_to_vector<bool>(value);
+              break;
+            }
+            case XmlRpc::XmlRpcValue::TypeInt:
+            {
+              loc_client_config[key] = convert_value_array_to_vector<int>(value);
+              break;
+            }
+            case XmlRpc::XmlRpcValue::TypeDouble:
+            {
+              loc_client_config[key] = convert_value_array_to_vector<double>(value);
+              break;
+            }
+            case XmlRpc::XmlRpcValue::TypeString:
+            {
+              loc_client_config[key] = convert_value_array_to_vector<std::string>(value);
+              break;
+            }
+            default:
+              ROS_ERROR_STREAM("unknown element type for " << key);
+              break;
+          }
+        }
+        break;
       default:
         ROS_ERROR_STREAM("unknown config type for " << key);
         break;

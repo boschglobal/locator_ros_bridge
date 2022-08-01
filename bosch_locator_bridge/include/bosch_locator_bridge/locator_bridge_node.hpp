@@ -60,6 +60,8 @@ public:
 private:
   bool check_module_versions(const std::unordered_map<std::string, std::pair<int32_t, int32_t>>& module_versions);
   template<typename T>
+  std::vector<T> convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const;
+  template<typename T>
   bool get_config_entry(const std::string& name, T& value) const;
   template<typename T>
   bool set_config_entry(const std::string& name, const T& value) const;
@@ -154,6 +156,18 @@ private:
   ros::Time prev_laser_timestamp_;
   ros::Time prev_laser2_timestamp_;
 };
+
+template<typename T>
+std::vector<T> LocatorBridgeNode::convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const
+{
+  std::vector<T> vec;
+  for (int i = 0; i != array.size(); ++i)
+  {
+    vec.push_back(static_cast<T>(array[i]));
+  }
+
+  return vec;
+}
 
 template<typename T>
 bool LocatorBridgeNode::get_config_entry(const std::string& name, T& value) const
