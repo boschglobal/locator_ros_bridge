@@ -62,7 +62,9 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
 });
 
 LocatorBridgeNode::LocatorBridgeNode(const std::string & nodeName)
-: Node(nodeName)
+: Node(nodeName,
+    rclcpp::NodeOptions().allow_undeclared_parameters(true)
+    .automatically_declare_parameters_from_overrides(true))
 {
 }
 
@@ -85,13 +87,10 @@ LocatorBridgeNode::~LocatorBridgeNode()
 void LocatorBridgeNode::init()
 {
   std::string host;
-  declare_parameter("locator_host", host);
   get_parameter("locator_host", host);
 
   std::string user, pwd;
-  declare_parameter("user_name", user);
   get_parameter("user_name", user);
-  declare_parameter("password", pwd);
   get_parameter("password", pwd);
 
   callback_group_services_ = create_callback_group(
@@ -173,7 +172,6 @@ void LocatorBridgeNode::init()
   // Create interface to send binary laser data if requested
   if (provide_laser_data_) {
     int laser_datagram_port;
-    declare_parameter("laser_datagram_port", laser_datagram_port);
     get_parameter("laser_datagram_port", laser_datagram_port);
 
     laser_sending_interface_.reset(new SendingInterface(laser_datagram_port, shared_from_this()));
@@ -182,7 +180,6 @@ void LocatorBridgeNode::init()
     // Create subscriber to laser data
 
     std::string scan_topic = "/scan";
-    declare_parameter("scan_topic", scan_topic);
     get_parameter("scan_topic", scan_topic);
 
     rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
@@ -199,7 +196,6 @@ void LocatorBridgeNode::init()
   // Create interface to send binary laser2 data if requested
   if (provide_laser2_data_) {
     int laser2_datagram_port;
-    declare_parameter("laser2_datagram_port", laser2_datagram_port);
     get_parameter("laser2_datagram_port", laser2_datagram_port);
 
     laser2_sending_interface_.reset(new SendingInterface(laser2_datagram_port, shared_from_this()));
@@ -208,7 +204,6 @@ void LocatorBridgeNode::init()
     // Create subscriber to laser2 data
 
     std::string scan2_topic = "/scan2";
-    declare_parameter("scan2_topic", scan2_topic);
     get_parameter("scan2_topic", scan2_topic);
 
     rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
@@ -225,7 +220,6 @@ void LocatorBridgeNode::init()
   // Create interface to send binary odometry data if requested
   if (provide_odometry_data_) {
     int odom_datagram_port;
-    declare_parameter("odom_datagram_port", odom_datagram_port);
     get_parameter("odom_datagram_port", odom_datagram_port);
 
     odom_sending_interface_.reset(new SendingInterface(odom_datagram_port, shared_from_this()));
@@ -234,7 +228,6 @@ void LocatorBridgeNode::init()
     // Create subscriber to odometry data
 
     std::string odom_topic = "/odom";
-    declare_parameter("odom_topic", odom_topic);
     get_parameter("odom_topic", odom_topic);
 
     rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
@@ -481,119 +474,44 @@ void LocatorBridgeNode::syncConfig()
 
   // overwrite current locator config with ros params
 
-  std::string laser_type;
-  declare_parameter("ClientSensor.laser.type", laser_type);
-  get_parameter("ClientSensor.laser.type", laser_type);
-  loc_client_config["ClientSensor.laser.type"] = laser_type;
-
-  std::string laser_address;
-  declare_parameter("ClientSensor.laser.address", laser_address);
-  get_parameter("ClientSensor.laser.address", laser_address);
-  loc_client_config["ClientSensor.laser.address"] = laser_address;
-
-  bool laser_mirror_laser_scans = false;
-  declare_parameter("ClientSensor.laser.mirrorLaserScans", laser_mirror_laser_scans);
-  get_parameter("ClientSensor.laser.mirrorLaserScans", laser_mirror_laser_scans);
-  loc_client_config["ClientSensor.laser.mirrorLaserScans"] = laser_mirror_laser_scans;
-
-  double laser_vehicle_transform_laser_x = 0.0;
-  declare_parameter("ClientSensor.laser.vehicleTransformLaser.x", laser_vehicle_transform_laser_x);
-  get_parameter("ClientSensor.laser.vehicleTransformLaser.x", laser_vehicle_transform_laser_x);
-  loc_client_config["ClientSensor.laser.vehicleTransformLaser.x"] = laser_vehicle_transform_laser_x;
-
-  double laser_vehicle_transform_laser_y = 0.0;
-  declare_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
-  get_parameter("ClientSensor.laser.vehicleTransformLaser.y", laser_vehicle_transform_laser_y);
-  loc_client_config["ClientSensor.laser.vehicleTransformLaser.y"] = laser_vehicle_transform_laser_y;
-
-  double laser_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
-  declare_parameter(
-    "ClientSensor.laser.vehicleTransformLaser.yaw",
-    laser_vehicle_transform_laser_yaw);
-  get_parameter("ClientSensor.laser.vehicleTransformLaser.yaw", laser_vehicle_transform_laser_yaw);
-  loc_client_config["ClientSensor.laser.vehicleTransformLaser.yaw"] =
-    laser_vehicle_transform_laser_yaw;
-
-  bool laser_use_intensities = false;
-  declare_parameter("ClientSensor.laser.useIntensities", laser_use_intensities);
-  get_parameter("ClientSensor.laser.useIntensities", laser_use_intensities);
-  loc_client_config["ClientSensor.laser.useIntensities"] = laser_use_intensities;
-
-  bool enable_laser2 = false;
-  declare_parameter("ClientSensor.enableLaser2", enable_laser2);
-  get_parameter("ClientSensor.enableLaser2", enable_laser2);
-  loc_client_config["ClientSensor.enableLaser2"] = enable_laser2;
-
-  std::string laser2_type;
-  declare_parameter("ClientSensor.laser2.type", laser2_type);
-  get_parameter("ClientSensor.laser2.type", laser2_type);
-  loc_client_config["ClientSensor.laser2.type"] = laser2_type;
-
-  std::string laser2_address;
-  declare_parameter("ClientSensor.laser2.address", laser2_address);
-  get_parameter("ClientSensor.laser2.address", laser2_address);
-  loc_client_config["ClientSensor.laser2.address"] = laser2_address;
-
-  bool laser2_mirror_laser_scans = false;
-  declare_parameter("ClientSensor.laser2.mirrorLaserScans", laser2_mirror_laser_scans);
-  get_parameter("ClientSensor.laser2.mirrorLaserScans", laser2_mirror_laser_scans);
-  loc_client_config["ClientSensor.laser2.mirrorLaserScans"] = laser2_mirror_laser_scans;
-
-  double laser2_vehicle_transform_laser_x = 0.0;
-  declare_parameter(
-    "ClientSensor.laser2.vehicleTransformLaser.x",
-    laser2_vehicle_transform_laser_x);
-  get_parameter("ClientSensor.laser2.vehicleTransformLaser.x", laser2_vehicle_transform_laser_x);
-  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.x"] =
-    laser2_vehicle_transform_laser_x;
-
-  double laser2_vehicle_transform_laser_y = 0.0;
-  declare_parameter(
-    "ClientSensor.laser2.vehicleTransformLaser.y",
-    laser2_vehicle_transform_laser_y);
-  get_parameter("ClientSensor.laser2.vehicleTransformLaser.y", laser2_vehicle_transform_laser_y);
-  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.y"] =
-    laser2_vehicle_transform_laser_y;
-
-  double laser2_vehicle_transform_laser_yaw = 0.0;  // angle in degrees
-  declare_parameter(
-    "ClientSensor.laser2.vehicleTransformLaser.yaw",
-    laser2_vehicle_transform_laser_yaw);
-  get_parameter(
-    "ClientSensor.laser2.vehicleTransformLaser.yaw",
-    laser2_vehicle_transform_laser_yaw);
-  loc_client_config["ClientSensor.laser2.vehicleTransformLaser.yaw"] =
-    laser2_vehicle_transform_laser_yaw;
-
-  bool laser2_use_intensities = false;
-  declare_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
-  get_parameter("ClientSensor.laser2.useIntensities", laser2_use_intensities);
-  loc_client_config["ClientSensor.laser2.useIntensities"] = laser2_use_intensities;
-
-  bool enable_reflector_markers = false;
-  declare_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
-  get_parameter("ClientSensor.enableReflectorMarkers", enable_reflector_markers);
-  loc_client_config["ClientSensor.enableReflectorMarkers"] = enable_reflector_markers;
-
-  bool autostart = false;
-  declare_parameter("ClientLocalization.autostart", autostart);
-  get_parameter("ClientLocalization.autostart", autostart);
-  loc_client_config["ClientLocalization.autostart"] = autostart;
-
-  bool odometry_enabled = false;
-  declare_parameter("ClientSensor.enableOdometry", odometry_enabled);
-  get_parameter("ClientSensor.enableOdometry", odometry_enabled);
-  loc_client_config["ClientSensor.enableOdometry"] = odometry_enabled;
-
-  bool odometry_tls = false;
-  declare_parameter("ClientSensor.odometryEncryption", odometry_tls);
-  get_parameter("ClientSensor.odometryEncryption", odometry_tls);
-  loc_client_config["ClientSensor.odometryEncryption"] = odometry_tls;
-
-  std::string odometry_address;
-  declare_parameter("ClientSensor.odometryAddress", odometry_address);
-  get_parameter("ClientSensor.odometryAddress", odometry_address);
-  loc_client_config["ClientSensor.odometryAddress"] = odometry_address;
+  std::map<std::string, rclcpp::Parameter> locator_parameters;
+  this->get_node_parameters_interface()->get_parameters_by_prefix(
+    "localization_client_config",
+    locator_parameters);
+  std::for_each(
+    locator_parameters.begin(), locator_parameters.end(), [&loc_client_config,
+    logger = get_logger()](const std::pair<std::string, rclcpp::Parameter> & param) {
+      switch (param.second.get_type()) {
+        case rclcpp::ParameterType::PARAMETER_BOOL:
+          loc_client_config[param.first] = param.second.as_bool();
+          break;
+        case rclcpp::ParameterType::PARAMETER_INTEGER:
+          loc_client_config[param.first] = param.second.as_int();
+          break;
+        case rclcpp::ParameterType::PARAMETER_DOUBLE:
+          loc_client_config[param.first] = param.second.as_double();
+          break;
+        case rclcpp::ParameterType::PARAMETER_STRING:
+          loc_client_config[param.first] = param.second.as_string();
+          break;
+        case rclcpp::ParameterType::PARAMETER_BOOL_ARRAY:
+          loc_client_config[param.first] = param.second.as_bool_array();
+          break;
+        case rclcpp::ParameterType::PARAMETER_INTEGER_ARRAY:
+          loc_client_config[param.first] = param.second.as_integer_array();
+          break;
+        case rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY:
+          loc_client_config[param.first] = param.second.as_double_array();
+          break;
+        case rclcpp::ParameterType::PARAMETER_STRING_ARRAY:
+          loc_client_config[param.first] = param.second.as_string_array();
+          break;
+        default:
+          RCLCPP_WARN(
+            logger, "Parameter type %s is unsupported for Locator config!",
+            param.second.get_type_name().c_str());
+      }
+    });
 
   RCLCPP_INFO_STREAM(get_logger(), "new loc client config: " << loc_client_config.toString());
   for (const auto & c : loc_client_config) {
