@@ -8,6 +8,7 @@ on:
   schedule:
     # Run once per day to detect broken dependencies.
     - cron: '33 6 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
