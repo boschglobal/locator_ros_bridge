@@ -54,8 +54,15 @@ void ReceivingInterface::onReadEvent(const Poco::AutoPtr<Poco::Net::ReadableNoti
     else
     {
       datagram_buffer_.insert(datagram_buffer_.end(), msg.begin(), msg.end());
-      const auto bytes_to_delete = tryToParseData(datagram_buffer_);
-      datagram_buffer_.erase(datagram_buffer_.begin(), datagram_buffer_.begin() + bytes_to_delete);
+
+      size_t bytes_to_delete = 0;
+      // Try to parse messages from the buffer until tryToParseData fails to parse a full message
+      do {
+        bytes_to_delete = tryToParseData(datagram_buffer_);
+        datagram_buffer_.erase(
+          datagram_buffer_.begin(),
+          datagram_buffer_.begin() + bytes_to_delete);
+      } while (bytes_to_delete > 0);
     }
   }
   catch (const std::ios_base::failure& io_failure)
