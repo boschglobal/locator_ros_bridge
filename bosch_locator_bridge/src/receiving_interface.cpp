@@ -57,8 +57,15 @@ void ReceivingInterface::onReadEvent(
       std::cout << "received msg of length 0... Connection closed? \n";
     } else {
       datagram_buffer_.insert(datagram_buffer_.end(), msg.begin(), msg.end());
-      const auto bytes_to_delete = tryToParseData(datagram_buffer_, node_);
-      datagram_buffer_.erase(datagram_buffer_.begin(), datagram_buffer_.begin() + bytes_to_delete);
+
+      size_t bytes_to_delete = 0;
+      // Try to parse messages from the buffer until tryToParseData fails to parse a full message
+      do {
+        bytes_to_delete = tryToParseData(datagram_buffer_, node_);
+        datagram_buffer_.erase(
+          datagram_buffer_.begin(),
+          datagram_buffer_.begin() + bytes_to_delete);
+      } while (bytes_to_delete > 0);
     }
   } catch (const std::ios_base::failure & io_failure) {
     // catching this exception is actually no error:
