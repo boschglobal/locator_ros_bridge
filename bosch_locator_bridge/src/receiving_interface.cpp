@@ -32,7 +32,6 @@ ReceivingInterface::ReceivingInterface(
   const Poco::Net::IPAddress & hostadress, Poco::UInt16 port,
   rclcpp::Node::SharedPtr node)
 : node_(node),
-  tf_broadcaster_(node),
   ccm_socket_(Poco::Net::SocketAddress(hostadress, port))
 {
   reactor_.addEventHandler(
@@ -73,24 +72,6 @@ void ReceivingInterface::onReadEvent(
 void ReceivingInterface::run()
 {
   reactor_.run();
-}
-
-void ReceivingInterface::publishTransform(
-  const geometry_msgs::msg::PoseStamped & pose, const std::string & parent_frame,
-  const std::string child_frame)
-{
-  geometry_msgs::msg::TransformStamped transform;
-  transform.header.stamp = pose.header.stamp;
-  transform.header.frame_id = parent_frame;
-
-  transform.transform.translation.x = pose.pose.position.x;
-  transform.transform.translation.y = pose.pose.position.y;
-  transform.transform.translation.z = pose.pose.position.z;
-  transform.transform.rotation = pose.pose.orientation;
-
-  transform.child_frame_id = child_frame;
-
-  tf_broadcaster_.sendTransform(transform);
 }
 
 ClientControlModeInterface::ClientControlModeInterface(
@@ -178,7 +159,6 @@ size_t ClientMapVisualizationInterface::tryToParseData(
 
   if (bytes_parsed > 0) {
     // publish
-    publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
     client_map_visualization_pub_->publish(client_map_visualization);
     client_map_visualization_pose_pub_->publish(pose);
     client_map_visualization_scan_pub_->publish(scan);
@@ -249,7 +229,6 @@ size_t ClientRecordingVisualizationInterface::tryToParseData(
 
   if (parsed_bytes > 0) {
     // publish
-    publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
     client_recording_visualization_pub_->publish(client_recording_visualization);
     client_recording_visualization_pose_pub_->publish(pose);
     client_recording_visualization_scan_pub_->publish(scan);
@@ -366,7 +345,6 @@ size_t ClientLocalizationPoseInterface::tryToParseData(
 
   if (bytes_parsed > 0) {
     // publish
-    publishTransform(pose, MAP_FRAME_ID, LASER_FRAME_ID);
     client_localization_pose_pub_->publish(client_localization_pose);
     client_localization_pose_pose_pub_->publish(poseWithCov);
     client_localization_pose_lidar_odo_pose_pub_->publish(lidar_odo_pose);
