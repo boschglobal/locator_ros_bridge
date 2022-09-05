@@ -16,7 +16,6 @@
 #pragma once
 
 #include <ros/ros.h>
-#include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
@@ -49,12 +48,8 @@ protected:
    */
   virtual size_t tryToParseData(const std::vector<char>& datagram_buffer) = 0;
 
-  void publishTransform(const geometry_msgs::PoseStamped& pose, const std::string& parent_frame,
-                        const std::string child_frame);
-
   //! Publisher
   std::vector<ros::Publisher> publishers_;
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
 
   //! Node handle
   ros::NodeHandle nh_;

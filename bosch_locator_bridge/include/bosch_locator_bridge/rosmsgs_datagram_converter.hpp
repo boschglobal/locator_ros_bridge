@@ -38,7 +38,6 @@
 
 #define MAP_FRAME_ID "map"
 #define ODOM_FRAME_ID "odom"
-#define LASER_FRAME_ID "base_laser"
 
 /**
  * Class with static function to convert ros messages to locator's datagrams.
