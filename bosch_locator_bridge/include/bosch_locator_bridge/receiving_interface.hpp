@@ -27,8 +27,8 @@
 #include "geometry_msgs/msg/pose_array.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
-#include "tf2_ros/transform_broadcaster.h"
 
 #include "bosch_locator_bridge/msg/client_control_mode.hpp"
 #include "bosch_locator_bridge/msg/client_global_align_visualization.hpp"
@@ -65,15 +65,8 @@ protected:
     const std::vector<char> & datagram_buffer,
     rclcpp::Node::SharedPtr node) = 0;
 
-  void publishTransform(
-    const geometry_msgs::msg::PoseStamped & pose,
-    const std::string & parent_frame, const std::string child_frame);
-
   //! Node
   rclcpp::Node::SharedPtr node_;
-
-  //! Broadcaster
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
 
   // port definitions for the different interfaces. See Locator API documentation section 12.8
   static constexpr Poco::UInt16 BINARY_CLIENT_CONTROL_MODE_PORT {9004};
