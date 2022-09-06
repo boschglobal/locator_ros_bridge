@@ -16,9 +16,11 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_
 #define BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_
 
+#include <Poco/BinaryReader.h>
 #include <Poco/Net/NetException.h>
 #include <Poco/Net/SocketNotification.h>
 #include <Poco/Net/SocketReactor.h>
+#include <Poco/Net/SocketStream.h>
 #include <Poco/Net/StreamSocket.h>
 
 #include <string>
@@ -61,9 +63,7 @@ protected:
    * @param datagram_buffer The data received via the binary connection socket
    * @return amount of bytes successfully parsed and can be removed from the buffer (0 if not parsing failed)
    */
-  virtual size_t tryToParseData(
-    const std::vector<char> & datagram_buffer,
-    rclcpp::Node::SharedPtr node) = 0;
+  virtual void tryToParseData(Poco::BinaryReader & binary_reader) = 0;
 
   void publishTransform(
     const geometry_msgs::msg::PoseStamped & pose,
@@ -89,17 +89,15 @@ protected:
 private:
   Poco::Net::StreamSocket ccm_socket_;
   Poco::Net::SocketReactor reactor_;
-  // TODO(): use a better suited data structure (a deque?)
-  std::vector<char> datagram_buffer_;
+  Poco::Net::SocketInputStream buffer_stream_ {ccm_socket_};
+  Poco::BinaryReader binary_reader_ {buffer_stream_, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER};
 };
 
 class ClientControlModeInterface : public ReceivingInterface
 {
 public:
   ClientControlModeInterface(const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientControlMode>
@@ -110,9 +108,7 @@ class ClientMapMapInterface : public ReceivingInterface
 {
 public:
   ClientMapMapInterface(const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr client_map_map_pub_;
@@ -124,9 +120,7 @@ public:
   ClientMapVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientMapVisualization>
@@ -145,9 +139,7 @@ public:
   ClientRecordingMapInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr client_recording_map_pub_;
@@ -159,9 +151,7 @@ public:
   ClientRecordingVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientRecordingVisualization>
@@ -180,9 +170,7 @@ public:
   ClientLocalizationMapInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr client_localization_map_pub_;
@@ -194,9 +182,7 @@ public:
   ClientLocalizationVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientLocalizationVisualization>
@@ -213,9 +199,7 @@ public:
   ClientLocalizationPoseInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientLocalizationPose>
@@ -232,9 +216,7 @@ public:
   ClientGlobalAlignVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
     rclcpp::Node::SharedPtr node);
-  size_t tryToParseData(
-    const std::vector<char> & datagram,
-    rclcpp::Node::SharedPtr node) override;
+  void tryToParseData(Poco::BinaryReader & binary_reader) override;
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientGlobalAlignVisualization>
