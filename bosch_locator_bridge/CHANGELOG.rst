@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.7 (2022-09-08)
+------------------
 * Fixed a bug that could cause latency in localization poses
 * Remove tf broadcaster
 * Check if laser scan message is valid
