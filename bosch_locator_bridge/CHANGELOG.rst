@@ -2,6 +2,15 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed a bug that could cause latency in localization poses
+* Remove tf broadcaster
+* Check if laser scan message is valid
+* Add refresh timer to service callback group to avoid overlapping json rpc calls
+* Update to ROKIT Locator version 1.5
+* Contributors: Fabian König, Stefan Laible
+
 2.1.6 (2022-06-13)
 ------------------
 * fix module version check for compatibility with v1.4.0
