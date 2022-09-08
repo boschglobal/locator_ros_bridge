@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.7 (2022-09-08)
+------------------
 * Fixed a bug that could cause latency in localization poses
 * Remove tf broadcaster
 * Support arrays in config
