@@ -2,6 +2,15 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed a bug that could cause latency in localization poses
+* Remove tf broadcaster
+* Support arrays in config
+* Check if laser scan message is valid
+* Update to ROKIT Locator version 1.5
+* Contributors: Fabian König, Stefan Laible
+
 1.0.6 (2022-04-13)
 ------------------
 * Fix check of locator config params
