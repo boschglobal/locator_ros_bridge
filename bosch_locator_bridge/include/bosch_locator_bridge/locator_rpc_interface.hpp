@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include <mutex>
 #include <unordered_map>
 #include <Poco/Net/HTTPClientSession.h>
 
@@ -46,6 +47,7 @@ public:
 protected:
   Poco::JSON::Object json_rpc_call(Poco::Net::HTTPClientSession& session, const std::string& method,
                                    const Poco::JSON::Object& query_obj);
+  std::mutex json_rpc_call_mutex_;
   Poco::Net::HTTPClientSession session_;
   std::string session_id_;
   size_t query_id_;

@@ -165,6 +165,8 @@ Poco::JSON::Object LocatorRPCInterface::call(const std::string& method, const Po
 Poco::JSON::Object LocatorRPCInterface::json_rpc_call(Poco::Net::HTTPClientSession& session, const std::string& method,
                                                       const Poco::JSON::Object& query_obj)
 {
+  std::lock_guard<std::mutex> lock(json_rpc_call_mutex_);  // just one call at a time
+
   using Poco::Net::HTTPRequest;
   using Poco::Net::HTTPResponse;
 
