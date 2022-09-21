@@ -23,6 +23,8 @@ There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
 * ROS 2: Foxy (branch [foxy](../../tree/foxy)), Rolling (this branch, will likely also work on Galactic)
 
+The repository also contains the [bosch_locator_bridge_utils](bosch_locator_bridge_utils) package, which provides an interface between the bosch_locator_bridge and [Nav2], the navigation stack of ROS 2.
+
 The following video (click on image) gives more information about the ROKIT Locator.
 [![Rexroth ROKIT Locator](https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg)](https://www.youtube.com/watch?v=g6SIUlXn9Bk)
 
@@ -58,12 +60,14 @@ To build from source, make sure your colcon workspace is set up correctly. Then 
 ## How to Get Started
 
 To get started, take a look at the [README.md](bosch_locator_bridge/README.md) of the bosch_locator_bridge package.
+And for the bosch_locator_bridge_utils package, please have a look at [README.md](bosch_locator_bridge_utils/README.md).
 
 ## License
 
 locator_ros_bridge is open-sourced under the Apache-2.0 license. See the [LICENSE](LICENSE) file for details.
 
 
+[Nav2]: https://navigation.ros.org/
 [ROS]: https://www.ros.org/
 [Poco]: https://pocoproject.org/
 [Rexroth ROKIT Locator]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
