@@ -1,4 +1,4 @@
-name: "Build action: Galactic"
+name: "Build action (utils): Galactic"
 
 on:
   push:
