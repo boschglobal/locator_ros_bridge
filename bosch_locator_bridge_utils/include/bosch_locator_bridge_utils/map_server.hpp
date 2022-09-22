@@ -50,6 +50,8 @@ protected:
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr cloud_sub_;
   rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::OccupancyGrid>::SharedPtr grid_pub_;
 
+  std::atomic<bool> active_{false};
+
   std::string frame_id_, topic_name_cloud_;
   nav_msgs::msg::OccupancyGrid grid_msg_;
   float grid_resolution_ = 0.0f;

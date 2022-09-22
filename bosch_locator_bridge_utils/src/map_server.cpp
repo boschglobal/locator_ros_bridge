@@ -45,6 +45,11 @@ nav2_util::CallbackReturn MapServer::on_configure(const rclcpp_lifecycle::State 
     topic_name_grid,
     rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable());
 
+  cloud_sub_ = create_subscription<sensor_msgs::msg::PointCloud2>(
+    topic_name_cloud_,
+    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+    std::bind(&MapServer::cloudCallback, this, std::placeholders::_1));
+
   return nav2_util::CallbackReturn::SUCCESS;
 }
 
@@ -52,10 +57,7 @@ nav2_util::CallbackReturn MapServer::on_activate(const rclcpp_lifecycle::State &
 {
   grid_pub_->on_activate();
 
-  cloud_sub_ = create_subscription<sensor_msgs::msg::PointCloud2>(
-    topic_name_cloud_,
-    rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
-    std::bind(&MapServer::cloudCallback, this, std::placeholders::_1));
+  active_ = true;
 
   // create bond connection
   createBond();
@@ -65,6 +67,8 @@ nav2_util::CallbackReturn MapServer::on_activate(const rclcpp_lifecycle::State &
 
 nav2_util::CallbackReturn MapServer::on_deactivate(const rclcpp_lifecycle::State & /*state*/)
 {
+  active_ = false;
+
   grid_pub_->on_deactivate();
 
   // destroy bond connection
@@ -75,6 +79,7 @@ nav2_util::CallbackReturn MapServer::on_deactivate(const rclcpp_lifecycle::State
 
 nav2_util::CallbackReturn MapServer::on_cleanup(const rclcpp_lifecycle::State & /*state*/)
 {
+  cloud_sub_.reset();
   grid_pub_.reset();
 
   return nav2_util::CallbackReturn::SUCCESS;
@@ -88,6 +93,8 @@ nav2_util::CallbackReturn MapServer::on_shutdown(const rclcpp_lifecycle::State &
 void MapServer::cloudCallback(
   const sensor_msgs::msg::PointCloud2::SharedPtr msg)
 {
+  if (!active_) {return;}
+
   convertCloud(msg);
 
   // update msg header
