@@ -18,9 +18,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable
 from launch.conditions import IfCondition, UnlessCondition
-from launch.launch_description_sources import FrontendLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from nav2_common.launch import RewrittenYaml
@@ -72,7 +71,9 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'params_file',
-            default_value=os.path.join(get_package_share_directory('bosch_locator_bridge_utils'), 'params', 'params.yaml'),
+            default_value=os.path.join(
+                get_package_share_directory('bosch_locator_bridge_utils'),
+                'params', 'params.yaml'),
             description='Full path to the ROS2 parameters file to use'),
 
         DeclareLaunchArgument(
@@ -87,7 +88,7 @@ def generate_launch_description():
             output='screen',
             parameters=[configured_params],
             remappings=remappings,
-            condition=IfCondition(LaunchConfiguration('use_locator_map'))),
+            condition=IfCondition(use_locator_map)),
 
         Node(
             package='nav2_map_server',
@@ -96,7 +97,7 @@ def generate_launch_description():
             output='screen',
             parameters=[configured_params],
             remappings=remappings,
-            condition=UnlessCondition(LaunchConfiguration('use_locator_map'))),
+            condition=UnlessCondition(use_locator_map)),
 
         Node(
             package='bosch_locator_bridge_utils',
