@@ -96,7 +96,7 @@ def generate_launch_description():
             output='screen',
             parameters=[configured_params],
             remappings=remappings,
-            condition=IfCondition(PythonExpression(['not ', LaunchConfiguration('use_locator_map')]))),
+            condition=UnlessCondition(LaunchConfiguration('use_locator_map'))),
 
         Node(
             package='bosch_locator_bridge_utils',
