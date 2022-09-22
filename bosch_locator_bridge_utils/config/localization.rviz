@@ -29,7 +29,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -74,87 +74,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_footprint:
-          Value: true
-        base_link:
-          Value: true
-        caster_back_left_base_link:
-          Value: true
-        caster_back_left_wheel_link:
-          Value: true
-        caster_back_right_base_link:
-          Value: true
-        caster_back_right_wheel_link:
-          Value: true
-        caster_front_left_base_link:
-          Value: true
-        caster_front_left_wheel_link:
-          Value: true
-        caster_front_right_base_link:
-          Value: true
-        caster_front_right_wheel_link:
-          Value: true
-        laser_base_link:
-          Value: true
-        laser_frame:
-          Value: true
-        laser_link:
-          Value: true
-        laser_rear_link:
-          Value: true
-        lift_link:
-          Value: true
-        map:
-          Value: true
-        odom:
-          Value: true
-        swingaxis_center_link:
-          Value: true
-        swingaxis_left_link:
-          Value: true
-        swingaxis_right_link:
-          Value: true
-        wheel_left_link:
-          Value: true
-        wheel_right_link:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_footprint:
-              base_link:
-                caster_front_left_base_link:
-                  caster_front_left_wheel_link:
-                    {}
-                caster_front_right_base_link:
-                  caster_front_right_wheel_link:
-                    {}
-                laser_base_link:
-                  laser_link:
-                    laser_frame:
-                      {}
-                laser_rear_link:
-                  {}
-                lift_link:
-                  {}
-                swingaxis_center_link:
-                  swingaxis_left_link:
-                    caster_back_left_base_link:
-                      caster_back_left_wheel_link:
-                        {}
-                    wheel_left_link:
-                      {}
-                  swingaxis_right_link:
-                    caster_back_right_base_link:
-                      caster_back_right_wheel_link:
-                        {}
-                    wheel_right_link:
-                      {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
