@@ -15,6 +15,7 @@
 
 #include "locator_bridge_node.hpp"
 
+#include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -475,7 +476,7 @@ void LocatorBridgeNode::syncConfig()
   // overwrite current locator config with ros params
 
   std::map<std::string, rclcpp::Parameter> locator_parameters;
-  this->get_node_parameters_interface()->get_parameters_by_prefix(
+  get_node_parameters_interface()->get_parameters_by_prefix(
     "localization_client_config",
     locator_parameters);
   std::for_each(
