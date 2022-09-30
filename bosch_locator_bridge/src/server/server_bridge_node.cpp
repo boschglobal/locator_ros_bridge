@@ -44,7 +44,7 @@ REQUIRED_MODULE_VERSIONS({
   {"AboutBuild", {3, 0}},
   {"Certificate", {3, 0}},
   {"System", {3, 1}},
-  {"ServerMap", {5, 0}},
+  {"ServerMap", {6, 0}},
   {"ServerUser", {4, 0}},
 //  {"User", {4, 0}},
   {"ServerInternal", {2, 0}},
