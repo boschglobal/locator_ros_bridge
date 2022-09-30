@@ -1,4 +1,4 @@
-name: "Build action: Rolling"
+name: "Build action (utils): Galactic"
 
 on:
   push:
@@ -17,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
-        os: [ ubuntu-22.04 ]
-        ros_distribution: [ rolling ]
+        os: [ ubuntu-20.04 ]
+        ros_distribution: [ galactic ]
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.3
@@ -26,7 +26,7 @@ jobs:
         required-ros-distributions: ${{ matrix.ros_distribution }}
     - uses : ros-tooling/action-ros-ci@v0.2
       with:
-        package-name: bosch_locator_bridge
+        package-name: bosch_locator_bridge_utils
         vcs-repo-file-url: ''
         target-ros2-distro: ${{ matrix.ros_distribution }}
         colcon-defaults: |
@@ -34,5 +34,5 @@ jobs:
             "build": {
               "mixin": ["coverage-gcc"]
             }
-          }       
+          } 
         colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
