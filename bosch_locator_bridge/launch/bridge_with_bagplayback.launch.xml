@@ -69,29 +69,31 @@ limitations under the License.-->
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
-    <param name="ClientSensor.laser.type" value="simple"/>
-    <param name="ClientSensor.laser.address" value="$(var bridge_ip):$(var laser_datagram_port)"/>
-    <param name="ClientSensor.laser.mirrorLaserScans" value="$(var laser_mirror_scans)"/>
-    <param name="ClientSensor.laser.vehicleTransformLaser.x" value="$(var laser_x)"/>
-    <param name="ClientSensor.laser.vehicleTransformLaser.y" value="$(var laser_y)"/>
-    <param name="ClientSensor.laser.vehicleTransformLaser.yaw" value="$(var laser_yaw)"/>
-    <param name="ClientSensor.laser.useIntensities" value="$(var laser_use_intensities)"/>
+    <param name="localization_client_config">
+      <param name="ClientSensor.laser.type" value="simple"/>
+      <param name="ClientSensor.laser.address" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+      <param name="ClientSensor.laser.mirrorLaserScans" value="$(var laser_mirror_scans)"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.x" value="$(var laser_x)"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.y" value="$(var laser_y)"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.yaw" value="$(var laser_yaw)"/>
+      <param name="ClientSensor.laser.useIntensities" value="$(var laser_use_intensities)"/>
 
-    <param name="ClientSensor.enableLaser2" value="$(var laser2_enable)"/>
-    <param name="ClientSensor.laser2.type" value="simple"/>
-    <param name="ClientSensor.laser2.address" value="$(var bridge_ip):$(var laser2_datagram_port)"/>
-    <param name="ClientSensor.laser2.mirrorLaserScans" value="$(var laser2_mirror_scans)"/>
-    <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="$(var laser2_x)"/>
-    <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="$(var laser2_y)"/>
-    <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="$(var laser2_yaw)"/>
-    <param name="ClientSensor.laser2.useIntensities" value="$(var laser2_use_intensities)"/>
+      <param name="ClientSensor.enableLaser2" value="$(var laser2_enable)"/>
+      <param name="ClientSensor.laser2.type" value="simple"/>
+      <param name="ClientSensor.laser2.address" value="$(var bridge_ip):$(var laser2_datagram_port)"/>
+      <param name="ClientSensor.laser2.mirrorLaserScans" value="$(var laser2_mirror_scans)"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="$(var laser2_x)"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="$(var laser2_y)"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="$(var laser2_yaw)"/>
+      <param name="ClientSensor.laser2.useIntensities" value="$(var laser2_use_intensities)"/>
 
-    <param name="ClientSensor.enableReflectorMarkers" value="$(var enable_reflector_markers="/>
+      <param name="ClientSensor.enableReflectorMarkers" value="$(var enable_reflector_markers)"/>
 
-    <param name="ClientLocalization.autostart" value="false"/>
-    <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
-    <param name="ClientSensor.odometryEncryption" value="false"/>
-    <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
+      <param name="ClientLocalization.autostart" value="false"/>
+      <param name="ClientSensor.enableOdometry" value="$(var enable_odometry)"/>
+      <param name="ClientSensor.odometryEncryption" value="false"/>
+      <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
+    </param>
   </node>
 
   <executable cmd="ros2 bag play $(var bag)" output="screen"/>
