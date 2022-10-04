@@ -44,6 +44,8 @@ private:
   bool check_module_versions(
       const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
           &module_versions);
+  template<typename T>
+  std::vector<T> convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const;
 
   bool serverMapListCb(bosch_locator_bridge::ServerMapList::Request &req,
                        bosch_locator_bridge::ServerMapList::Response &res);
@@ -62,3 +64,15 @@ private:
 
   std::vector<ros::ServiceServer> services_;
 };
+
+template<typename T>
+std::vector<T> ServerBridgeNode::convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const
+{
+  std::vector<T> vec;
+  for (int i = 0; i != array.size(); ++i)
+  {
+    vec.push_back(static_cast<T>(array[i]));
+  }
+
+  return vec;
+}

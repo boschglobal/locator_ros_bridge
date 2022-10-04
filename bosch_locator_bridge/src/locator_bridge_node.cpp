@@ -398,7 +398,8 @@ void LocatorBridgeNode::syncConfig()
       case XmlRpc::XmlRpcValue::TypeArray:
         if (value.size() == 0)
         {
-          ROS_WARN_STREAM("empty array for " << key);
+          // for an empty array the type does not matter here, we arbitrarily choose double
+          loc_client_config[key] = convert_value_array_to_vector<double>(value);
         }
         else
         {
