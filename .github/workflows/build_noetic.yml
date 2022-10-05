@@ -19,7 +19,6 @@ jobs:
         os: [ ubuntu-20.04 ]
         ros_distribution: [ noetic ]
     steps:
-    - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.3
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
