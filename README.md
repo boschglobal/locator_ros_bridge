@@ -7,6 +7,10 @@
 [![Build action: Galactic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml)
 [![Build action: Rolling](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml)
 
+# **Warning**
+
+**The bosch_locator_bridge is only maintained for the latest version of the ROKIT Locator. This branch is intended for version 1.4 of the ROKIT Locator. It is not tested and will not be maintained!**
+
 # locator_ros_bridge
 
 This repository contains the [bosch_locator_bridge](bosch_locator_bridge) package, which provides a [ROS] interface to the [Rexroth ROKIT Locator].
