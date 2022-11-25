@@ -9,7 +9,7 @@
 
 # **Warning**
 
-**The bosch_locator_bridge is only maintained for the latest version of the ROKIT Locator. This branch is intended for version 1.4 of the ROKIT Locator. It is not tested and will not be maintained!**
+**The `bosch_locator_bridge` is only maintained for the latest version of the ROKIT Locator. This branch is intended for version 1.4 of the ROKIT Locator. It is not tested and will not be maintained!**
 
 # locator_ros_bridge
 
