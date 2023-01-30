@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.8 (2023-01-30)
+------------------
 * Support arrays in config for server node
 * Update module versions in server node
 * Use mutex to just make one json_rpc_call at a time
