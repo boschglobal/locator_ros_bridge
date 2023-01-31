@@ -30,6 +30,12 @@ int32 state
 # indicate this by incrementing the epoch
 uint64 epoch
 
+# A 64-bit bit field which indicates errors that may affect the localization
+uint64 errorFlags
+
+# A 64-bit bit field which provides detailed information about specific aspects of the localization
+uint64 infoFlags
+
 # Constants
 int32 LOC_STATUS_INFO_LOCALIZATION_NOT_RUNNING = -3
 int32 LOC_STATUS_NOT_LOCALIZED_STARTUP = -2
