@@ -201,7 +201,8 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
   binary_reader >> age >> stamp;
   client_localization_pose.age = rclcpp::Duration::from_seconds(age);
   client_localization_pose.timestamp = rclcpp::Time(stamp * 1e9);
-  binary_reader >> client_localization_pose.unique_id >> client_localization_pose.state;
+  binary_reader >> client_localization_pose.unique_id >> client_localization_pose.state >>
+  client_localization_pose.error_flags >> client_localization_pose.info_flags;
 
   // Get pose
   pose.header.stamp = client_localization_pose.timestamp;
