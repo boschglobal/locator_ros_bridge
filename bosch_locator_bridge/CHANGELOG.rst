@@ -2,6 +2,13 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Support setting arbitrary Locator config entries
+* Update module versions in server node
+* Use mutex to just make one json_rpc_call at a time
+* Contributors: Stefan Laible
+
 2.0.8 (2022-09-08)
 ------------------
 * Fixed a bug that could cause latency in localization poses
