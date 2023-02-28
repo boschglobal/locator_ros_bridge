@@ -17,6 +17,7 @@
 
 #include <pcl_conversions/pcl_conversions.h>
 
+#include <cfloat>
 #include <memory>
 #include <string>
 #include <utility>
