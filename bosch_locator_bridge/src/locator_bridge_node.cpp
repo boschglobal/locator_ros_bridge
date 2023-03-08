@@ -562,7 +562,7 @@ void LocatorBridgeNode::syncConfig()
 
   if (!loc_client_interface_->setConfigList(loc_client_config)) {
     // Try to stop everything before setting config list
-    // TODO: Better use ClientControlMode interface to check the current operating mode
+    // TODO( ): Better use ClientControlMode interface to check the current operating mode
     clientRecordingStopVisualRecordingCb(nullptr, nullptr);
     clientMapStopCb(nullptr, nullptr);
     clientLocalizationStopCb(nullptr, nullptr);
