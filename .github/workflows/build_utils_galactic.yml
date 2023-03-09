@@ -23,7 +23,7 @@ jobs:
     - uses: ros-tooling/setup-ros@v0.5
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
-    - uses : ros-tooling/action-ros-ci@v0.2.7
+    - uses : ros-tooling/action-ros-ci@v0.2
       with:
         package-name: bosch_locator_bridge_utils
         vcs-repo-file-url: ''
