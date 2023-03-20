@@ -562,7 +562,10 @@ void LocatorBridgeNode::syncConfig()
 
   if (!loc_client_interface_->setConfigList(loc_client_config)) {
     // Try to stop everything before setting config list
-    // TODO( ): Better use ClientControlMode interface to check the current operating mode
+    RCLCPP_WARN(
+      get_logger(),
+      "One of the modes appears to be in a RUN-state. In order to set the configuration parameters,"
+      " all modes are now stopped! Localization is started afterwards automatically.");
     clientRecordingStopVisualRecordingCb(nullptr, nullptr);
     clientMapStopCb(nullptr, nullptr);
     clientLocalizationStopCb(nullptr, nullptr);
