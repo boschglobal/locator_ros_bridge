@@ -560,7 +560,17 @@ void LocatorBridgeNode::syncConfig()
     provide_odometry_data_ = false;
   }
 
-  loc_client_interface_->setConfigList(loc_client_config);
+  if (!loc_client_interface_->setConfigList(loc_client_config)) {
+    // Try to stop everything before setting config list
+    RCLCPP_WARN(
+      get_logger(),
+      "One of the modes appears to be in a RUN-state. In order to set the configuration parameters,"
+      " all modes are now stopped! Localization is started afterwards automatically.");
+    clientRecordingStopVisualRecordingCb(nullptr, nullptr);
+    clientMapStopCb(nullptr, nullptr);
+    clientLocalizationStopCb(nullptr, nullptr);
+    loc_client_interface_->setConfigList(loc_client_config);
+  }
 }
 
 void LocatorBridgeNode::checkLaserScan(
