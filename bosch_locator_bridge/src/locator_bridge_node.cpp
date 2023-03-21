@@ -480,7 +480,19 @@ void LocatorBridgeNode::syncConfig()
     provide_odometry_data_ = false;
   }
 
-  loc_client_interface_->setConfigList(loc_client_config);
+  if (!loc_client_interface_->setConfigList(loc_client_config))
+  {
+    // Try to stop everything before setting config list
+    ROS_WARN(
+      "One of the modes appears to be in a RUN-state. In order to set the configuration parameters,"
+      " all modes are now stopped! Localization is started afterwards automatically.");
+    std_srvs::Empty::Request req;
+    std_srvs::Empty::Response res;
+    clientRecordingStopVisualRecordingCb(req, res);
+    clientMapStopCb(req, res);
+    clientLocalizationStopCb(req, res);
+    loc_client_interface_->setConfigList(loc_client_config);
+  }
 }
 
 void LocatorBridgeNode::checkLaserScan(const sensor_msgs::LaserScan& msg,

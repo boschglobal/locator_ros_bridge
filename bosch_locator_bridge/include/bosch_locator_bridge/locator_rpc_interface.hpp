@@ -39,7 +39,7 @@ public:
   std::unordered_map<std::string, std::pair<int32_t, int32_t>> getAboutModules();
 
   Poco::DynamicStruct getConfigList();
-  void setConfigList(const Poco::DynamicStruct& config);
+  bool setConfigList(const Poco::DynamicStruct& config);
 
   Poco::JSON::Object getSessionQuery() const;
   Poco::JSON::Object call(const std::string& method, const Poco::JSON::Object& query_obj);
