@@ -152,10 +152,15 @@ Poco::DynamicStruct LocatorRPCInterface::getConfigList()
   return config;
 }
 
-void LocatorRPCInterface::setConfigList(const Poco::DynamicStruct & config)
+bool LocatorRPCInterface::setConfigList(const Poco::DynamicStruct & config)
 {
-  auto config_resp =
+  try {
     json_rpc_call(session_, "configSet", makeConfigEntryArrayMessage(session_id_, config));
+  } catch (const std::runtime_error & error) {
+    std::cerr << error.what() << std::endl;
+    return false;
+  }
+  return true;
 }
 
 Poco::JSON::Object LocatorRPCInterface::call(
