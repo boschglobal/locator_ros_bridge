@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.10 (2023-03-23)
+-------------------
 * Try to stop everything before setting config list (`#37 <https://github.com/boschglobal/locator_ros_bridge/issues/37>`_)
 * Add errorFlags and infoFlags fields to ClientLocalizationPose (`#34 <https://github.com/boschglobal/locator_ros_bridge/issues/34>`_)
 * Update to ROKIT Locator version 1.6
