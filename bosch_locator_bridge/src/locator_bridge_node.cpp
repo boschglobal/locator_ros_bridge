@@ -74,13 +74,16 @@ void LocatorBridgeNode::init()
   std::string host;
   nh_.getParam("locator_host", host);
 
+  int port;
+  nh_.getParam("locator_port", port);
+
   std::string user, pwd;
   nh_.getParam("user_name", user);
   nh_.getParam("password", pwd);
 
   // NOTE for now, we only have a session management with the localization client
   // Same thing is likely needed for the map server
-  loc_client_interface_.reset(new LocatorRPCInterface(host, 8080));
+  loc_client_interface_.reset(new LocatorRPCInterface(host, port));
   loc_client_interface_->login(user, pwd);
   session_refresh_timer_ = nh_.createTimer(ros::Duration(30.), [&](const ros::TimerEvent&) {
     ROS_INFO_STREAM("refreshing session!");
