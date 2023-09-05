@@ -73,6 +73,11 @@ void LocatorBridgeNode::init()
 {
   std::string host;
   nh_.getParam("locator_host", host);
+  int tmp_binaryPortsStart, tmp_rpcPort;
+  nh_.getParam("locator_binaryPortsStart", tmp_binaryPortsStart);
+  uint16_t binaryPortsStart{static_cast<uint16_t>(tmp_binaryPortsStart)};
+  nh_.getParam("locator_RPC_Port", tmp_rpcPort);
+  uint16_t rpcPort{static_cast<uint16_t>(tmp_rpcPort)};
 
   std::string user, pwd;
   nh_.getParam("user_name", user);
@@ -80,7 +85,7 @@ void LocatorBridgeNode::init()
 
   // NOTE for now, we only have a session management with the localization client
   // Same thing is likely needed for the map server
-  loc_client_interface_.reset(new LocatorRPCInterface(host, 8080));
+  loc_client_interface_.reset(new LocatorRPCInterface(host, rpcPort));
   loc_client_interface_->login(user, pwd);
   session_refresh_timer_ = nh_.createTimer(ros::Duration(30.), [&](const ros::TimerEvent&) {
     ROS_INFO_STREAM("refreshing session!");
@@ -158,7 +163,7 @@ void LocatorBridgeNode::init()
     odom_sub_ = nh_.subscribe(odom_topic, 1, &LocatorBridgeNode::odom_callback, this);
   }
 
-  setupBinaryReceiverInterfaces(host);
+  setupBinaryReceiverInterfaces(host, static_cast<Poco::UInt16>(binaryPortsStart));
 
   ROS_INFO_STREAM("initialization done");
 }
@@ -523,36 +528,47 @@ void LocatorBridgeNode::checkLaserScan(const sensor_msgs::LaserScan& msg,
   }
 }
 
-void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host)
+void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, const Poco::UInt16& binaryPortsStart)
 {
+  // port definitions for the different interfaces. See Locator API documentation section 12.8
+  Poco::UInt16 binaryClientControlModePort{ binaryPortsStart /*default: 9004*/ };
+  Poco::UInt16 binaryClientMapMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 1) };
+  Poco::UInt16 binaryClientMapVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 2) };
+  Poco::UInt16 binaryClientRecordingMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 3) };
+  Poco::UInt16 binaryClientRecordingVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 4) };
+  Poco::UInt16 binaryClientLocalizationMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 5) };
+  Poco::UInt16 binaryClientLocalizationVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 6) };
+  Poco::UInt16 binaryClientLocalizationPosePort{ static_cast<Poco::UInt16>(binaryPortsStart + 7) };
+  Poco::UInt16 binaryClientGlobalAlignVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 8) };
+
   // Create binary interface for client control mode
-  client_control_mode_interface_.reset(new ClientControlModeInterface(Poco::Net::IPAddress(host), nh_));
+  client_control_mode_interface_.reset(new ClientControlModeInterface(Poco::Net::IPAddress(host), binaryClientControlModePort, nh_));
   client_control_mode_interface_thread_.start(*client_control_mode_interface_);
   // Create binary interface for client map map
-  client_map_map_interface_.reset(new ClientMapMapInterface(Poco::Net::IPAddress(host), nh_));
+  client_map_map_interface_.reset(new ClientMapMapInterface(Poco::Net::IPAddress(host), binaryClientMapMapPort, nh_));
   client_map_map_interface_thread_.start(*client_map_map_interface_);
   // Create binary interface for client map visualization
-  client_map_visualization_interface_.reset(new ClientMapVisualizationInterface(Poco::Net::IPAddress(host), nh_));
+  client_map_visualization_interface_.reset(new ClientMapVisualizationInterface(Poco::Net::IPAddress(host), binaryClientMapVisualizationPort, nh_));
   client_map_visualization_interface_thread_.start(*client_map_visualization_interface_);
   // Create binary interface for client recording map
-  client_recording_map_interface_.reset(new ClientRecordingMapInterface(Poco::Net::IPAddress(host), nh_));
+  client_recording_map_interface_.reset(new ClientRecordingMapInterface(Poco::Net::IPAddress(host), binaryClientRecordingMapPort, nh_));
   client_recording_map_interface_thread_.start(*client_recording_map_interface_);
   // Create binary interface for client recording visualization
   client_recording_visualization_interface_.reset(
-      new ClientRecordingVisualizationInterface(Poco::Net::IPAddress(host), nh_));
+      new ClientRecordingVisualizationInterface(Poco::Net::IPAddress(host), binaryClientRecordingVisualizationPort, nh_));
   client_recording_visualization_interface_thread_.start(*client_recording_visualization_interface_);
   // Create binary interface for client localization map
-  client_localization_map_interface_.reset(new ClientLocalizationMapInterface(Poco::Net::IPAddress(host), nh_));
+  client_localization_map_interface_.reset(new ClientLocalizationMapInterface(Poco::Net::IPAddress(host), binaryClientLocalizationMapPort, nh_));
   client_localization_map_interface_thread_.start(*client_localization_map_interface_);
   // Create binary interface for ClientLocalizationVisualizationInterface
   client_localization_visualization_interface_.reset(
-      new ClientLocalizationVisualizationInterface(Poco::Net::IPAddress(host), nh_));
+      new ClientLocalizationVisualizationInterface(Poco::Net::IPAddress(host), binaryClientLocalizationVisualizationPort, nh_));
   client_localization_visualization_interface_thread_.start(*client_localization_visualization_interface_);
   // Create binary interface for ClientLocalizationPoseInterface
-  client_localization_pose_interface_.reset(new ClientLocalizationPoseInterface(Poco::Net::IPAddress(host), nh_));
+  client_localization_pose_interface_.reset(new ClientLocalizationPoseInterface(Poco::Net::IPAddress(host), binaryClientLocalizationPosePort, nh_));
   client_localization_pose_interface_thread_.start(*client_localization_pose_interface_);
   // Create binary interface for ClientGlobalAlignVisualizationInterface
   client_global_align_visualization_interface_.reset(
-      new ClientGlobalAlignVisualizationInterface(Poco::Net::IPAddress(host), nh_));
+      new ClientGlobalAlignVisualizationInterface(Poco::Net::IPAddress(host), binaryClientGlobalAlignVisualizationPort, nh_));
   client_global_align_visualization_interface_thread_.start(*client_global_align_visualization_interface_);
 }

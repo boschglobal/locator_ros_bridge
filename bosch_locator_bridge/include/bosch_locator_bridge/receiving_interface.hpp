@@ -54,17 +54,6 @@ protected:
   //! Node handle
   ros::NodeHandle nh_;
 
-  // port definitions for the different interfaces. See Locator API documentation section 12.8
-  static constexpr Poco::UInt16 BINARY_CLIENT_CONTROL_MODE_PORT{ 9004 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_MAP_MAP_PORT{ 9005 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_MAP_VISUALIZATION_PORT{ 9006 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_RECORDING_MAP_PORT{ 9007 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_RECORDING_VISUALIZATION_PORT{ 9008 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_MAP_PORT{ 9009 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT{ 9010 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_POSE_PORT{ 9011 };
-  static constexpr Poco::UInt16 BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT{ 9012 };
-
 private:
   Poco::Net::StreamSocket ccm_socket_;
   Poco::Net::SocketReactor reactor_;
@@ -75,62 +64,62 @@ private:
 class ClientControlModeInterface : public ReceivingInterface
 {
 public:
-  ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientMapMapInterface : public ReceivingInterface
 {
 public:
-  ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientMapVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientRecordingMapInterface : public ReceivingInterface
 {
 public:
-  ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientRecordingVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationMapInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationVisualizationInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientLocalizationVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationPoseInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientGlobalAlignVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh);
+  ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };

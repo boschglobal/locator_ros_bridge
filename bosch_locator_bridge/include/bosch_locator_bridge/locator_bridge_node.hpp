@@ -99,7 +99,7 @@ private:
   /// Check if laser scan message is valid
   void checkLaserScan(const sensor_msgs::LaserScan& msg,
                       const std::string& laser) const;
-  void setupBinaryReceiverInterfaces(const std::string& host);
+  void setupBinaryReceiverInterfaces(const std::string& host, const Poco::UInt16& binaryPortsStart);
 
   ros::NodeHandle nh_;
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;

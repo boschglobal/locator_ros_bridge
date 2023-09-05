@@ -81,8 +81,8 @@ void ReceivingInterface::run()
   reactor_.run();
 }
 
-ClientControlModeInterface::ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_CONTROL_MODE_PORT, nh)
+ClientControlModeInterface::ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientControlModePort, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientControlModePort, nh)
 {
   // Setup publisher
   publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientControlMode>("client_control_mode", 5, true));
@@ -102,8 +102,8 @@ size_t ClientControlModeInterface::tryToParseData(const std::vector<char>& datag
   return parsed_bytes;
 }
 
-ClientMapMapInterface::ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_MAP_MAP_PORT, nh)
+ClientMapMapInterface::ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientMapMapPort, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientMapMapPort, nh)
 {
   // Setup publisher
   publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_map_map", 5));
@@ -123,8 +123,9 @@ size_t ClientMapMapInterface::tryToParseData(const std::vector<char>& datagram)
 }
 
 ClientMapVisualizationInterface::ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                 const Poco::UInt16& binaryClientMapVisualizationPort,
                                                                  ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_MAP_VISUALIZATION_PORT, nh)
+  : ReceivingInterface(hostadress, binaryClientMapVisualizationPort, nh)
 {
   // Setup publisher
   publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientMapVisualization>("client_map_visualization", 5));
@@ -155,8 +156,10 @@ size_t ClientMapVisualizationInterface::tryToParseData(const std::vector<char>& 
   return bytes_parsed;
 }
 
-ClientRecordingMapInterface::ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_MAP_PORT, nh)
+ClientRecordingMapInterface::ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress,
+                                                         const Poco::UInt16& binaryClientRecordingMapPort,
+                                                         ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientRecordingMapPort, nh)
 {
   // Setup publisher
   publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_recording_map", 5));
@@ -176,8 +179,9 @@ size_t ClientRecordingMapInterface::tryToParseData(const std::vector<char>& data
 }
 
 ClientRecordingVisualizationInterface::ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                             const Poco::UInt16& binaryClientRecordingVisualizationPort,
                                                                              ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_VISUALIZATION_PORT, nh)
+  : ReceivingInterface(hostadress, binaryClientRecordingVisualizationPort, nh)
 {
   // Setup publisher
   publishers_.push_back(
@@ -210,8 +214,9 @@ size_t ClientRecordingVisualizationInterface::tryToParseData(const std::vector<c
 }
 
 ClientLocalizationMapInterface::ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress,
+                                                               const Poco::UInt16& binaryClientLocalizationMapPort,
                                                                ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_MAP_PORT, nh)
+  : ReceivingInterface(hostadress, binaryClientLocalizationMapPort, nh)
 {
   // Setup publisher
   // enable latching, since this is usually only published once
@@ -232,8 +237,8 @@ size_t ClientLocalizationMapInterface::tryToParseData(const std::vector<char>& d
 }
 
 ClientLocalizationVisualizationInterface::ClientLocalizationVisualizationInterface(
-    const Poco::Net::IPAddress& hostadress, ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT, nh)
+    const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientLocalizationVisualizationPort, ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientLocalizationVisualizationPort, nh)
 {
   // Setup publisher
   publishers_.push_back(
@@ -263,8 +268,9 @@ size_t ClientLocalizationVisualizationInterface::tryToParseData(const std::vecto
 }
 
 ClientLocalizationPoseInterface::ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress,
+                                                                 const Poco::UInt16& binaryClientLocalizationPosePort,
                                                                  ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_POSE_PORT, nh)
+  : ReceivingInterface(hostadress, binaryClientLocalizationPosePort, nh)
 {
   // Setup publisher
   publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientLocalizationPose>("client_localization_pose", 5));
@@ -306,8 +312,9 @@ size_t ClientLocalizationPoseInterface::tryToParseData(const std::vector<char>& 
 }
 
 ClientGlobalAlignVisualizationInterface::ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                                                 const Poco::UInt16& binaryClientGlobalAlignVisualizationPort,
                                                                                  ros::NodeHandle& nh)
-  : ReceivingInterface(hostadress, BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT, nh)
+  : ReceivingInterface(hostadress, binaryClientGlobalAlignVisualizationPort, nh)
 {
   // Setup publisher
   publishers_.push_back(
