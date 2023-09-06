@@ -165,9 +165,10 @@ public:
    *                                  it to the datagram structure required for the binary interface of the locator.
    * @param msg The odometry message
    * @param odom_num The current odomerty observation number
+   * @param velocitySet If velocity is unknown (false) velocity entries within the datagram will be ignored.
    * @return The data shaped into the datagram structure required by the locator
    */
-  static Poco::Buffer<char> convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num);
+  static Poco::Buffer<char> convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num, bool velocitySet);
 
   static Poco::JSON::Object makePose2d(const geometry_msgs::Pose2D& pose);
 

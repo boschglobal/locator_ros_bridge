@@ -480,7 +480,7 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   return buffer;
 }
 
-Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num)
+Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num, bool velocitySet)
 {
   // convert the ROS message to a locator ClientSensorLaserDatagram
   const size_t resulting_msg_size = 8        // timestamp
@@ -512,9 +512,8 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_
   // Write velocity
   writer << msg.twist.twist.linear.x << msg.twist.twist.linear.y << msg.twist.twist.angular.z;
 
-  // velocity
-  // (available in the nav_msgs::Odometry message though its reliability cannot be judged at this stage, activate)
-  writer << static_cast<char>(true);
+  // velocitySet: Indicates whether or not the velocity is known.
+  writer << static_cast<char>(velocitySet);
 
   writer.flush();
 

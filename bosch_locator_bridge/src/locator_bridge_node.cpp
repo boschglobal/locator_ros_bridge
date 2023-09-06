@@ -161,6 +161,8 @@ void LocatorBridgeNode::init()
     std::string odom_topic = "/odom";
     nh_.getParam("odom_topic", odom_topic);
     odom_sub_ = nh_.subscribe(odom_topic, 1, &LocatorBridgeNode::odom_callback, this);
+
+    nh_.getParam("odometry_velocity_set", odometry_velocity_set_);
   }
 
   setupBinaryReceiverInterfaces(host, static_cast<Poco::UInt16>(binaryPortsStart));
@@ -242,7 +244,7 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
 {
-  Poco::Buffer<char> odom_datagram = RosMsgsDatagramConverter::convertOdometry2DataGram(msg, ++odom_num_);
+  Poco::Buffer<char> odom_datagram = RosMsgsDatagramConverter::convertOdometry2DataGram(msg, ++odom_num_, odometry_velocity_set_);
   odom_sending_interface_->sendData(odom_datagram.begin(), odom_datagram.size());
 }
 

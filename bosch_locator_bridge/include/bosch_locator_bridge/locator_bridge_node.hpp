@@ -110,6 +110,7 @@ private:
 
   // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
   bool provide_odometry_data_;
+  bool odometry_velocity_set_;
   ros::Subscriber laser_sub_;
   std::unique_ptr<SendingInterface> laser_sending_interface_;
   Poco::Thread laser_sending_interface_thread_;

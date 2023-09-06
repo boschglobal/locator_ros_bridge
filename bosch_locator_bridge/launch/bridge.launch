@@ -59,6 +59,7 @@ limitations under the License.-->
   <arg name="scan_topic" default="/scan"/>
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
+  <arg name="odometry_velocity_set" default="false"/>
 
   <node pkg="bosch_locator_bridge" type="node" name="$(arg bridge_node_name)" output="screen" required="true">
     <param name="locator_host" value="$(arg locator_ip)" />
@@ -72,6 +73,7 @@ limitations under the License.-->
     <param name="scan_topic" value="$(arg scan_topic)"/>
     <param name="scan2_topic" value="$(arg scan2_topic)"/>
     <param name="odom_topic" value="$(arg odom_topic)"/>
+    <param name="odometry_velocity_set" value="$(arg odometry_velocity_set)"/>
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
