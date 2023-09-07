@@ -45,6 +45,7 @@ RosMsgsDatagramConverter::convertClientControlMode2Message(const std::vector<cha
   client_control_mode.localization_state = static_cast<uint8_t>((client_control_mode_datagram >> 9) & 0b111);
   client_control_mode.map_state = static_cast<uint8_t>((client_control_mode_datagram >> 12) & 0b111);
   client_control_mode.visual_recording_state = static_cast<uint8_t>((client_control_mode_datagram >> 15) & 0b111);
+  client_control_mode.expandmap_state = static_cast<uint8_t>((client_control_mode_datagram >> 18) & 0b111);
   return 4;
 }
 
