@@ -23,10 +23,10 @@ limitations under the License.-->
   <!-- ip of the computer, on which the locator software is running -->
   <arg name="locator_ip" default="127.0.0.1"/>
 
-  <!-- port at which the binary interfaces start -->
+  <!-- port at which the JSON RPC ROKIT Locator Client starts -->
   <arg name="locator_RPC_Port" default="8080"/>
 
-  <!-- port at which the binary interfaces start -->
+  <!-- port at which the binary interface ClientControlMode starts -->
   <arg name="locator_binaryPortsStart" default="9004"/>
 
   <!-- name of the node -->
@@ -64,6 +64,7 @@ limitations under the License.-->
   <arg name="scan_topic" default="/scan"/>
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
+  <!-- set to true if the velocity in the odometry should be used -->
   <arg name="odometry_velocity_set" default="false"/>
 
   <node pkg="bosch_locator_bridge" type="node" name="$(arg bridge_node_name)" output="screen" required="true">
