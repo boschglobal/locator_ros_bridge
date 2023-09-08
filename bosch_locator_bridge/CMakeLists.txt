@@ -29,6 +29,8 @@ add_message_files(
   msg
   FILES
     ClientControlMode.msg
+    ClientExpandMapOverwriteZoneInformation.msg
+    ClientExpandMapVisualization.msg
     ClientGlobalAlignLandmarkObservationNotice.msg
     ClientGlobalAlignLandmarkVisualizationInformation.msg
     ClientGlobalAlignVisualization.msg

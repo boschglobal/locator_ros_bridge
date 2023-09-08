@@ -29,6 +29,7 @@
 #include "bosch_locator_bridge/ClientControlMode.h"
 #include "bosch_locator_bridge/ClientRecordingVisualization.h"
 #include "bosch_locator_bridge/ClientMapVisualization.h"
+#include "bosch_locator_bridge/ClientExpandMapVisualization.h"
 #include "bosch_locator_bridge/ClientLocalizationVisualization.h"
 #include "bosch_locator_bridge/ClientLocalizationPose.h"
 #include "bosch_locator_bridge/ClientGlobalAlignVisualization.h"
@@ -171,6 +172,16 @@ public:
   static Poco::Buffer<char> convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num, bool velocitySet);
 
   static Poco::JSON::Object makePose2d(const geometry_msgs::Pose2D& pose);
+
+  /**
+   * @brief convertClientExpandMapVisualizationDatagram2Message
+   * @param datagram The binary data input datagram [INPUT]
+   * @param client_expandmap_visualization ClientExpandMapVisualization message [OUTPUT]
+   * @return number of bytes parsed successfully
+   */
+  static size_t convertClientExpandMapVisualizationDatagram2Message(
+      const std::vector<char>& datagram,
+      bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization);
 
 private:
   static size_t convertMapDatagram2Message(Poco::BinaryReader& binary_reader, const ros::Time& stamp,

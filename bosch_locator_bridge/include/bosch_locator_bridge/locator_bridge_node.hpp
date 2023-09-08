@@ -47,6 +47,8 @@ class ClientLocalizationMapInterface;
 class ClientLocalizationVisualizationInterface;
 class ClientLocalizationPoseInterface;
 class ClientGlobalAlignVisualizationInterface;
+class ClientExpandMapVisualizationInterface;
+class ClientExpandMapPriorMapInterface;
 
 /**
  * This is the main ROS node. It binds together the ROS interface and the Locator API.
@@ -153,6 +155,10 @@ private:
   Poco::Thread client_localization_pose_interface_thread_;
   std::unique_ptr<ClientGlobalAlignVisualizationInterface> client_global_align_visualization_interface_;
   Poco::Thread client_global_align_visualization_interface_thread_;
+   std::unique_ptr<ClientExpandMapVisualizationInterface> client_expandmap_visualization_interface_;
+  Poco::Thread client_expandmap_visualization_interface_thread_;
+  std::unique_ptr<ClientExpandMapPriorMapInterface> client_expandmap_priormap_interface_;
+  Poco::Thread client_expandmap_priormap_interface_thread_;
 
   size_t scan_num_{ 0 };
   size_t scan2_num_{ 0 };

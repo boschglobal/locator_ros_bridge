@@ -123,3 +123,17 @@ public:
   ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
+
+class ClientExpandMapVisualizationInterface : public ReceivingInterface
+{
+public:
+  ClientExpandMapVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
+  size_t tryToParseData(const std::vector<char>& datagram) override;
+};
+
+class ClientExpandMapPriorMapInterface : public ReceivingInterface
+{
+public:
+  ClientExpandMapPriorMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16&, ros::NodeHandle& nh);
+  size_t tryToParseData(const std::vector<char>& datagram) override;
+};

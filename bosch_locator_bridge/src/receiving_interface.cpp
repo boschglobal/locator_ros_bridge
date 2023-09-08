@@ -342,3 +342,49 @@ size_t ClientGlobalAlignVisualizationInterface::tryToParseData(const std::vector
   }
   return bytes_parsed;
 }
+
+ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                                               const Poco::UInt16& binaryClientExpandMapVisualizationPort,
+                                                               ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientExpandMapVisualizationPort, nh)
+{
+  // Setup publisher
+  // enable latching, since this is usually only published once
+  publishers_.push_back(nh.advertise<bosch_locator_bridge::ClientExpandMapVisualization>("client_expandmap_visualization", 5, true));
+}
+
+size_t ClientExpandMapVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
+{
+  // convert datagram to ros message
+  bosch_locator_bridge::ClientExpandMapVisualization client_expandmap_visualization;
+  const auto bytes_parsed = RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(datagram, client_expandmap_visualization);
+  if (bytes_parsed > 0)
+  {
+    // publish
+    publishers_[0].publish(client_expandmap_visualization);
+  }
+  return bytes_parsed;
+}
+
+ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(const Poco::Net::IPAddress& hostadress,
+                                                               const Poco::UInt16& binaryClientExpandMapPriorMapPort,
+                                                               ros::NodeHandle& nh)
+  : ReceivingInterface(hostadress, binaryClientExpandMapPriorMapPort, nh)
+{
+  // Setup publisher
+  // enable latching, since this is usually only published once
+  publishers_.push_back(nh.advertise<sensor_msgs::PointCloud2>("client_expandmap_priormap", 5, true));
+}
+
+size_t ClientExpandMapPriorMapInterface::tryToParseData(const std::vector<char>& datagram)
+{
+  // convert datagram to ros message
+  sensor_msgs::PointCloud2 map;
+  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
+  if (parsed_bytes > 0)
+  {
+    // publish
+    publishers_[0].publish(map);
+  }
+  return parsed_bytes;
+}

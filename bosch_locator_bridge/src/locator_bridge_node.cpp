@@ -579,6 +579,8 @@ void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, c
   Poco::UInt16 binaryClientLocalizationVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 6) };
   Poco::UInt16 binaryClientLocalizationPosePort{ static_cast<Poco::UInt16>(binaryPortsStart + 7) };
   Poco::UInt16 binaryClientGlobalAlignVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 8) };
+  Poco::UInt16 binaryClientExpandMapVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 9) };
+  Poco::UInt16 binaryClientExpandMapPriorMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 10) };
 
   // Create binary interface for client control mode
   client_control_mode_interface_.reset(new ClientControlModeInterface(Poco::Net::IPAddress(host), binaryClientControlModePort, nh_));
@@ -610,4 +612,14 @@ void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, c
   client_global_align_visualization_interface_.reset(
       new ClientGlobalAlignVisualizationInterface(Poco::Net::IPAddress(host), binaryClientGlobalAlignVisualizationPort, nh_));
   client_global_align_visualization_interface_thread_.start(*client_global_align_visualization_interface_);
+
+  // Create binary interface for ClientExpandMapVisualizationInterface
+  client_expandmap_visualization_interface_.reset(
+      new ClientExpandMapVisualizationInterface(Poco::Net::IPAddress(host), binaryClientExpandMapVisualizationPort, nh_));
+  client_expandmap_visualization_interface_thread_.start(*client_expandmap_visualization_interface_);
+
+  // Create binary interface for ClientExpandMapPriorMapInterface
+  client_expandmap_priormap_interface_.reset(
+      new ClientExpandMapPriorMapInterface(Poco::Net::IPAddress(host), binaryClientExpandMapPriorMapPort, nh_));
+  client_expandmap_priormap_interface_thread_.start(*client_expandmap_priormap_interface_);
 }
