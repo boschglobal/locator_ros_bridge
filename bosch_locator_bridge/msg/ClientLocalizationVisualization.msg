@@ -22,9 +22,6 @@ uint64 unique_id
 # The localization status
 int32 loc_state
 
-# Distance traversed by the sensor since the last successful loop closure
-float64 distanceToLastLC
-
 # The relative delay within the system when processing laser scans.
 # 0: no delay; 1.0 : delay causes loop closures to be omitted when building the temporary map
 float64 delay
