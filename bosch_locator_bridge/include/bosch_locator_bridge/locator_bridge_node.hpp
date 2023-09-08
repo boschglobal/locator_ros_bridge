@@ -26,6 +26,8 @@
 #include <std_srvs/Empty.h>
 
 #include "bosch_locator_bridge/ClientConfigGetEntry.h"
+#include "bosch_locator_bridge/ClientExpandMapEnable.h"
+#include "bosch_locator_bridge/ClientRecordingSetCurrentPose.h"
 #include "bosch_locator_bridge/ClientMapList.h"
 #include "bosch_locator_bridge/ClientMapSend.h"
 #include "bosch_locator_bridge/ClientMapSet.h"
@@ -92,6 +94,11 @@ private:
   bool clientMapStartCb(bosch_locator_bridge::ClientMapStart::Request& req,
                         bosch_locator_bridge::ClientMapStart::Response& res);
   bool clientMapStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+
+  bool clientExpandMapEnableCb(bosch_locator_bridge::ClientExpandMapEnable::Request& req, bosch_locator_bridge::ClientExpandMapEnable::Response& res);
+  bool clientExpandMapDisableCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+
+  bool clientRecordingSetCurrentPoseCb(bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req, bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res);
 
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();

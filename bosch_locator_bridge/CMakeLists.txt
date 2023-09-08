@@ -41,10 +41,12 @@ add_message_files(
 add_service_files(
   FILES
     ClientConfigGetEntry.srv
+    ClientExpandMapEnable.srv
     ClientMapList.srv
     ClientMapSend.srv
     ClientMapSet.srv
     ClientMapStart.srv
+    ClientRecordingSetCurrentPose.srv
     StartRecording.srv
     ServerMapGetImageWithResolution.srv
     ServerMapList.srv

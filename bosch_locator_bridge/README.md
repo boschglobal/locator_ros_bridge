@@ -245,6 +245,18 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 	Stop self-localization within the map.
 
+* **`/bridge_node/enable_map_expansion`** ([bosch_locator_bridge/ClientExpandMapEnable](./srv/ClientExpandMapEnable.srv))
+
+	Enable the map expansion
+
+* **`/bridge_node/disable_map_expansion`** ([std_srvs/Empty])
+
+	Disable the map expansion
+
+* **`/bridge_node/recording_set_current_pose`** ([bosch_locator_bridge/ClientRecordingSetcurrentPose](./srv/ClientRecordingSetcurrentPose.srv))
+
+	Set the current pose in the recording
+
 ### server_bridge_node
 
 This node provides an interface to the map server.

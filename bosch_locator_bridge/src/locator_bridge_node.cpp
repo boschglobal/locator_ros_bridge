@@ -118,6 +118,12 @@ void LocatorBridgeNode::init()
   services_.push_back(nh_.advertiseService("set_map", &LocatorBridgeNode::clientMapSetCb, this));
   services_.push_back(nh_.advertiseService("list_client_maps", &LocatorBridgeNode::clientMapList, this));
 
+  services_.push_back(nh_.advertiseService("enable_map_expansion", &LocatorBridgeNode::clientExpandMapEnableCb, this));
+  services_.push_back(nh_.advertiseService("disable_map_expansion", &LocatorBridgeNode::clientExpandMapDisableCb, this));
+
+  services_.push_back(nh_.advertiseService("recording_set_current_pose", &LocatorBridgeNode::clientRecordingSetCurrentPoseCb, this));
+
+
   // subscribe to default topic published by rviz "2D Pose Estimate" button for setting seed
   set_seed_sub_ = nh_.subscribe("/initialpose", 1, &LocatorBridgeNode::setSeedCallback, this);
 
@@ -303,6 +309,37 @@ bool LocatorBridgeNode::clientLocalizationStopCb(std_srvs::Empty::Request& req, 
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientLocalizationStop", query);
+  return true;
+}
+
+bool LocatorBridgeNode::clientExpandMapEnableCb(bosch_locator_bridge::ClientExpandMapEnable::Request& req,
+                                                bosch_locator_bridge::ClientExpandMapEnable::Response& res)
+{
+  const std::string prior_map_name = req.prior_map_name.empty() ? last_map_name_ : req.prior_map_name;
+
+  auto query = loc_client_interface_->getSessionQuery();
+  query.set("priorMapName:", prior_map_name);
+  auto response = loc_client_interface_->call("clientExpandMapEnable", query);
+  return true;
+}
+
+bool LocatorBridgeNode::clientExpandMapDisableCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+  auto query = loc_client_interface_->getSessionQuery();
+  auto response = loc_client_interface_->call("clientExpandMapDisable", query);
+  return true;
+}
+
+bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req, bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res)
+{
+  auto query = loc_client_interface_->getSessionQuery();
+  geometry_msgs::Pose2D current_pose;
+  current_pose.x = req.x_m;
+  current_pose.y = req.y_m;
+  current_pose.theta = req.theta_rad;
+
+  query.set("pose:", RosMsgsDatagramConverter::makePose2d(current_pose));
+  auto response = loc_client_interface_->call("clientRecordingSetCurrentPose", query);
   return true;
 }
 
