@@ -318,7 +318,7 @@ bool LocatorBridgeNode::clientExpandMapEnableCb(bosch_locator_bridge::ClientExpa
   const std::string prior_map_name = req.prior_map_name.empty() ? last_map_name_ : req.prior_map_name;
 
   auto query = loc_client_interface_->getSessionQuery();
-  query.set("priorMapName:", prior_map_name);
+  query.set("priorMapName", prior_map_name);
   auto response = loc_client_interface_->call("clientExpandMapEnable", query);
   return true;
 }
@@ -338,7 +338,7 @@ bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(bosch_locator_bridge::Cl
   current_pose.y = req.y_m;
   current_pose.theta = req.theta_rad;
 
-  query.set("pose:", RosMsgsDatagramConverter::makePose2d(current_pose));
+  query.set("pose", RosMsgsDatagramConverter::makePose2d(current_pose));
   auto response = loc_client_interface_->call("clientRecordingSetCurrentPose", query);
   return true;
 }
