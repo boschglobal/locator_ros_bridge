@@ -83,6 +83,36 @@ When you are done, you can stop the localization with
 
     rosservice call /bridge_node/stop_localization
 
+#### Map Expansion
+
+1. Record and build the prior map (map name: priormap) as usual. 
+2. Start localization on this prior map and move until the system is localized.
+3. Make a note of the pose and do not move
+4. Enable map expansion
+	```
+	rosservice  call /bridge_node/enable_map_expansion "prior_map_name:priormap"
+	```
+5. Start visual recording and use the following to visualize the prior map
+   ```
+   rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_visual_recording_with_prior_map.rviz
+   ```
+
+6. Use the pose in step 3 to set the current pose in the recording
+	```
+	rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
+	```
+7. Drive around to recording the new area as extension
+8. Stop visual recording
+9.  Start mapping with the recording including the inital pose (map expansion is still enabled)
+	```
+	rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_map_creation_with_prior_map.rviz
+	```
+
+10. Disable the map expansion
+	```
+	rosservice  call /bridge_node/disable_map_expansion
+	```
+
 ## Nodes
 
 ### bridge_node
@@ -207,6 +237,16 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 	The current pose of the laser sensor, given in a relative reference frame.
 
+##### Map Expansion
+
+* **`/bridge_node/client_expandmap_priormap`** ([sensor_msgs/PointCloud2])
+
+	Prior map as point cloud.
+
+* **`/bridge_node/client_expandmap_visualization`** ([bosch_locator_bridge/ClientExpandMapVisualization](./msg/ClientExpandMapVisualization.msg))
+
+	Map expansion information, e.g. zones.
+
 #### Services
 
 * **`/bridge_node/get_config_entry`** ([bosch_locator_bridge/ClientConfigGetEntry](./srv/ClientConfigGetEntry.srv))
@@ -255,9 +295,11 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 * **`/bridge_node/recording_set_current_pose`** ([bosch_locator_bridge/ClientRecordingSetCurrentPose](./srv/ClientRecordingSetCurrentPose.srv))
 
-	Set the current pose in the recording
+	Set the current pose in the recording.
 	For negative numbers pass an additional -- argument to specify the command-line termination.
-	`rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78`
+	```
+	rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
+	```
 
 ### server_bridge_node
 
