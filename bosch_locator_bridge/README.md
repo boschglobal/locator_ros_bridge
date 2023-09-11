@@ -85,12 +85,12 @@ When you are done, you can stop the localization with
 
 #### Map Expansion
 
-1. Record and build the prior map (map name: priormap) as usual. 
+1. Record and build the prior map (map name: priormap) as usual.
 2. Start localization on this prior map and move until the system is localized.
 3. Make a note of the pose and do not move
 4. Enable map expansion
 	```
-	rosservice  call /bridge_node/enable_map_expansion "prior_map_name:priormap"
+	rosservice  call /bridge_node/enable_map_expansion "prior_map_name: priormap"
 	```
 5. Start visual recording and use the following to visualize the prior map
    ```
