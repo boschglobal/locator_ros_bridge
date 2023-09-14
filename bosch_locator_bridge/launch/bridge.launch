@@ -37,7 +37,7 @@ limitations under the License.-->
   <!-- whether for forward odometry data from ROS to locator -->
   <arg name="enable_odometry" default="false"/>
 
-  <arg name="laser_datagram_port" default="4242"/>
+  <arg name="laser_datagram_port" default="2112"/>
   <arg name="laser_mirror_scans" default="false"/>
   <arg name="laser_x" default="0.0"/>
   <arg name="laser_y" default="0.0"/>
