@@ -617,12 +617,9 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
       binary_reader >> polygon_length;
       for (unsigned int i = 0; i < polygon_length; i++)
       {
-        float pose_x, pose_y;      
-        binary_reader >> pose_x >> pose_y;
-        geometry_msgs::Point point;
-        point.x = static_cast<double>(pose_x);
-        point.y = static_cast<double>(pose_y);
-        zone.polygon.push_back(point);
+        geometry_msgs::Point32 point;
+        binary_reader >> point.x >> point.y;
+        zone.polygon.push_back(std::move(point));
       }
 
       binary_reader >> zone.id >> zone.type;

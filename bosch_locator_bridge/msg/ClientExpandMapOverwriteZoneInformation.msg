@@ -16,7 +16,7 @@
 int64 id
 string name
 int64 type
-geometry_msgs/Point[] polygon
+geometry_msgs/Point32[] polygon
 
 
 # Constants
