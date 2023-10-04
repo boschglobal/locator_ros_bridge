@@ -59,8 +59,7 @@ limitations under the License.-->
   <arg name="scan_topic" default="/scan"/>
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
-  <!-- set to true if the velocity in the odometry should be used -->
-  <arg name="odometry_velocity_set" default="false"/>
+  <arg name="odometry_velocity_set" default="false" doc="set to true if the velocity in the odometry should be used"/>
 
   <node pkg="bosch_locator_bridge" type="node" name="$(arg bridge_node_name)" output="screen" required="true">
     <param name="locator_host" value="$(arg locator_ip)" />
