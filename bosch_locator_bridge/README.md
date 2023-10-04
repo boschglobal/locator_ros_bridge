@@ -89,29 +89,29 @@ When you are done, you can stop the localization with
 2. Start localization on this prior map and move until the system is localized.
 3. Make a note of the pose and do not move
 4. Enable map expansion
-	```
-	rosservice  call /bridge_node/enable_map_expansion "prior_map_name: priormap"
-	```
+    ```
+    rosservice  call /bridge_node/enable_map_expansion "prior_map_name: priormap"
+    ```
 5. Start visual recording and use the following to visualize the prior map
-   ```
-   rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_visual_recording_with_prior_map.rviz
-   ```
+    ```
+    rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_visual_recording_with_prior_map.rviz
+    ```
 
 6. Use the pose in step 3 to set the current pose in the recording
-	```
-	rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
-	```
-7. Drive around to recording the new area as extension
+    ```
+    rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
+    ```
+7. Drive around to record the new area as an extension
 8. Stop visual recording
-9.  Start mapping with the recording including the inital pose (map expansion is still enabled)
-	```
-	rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_map_creation_with_prior_map.rviz
-	```
+9. Start mapping with the recording including the initial pose (map expansion is still enabled)
+    ```
+    rosrun rviz rviz -d `rospack find bosch_locator_bridge`/config/locator_bridge_map_creation_with_prior_map.rviz
+    ```
 
 10. Disable the map expansion
-	```
-	rosservice  call /bridge_node/disable_map_expansion
-	```
+    ```
+    rosservice  call /bridge_node/disable_map_expansion
+    ```
 
 ## Nodes
 
@@ -138,168 +138,168 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 * **`/odom`** ([nav_msgs/Odometry])
 
-	The odometry topic to translate and forward to the ROKIT Locator. Only used when `enable_odometry` is set to `true`.
+    The odometry topic to translate and forward to the ROKIT Locator. Only used when `enable_odometry` is set to `true`.
 
 * **`/initialpose`** ([geometry_msgs/PoseWithCovarianceStamped])
 
-	Set a seed pose to help localization.
-	RViz by default sends a message of this type and topic when the user clicks on the "2D Pose Estimate" button in the toolbar.
+    Set a seed pose to help localization.
+    RViz by default sends a message of this type and topic when the user clicks on the "2D Pose Estimate" button in the toolbar.
 
 #### Published Topics
 
 * **`/bridge_node/client_control_mode`** ([bosch_locator_bridge/ClientControlMode](./msg/ClientControlMode.msg))
 
-	The state of the different modules. See ROKIT Locator API Documentation, chapter 5 "Client Control Mode".
+    The state of the different modules. See ROKIT Locator API Documentation, chapter 5 "Client Control Mode".
 
 ##### Map Creation
 
 * **`/bridge_node/client_map_map`** ([sensor_msgs/PointCloud2])
 
-	The map used for localization as point cloud.
+    The map used for localization as point cloud.
 
 * **`/bridge_node/client_map_visualization`** ([bosch_locator_bridge/ClientMapVisualization](./msg/ClientMapVisualization.msg))
 
-	Describes the current state of the map creation mode.
+    Describes the current state of the map creation mode.
 
 * **`/bridge_node/client_map_visualization/pose`** ([geometry_msgs/PoseStamped])
 
-	The current pose of the laser sensor during the map creation mode.
+    The current pose of the laser sensor during the map creation mode.
 
 * **`/bridge_node/client_map_visualization/scan`** ([sensor_msgs/PointCloud2])
 
-	The current laser scan worked on during the map creation mode.
+    The current laser scan worked on during the map creation mode.
 
 * **`/bridge_node/client_map_visualization/path_poses`** ([geometry_msgs/PoseArray])
 
-	The path of the laser sensor during the map creation mode.
+    The path of the laser sensor during the map creation mode.
 
 * **`/bridge_node/client_global_align_visualization`** ([bosch_locator_bridge/ClientGlobalAlignVisualization](./msg/ClientGlobalAlignVisualization.msg))
 
-	Information on global alignment landmarks and their observations.
+    Information on global alignment landmarks and their observations.
 
 * **`/bridge_node/client_global_align_visualization/poses`** ([geometry_msgs/PoseArray])
 
-	Previous poses visited by the laser sensor.
+    Previous poses visited by the laser sensor.
 
 * **`/bridge_node/client_global_align_visualization/landmarks/poses`** ([geometry_msgs/PoseArray])
 
-	Poses of the estimated landmarks.
+    Poses of the estimated landmarks.
 
 ##### Map Recording
 
 * **`/bridge_node/client_recording_map`** ([sensor_msgs/PointCloud2])
 
-	The map as point cloud during the recording mode.
+    The map as point cloud during the recording mode.
 
 * **`/bridge_node/client_recording_visualization`** ([bosch_locator_bridge/ClientRecordingVisualization](./msg/ClientRecordingVisualization.msg))
 
-	Visualization information for the recording process.
+    Visualization information for the recording process.
 
 * **`/bridge_node/client_recording_visualization/pose`** ([geometry_msgs/PoseStamped])
 
-	Latest estimated pose of the laser sensor during the recording process.
+    Latest estimated pose of the laser sensor during the recording process.
 
 * **`/bridge_node/client_recording_visualization/scan`** ([sensor_msgs/LaserScan])
 
-	Latest processed laser scan during the recording process.
+    Latest processed laser scan during the recording process.
 
 * **`/bridge_node/client_recording_visualization/path_poses`** ([geometry_msgs/PoseArray])
 
-	Latest path of the laser sensor during the recording process.
+    Latest path of the laser sensor during the recording process.
 
 ##### Localization
 
 * **`/bridge_node/client_localization_map`** ([sensor_msgs/PointCloud2])
 
-	Map as point cloud used during localization.
+    Map as point cloud used during localization.
 
 * **`/bridge_node/client_localization_visualization`** ([bosch_locator_bridge/ClientLocalizationVisualization](./msg/ClientLocalizationVisualization.msg))
 
-	Visualization information for the localization process.
+    Visualization information for the localization process.
 
 * **`/bridge_node/client_localization_visualization/pose`** ([geometry_msgs/PoseStamped])
 
-	Current estimated pose during localization process.
+    Current estimated pose during localization process.
 
 * **`/bridge_node/client_localization_visualization/scan`** ([sensor_msgs/PointCloud2])
 
-	Currently processed laser scan during localization.
+    Currently processed laser scan during localization.
 
 * **`/bridge_node/client_localization_pose`** ([bosch_locator_bridge/ClientLocalizationPose](./msg/ClientLocalizationPose.msg))
 
-	Localization information.
+    Localization information.
 
 * **`/bridge_node/client_localization_pose/pose`** ([geometry_msgs/PoseStamped])
 
-	6 DoF pose of the laser sensor during localization process.
+    6 DoF pose of the laser sensor during localization process.
 
 * **`/bridge_node/client_localization_pose/lidar_odo_pose`** ([geometry_msgs/PoseStamped])
 
-	The current pose of the laser sensor, given in a relative reference frame.
+    The current pose of the laser sensor, given in a relative reference frame.
 
 ##### Map Expansion
 
 * **`/bridge_node/client_expandmap_priormap`** ([sensor_msgs/PointCloud2])
 
-	Prior map as point cloud.
+    Prior map as point cloud.
 
 * **`/bridge_node/client_expandmap_visualization`** ([bosch_locator_bridge/ClientExpandMapVisualization](./msg/ClientExpandMapVisualization.msg))
 
-	Map expansion information, e.g. zones.
+    Map expansion information, e.g. zones.
 
 #### Services
 
 * **`/bridge_node/get_config_entry`** ([bosch_locator_bridge/ClientConfigGetEntry](./srv/ClientConfigGetEntry.srv))
 
-	Returns the value of the config entry with the given name.
+    Returns the value of the config entry with the given name.
 
 * **`/bridge_node/start_visual_recording`** ([bosch_locator_bridge/StartRecording](./srv/StartRecording.srv))
 
-	Starts the visual map recording under the given map name.
+    Starts the visual map recording under the given map name.
 
 * **`/bridge_node/stop_visual_recording`** ([std_srvs/Empty])
 
-	Stops visual map recording.
+    Stops visual map recording.
 
 * **`/bridge_node/start_map`** ([bosch_locator_bridge/ClientMapStart](./srv/ClientMapStart.srv))
 
-	Start to create a map from the data contained within a recording.
+    Start to create a map from the data contained within a recording.
 
 * **`/bridge_node/stop_map`** ([std_srvs/Empty])
 
-	Stop map creation.
+    Stop map creation.
 
 * **`/bridge_node/send_map`** ([bosch_locator_bridge/ClientMapSend](./srv/ClientMapSend.srv))
 
-	Send the given map to the map server. This is a prerequisite so that the map can be used for localization.
+    Send the given map to the map server. This is a prerequisite so that the map can be used for localization.
 
 * **`/bridge_node/set_map`** ([bosch_locator_bridge/ClientMapSet](./srv/ClientMapSet.srv))
 
-	Set the given map to be used for localization.
+    Set the given map to be used for localization.
 
 * **`/bridge_node/start_localization`** ([std_srvs/Empty])
 
-	Start self-localization within the map.
+    Start self-localization within the map.
 
 * **`/bridge_node/stop_localization`** ([std_srvs/Empty])
 
-	Stop self-localization within the map.
+    Stop self-localization within the map.
 
 * **`/bridge_node/enable_map_expansion`** ([bosch_locator_bridge/ClientExpandMapEnable](./srv/ClientExpandMapEnable.srv))
 
-	Enable the map expansion
+    Enable the map expansion
 
 * **`/bridge_node/disable_map_expansion`** ([std_srvs/Empty])
 
-	Disable the map expansion
+    Disable the map expansion
 
 * **`/bridge_node/recording_set_current_pose`** ([bosch_locator_bridge/ClientRecordingSetCurrentPose](./srv/ClientRecordingSetCurrentPose.srv))
 
-	Set the current pose in the recording.
-	For negative numbers pass an additional -- argument to specify the command-line termination.
-	```
-	rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
-	```
+    Set the current pose in the recording.
+    For negative numbers pass an additional -- argument to specify the command-line termination.
+    ```
+    rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
+    ```
 
 ### server_bridge_node
 
@@ -320,11 +320,11 @@ where
 
 * **`/server_bridge_node/get_map_with_resolution`** ([bosch_locator_bridge/ServerMapGetImageWithResolution](./srv/ServerMapGetImageWithResolution.srv))
 
-	Stores the requested map in a pair of files (YAML and PNG), as is usual with ROS.
+    Stores the requested map in a pair of files (YAML and PNG), as is usual with ROS.
 
 * **`/server_bridge_node/list_server_maps`** ([bosch_locator_bridge/ServerMapList](./srv/ServerMapList.srv))
 
-	Returns list of maps on map server.
+    Returns list of maps on map server.
 
 ## Caveats
 
