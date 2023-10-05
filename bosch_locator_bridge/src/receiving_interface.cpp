@@ -81,7 +81,7 @@ void ReceivingInterface::run()
   reactor_.run();
 }
 
-ClientControlModeInterface::ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientControlModePort, ros::NodeHandle& nh)
+ClientControlModeInterface::ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientControlModePort, ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientControlModePort, nh)
 {
   // Setup publisher
@@ -102,7 +102,7 @@ size_t ClientControlModeInterface::tryToParseData(const std::vector<char>& datag
   return parsed_bytes;
 }
 
-ClientMapMapInterface::ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientMapMapPort, ros::NodeHandle& nh)
+ClientMapMapInterface::ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientMapMapPort, ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientMapMapPort, nh)
 {
   // Setup publisher
@@ -123,7 +123,7 @@ size_t ClientMapMapInterface::tryToParseData(const std::vector<char>& datagram)
 }
 
 ClientMapVisualizationInterface::ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
-                                                                 const Poco::UInt16& binaryClientMapVisualizationPort,
+                                                                 const Poco::UInt16 binaryClientMapVisualizationPort,
                                                                  ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientMapVisualizationPort, nh)
 {
@@ -157,7 +157,7 @@ size_t ClientMapVisualizationInterface::tryToParseData(const std::vector<char>& 
 }
 
 ClientRecordingMapInterface::ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress,
-                                                         const Poco::UInt16& binaryClientRecordingMapPort,
+                                                         const Poco::UInt16 binaryClientRecordingMapPort,
                                                          ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientRecordingMapPort, nh)
 {
@@ -179,7 +179,7 @@ size_t ClientRecordingMapInterface::tryToParseData(const std::vector<char>& data
 }
 
 ClientRecordingVisualizationInterface::ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress,
-                                                                             const Poco::UInt16& binaryClientRecordingVisualizationPort,
+                                                                             const Poco::UInt16 binaryClientRecordingVisualizationPort,
                                                                              ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientRecordingVisualizationPort, nh)
 {
@@ -214,7 +214,7 @@ size_t ClientRecordingVisualizationInterface::tryToParseData(const std::vector<c
 }
 
 ClientLocalizationMapInterface::ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress,
-                                                               const Poco::UInt16& binaryClientLocalizationMapPort,
+                                                               const Poco::UInt16 binaryClientLocalizationMapPort,
                                                                ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientLocalizationMapPort, nh)
 {
@@ -237,7 +237,7 @@ size_t ClientLocalizationMapInterface::tryToParseData(const std::vector<char>& d
 }
 
 ClientLocalizationVisualizationInterface::ClientLocalizationVisualizationInterface(
-    const Poco::Net::IPAddress& hostadress, const Poco::UInt16& binaryClientLocalizationVisualizationPort, ros::NodeHandle& nh)
+    const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientLocalizationVisualizationPort, ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientLocalizationVisualizationPort, nh)
 {
   // Setup publisher
@@ -268,7 +268,7 @@ size_t ClientLocalizationVisualizationInterface::tryToParseData(const std::vecto
 }
 
 ClientLocalizationPoseInterface::ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress,
-                                                                 const Poco::UInt16& binaryClientLocalizationPosePort,
+                                                                 const Poco::UInt16 binaryClientLocalizationPosePort,
                                                                  ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientLocalizationPosePort, nh)
 {
@@ -312,7 +312,7 @@ size_t ClientLocalizationPoseInterface::tryToParseData(const std::vector<char>& 
 }
 
 ClientGlobalAlignVisualizationInterface::ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress,
-                                                                                 const Poco::UInt16& binaryClientGlobalAlignVisualizationPort,
+                                                                                 const Poco::UInt16 binaryClientGlobalAlignVisualizationPort,
                                                                                  ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientGlobalAlignVisualizationPort, nh)
 {
@@ -344,7 +344,7 @@ size_t ClientGlobalAlignVisualizationInterface::tryToParseData(const std::vector
 }
 
 ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
-                                                               const Poco::UInt16& binaryClientExpandMapVisualizationPort,
+                                                               const Poco::UInt16 binaryClientExpandMapVisualizationPort,
                                                                ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientExpandMapVisualizationPort, nh)
 {
@@ -367,7 +367,7 @@ size_t ClientExpandMapVisualizationInterface::tryToParseData(const std::vector<c
 }
 
 ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(const Poco::Net::IPAddress& hostadress,
-                                                               const Poco::UInt16& binaryClientExpandMapPriorMapPort,
+                                                               const Poco::UInt16 binaryClientExpandMapPriorMapPort,
                                                                ros::NodeHandle& nh)
   : ReceivingInterface(hostadress, binaryClientExpandMapPriorMapPort, nh)
 {

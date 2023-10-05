@@ -567,7 +567,7 @@ void LocatorBridgeNode::checkLaserScan(const sensor_msgs::LaserScan& msg,
   }
 }
 
-void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, const Poco::UInt16& binaryPortsStart)
+void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, const Poco::UInt16 binaryPortsStart)
 {
   // port definitions for the different interfaces. See Locator API documentation section 12.8
   Poco::UInt16 binaryClientControlModePort{ binaryPortsStart /*default: 9004*/ };
