@@ -333,12 +333,8 @@ bool LocatorBridgeNode::clientExpandMapDisableCb(std_srvs::Empty::Request& req, 
 bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req, bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
-  geometry_msgs::Pose2D current_pose;
-  current_pose.x = req.x_m;
-  current_pose.y = req.y_m;
-  current_pose.theta = req.theta_rad;
 
-  query.set("pose", RosMsgsDatagramConverter::makePose2d(current_pose));
+  query.set("pose", RosMsgsDatagramConverter::makePose2d(req.pose));
   auto response = loc_client_interface_->call("clientRecordingSetCurrentPose", query);
   return true;
 }

@@ -13,7 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-float64 x_m
-float64 y_m
-float64 theta_rad
+geometry_msgs/Pose2D pose
 ---
