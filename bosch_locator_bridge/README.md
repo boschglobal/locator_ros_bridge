@@ -99,7 +99,10 @@ When you are done, you can stop the localization with
 
 6. Use the pose in step 3 to set the current pose in the recording
     ```
-    rosservice call /bridge_node/recording_set_current_pose -- -2.33475 2.65895 2.78
+    rosservice call /bridge_node/recording_set_current_pose "pose:
+        x: -0.357
+        y: 32.3
+        theta: -0.23"
     ```
 7. Drive around to record the new area as an extension
 8. Stop visual recording
