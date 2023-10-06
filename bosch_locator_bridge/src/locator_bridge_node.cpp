@@ -44,7 +44,7 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIR
   {"ClientSensor", {6, 0}},
 //  {"ClientUser", {4, 0}},
 //  {"User", {1, 0}},
-//  {"ClientExpandMap", {3, 0}},
+  {"ClientExpandMap", {3, 0}},
 });
 
 LocatorBridgeNode::LocatorBridgeNode() : nh_("~")
