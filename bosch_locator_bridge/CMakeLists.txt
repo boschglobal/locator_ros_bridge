@@ -36,6 +36,8 @@ find_package(Poco REQUIRED COMPONENTS Foundation Net JSON)
 
 set(msg_files
     "msg/ClientControlMode.msg"
+    "msg/ClientExpandMapOverwriteZoneInformation.msg"
+    "msg/ClientExpandMapVisualization.msg"
     "msg/ClientGlobalAlignLandmarkObservationNotice.msg"
     "msg/ClientGlobalAlignLandmarkVisualizationInformation.msg"
     "msg/ClientGlobalAlignVisualization.msg"
@@ -47,10 +49,12 @@ set(msg_files
 
 set(srv_files
     "srv/ClientConfigGetEntry.srv"
+    "srv/ClientExpandMapEnable.srv"
     "srv/ClientMapList.srv"
     "srv/ClientMapSend.srv"
     "srv/ClientMapSet.srv"
     "srv/ClientMapStart.srv"
+    "srv/ClientRecordingSetCurrentPose.srv"
     "srv/StartRecording.srv"
     "srv/ServerMapGetImageWithResolution.srv"
     "srv/ServerMapList.srv"

@@ -21,6 +21,15 @@ limitations under the License.-->
   <!-- ip of the computer, on which the locator software is running -->
   <arg name="locator_ip" default="127.0.0.1"/>
 
+    <!-- port at which the JSON RPC ROKIT Locator Client starts -->
+  <arg name="locator_RPC_Port" default="8080"/>
+
+  <!-- port at which the binary interface ClientControlMode starts -->
+  <arg name="locator_binaryPortsStart" default="9004"/>
+
+  <!-- name of the node -->
+  <arg name="bridge_node_name" default="bridge_node"/>
+
   <!-- login credentials for the locator software -->
   <arg name="locator_user" default="admin"/>
   <arg name="locator_password" default="admin"/>
@@ -28,7 +37,7 @@ limitations under the License.-->
   <!-- whether for forward odometry data from ROS to locator -->
   <arg name="enable_odometry" default="false"/>
 
-  <arg name="laser_datagram_port" default="4242"/>
+  <arg name="laser_datagram_port" default="2112"/>
   <arg name="laser_mirror_scans" default="false"/>
   <arg name="laser_x" default="0.0"/>
   <arg name="laser_y" default="0.0"/>
@@ -51,8 +60,10 @@ limitations under the License.-->
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
 
-  <node pkg="bosch_locator_bridge" exec="node" name="bridge_node" output="screen">
+  <node pkg="bosch_locator_bridge" exec="node" name="$(arg bridge_node_name)" output="screen">
     <param name="locator_host" value="$(var locator_ip)" />
+    <param name="locator_RPC_Port" value="$(arg locator_RPC_Port)" />
+    <param name="locator_binaryPortsStart" value="$(arg locator_binaryPortsStart)" />
     <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
     <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
     <param name="odom_datagram_port" value="$(var odom_datagram_port)"/>
@@ -61,6 +72,7 @@ limitations under the License.-->
     <param name="scan_topic" value="$(var scan_topic)"/>
     <param name="scan2_topic" value="$(var scan2_topic)"/>
     <param name="odom_topic" value="$(var odom_topic)"/>
+    <param name="odometry_velocity_set" value="$(arg odometry_velocity_set)"/>
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->

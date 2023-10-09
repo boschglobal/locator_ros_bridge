@@ -68,17 +68,6 @@ protected:
   //! Node
   rclcpp::Node::SharedPtr node_;
 
-  // port definitions for the different interfaces. See Locator API documentation section 12.8
-  static constexpr Poco::UInt16 BINARY_CLIENT_CONTROL_MODE_PORT {9004};
-  static constexpr Poco::UInt16 BINARY_CLIENT_MAP_MAP_PORT {9005};
-  static constexpr Poco::UInt16 BINARY_CLIENT_MAP_VISUALIZATION_PORT {9006};
-  static constexpr Poco::UInt16 BINARY_CLIENT_RECORDING_MAP_PORT {9007};
-  static constexpr Poco::UInt16 BINARY_CLIENT_RECORDING_VISUALIZATION_PORT {9008};
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_MAP_PORT {9009};
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT {9010};
-  static constexpr Poco::UInt16 BINARY_CLIENT_LOCALIZATION_POSE_PORT {9011};
-  static constexpr Poco::UInt16 BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT {9012};
-
 private:
   Poco::Net::StreamSocket ccm_socket_;
   Poco::Net::SocketReactor reactor_;
@@ -89,7 +78,9 @@ private:
 class ClientControlModeInterface : public ReceivingInterface
 {
 public:
-  ClientControlModeInterface(const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node);
+  ClientControlModeInterface(const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientControlModePort,
+  rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
@@ -102,7 +93,9 @@ private:
 class ClientMapMapInterface : public ReceivingInterface
 {
 public:
-  ClientMapMapInterface(const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node);
+  ClientMapMapInterface(const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientMapMapPort,
+  rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
@@ -116,6 +109,7 @@ class ClientMapVisualizationInterface : public ReceivingInterface
 public:
   ClientMapVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientMapVisualizationPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -137,6 +131,7 @@ class ClientRecordingMapInterface : public ReceivingInterface
 public:
   ClientRecordingMapInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientRecordingMapPort, 
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -151,6 +146,7 @@ class ClientRecordingVisualizationInterface : public ReceivingInterface
 public:
   ClientRecordingVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientRecordingVisualizationPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -172,6 +168,7 @@ class ClientLocalizationMapInterface : public ReceivingInterface
 public:
   ClientLocalizationMapInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientLocalizationMapPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -186,6 +183,7 @@ class ClientLocalizationVisualizationInterface : public ReceivingInterface
 public:
   ClientLocalizationVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientLocalizationVisualizationPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -205,6 +203,7 @@ class ClientLocalizationPoseInterface : public ReceivingInterface
 public:
   ClientLocalizationPoseInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientLocalizationPosePort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -224,6 +223,7 @@ class ClientGlobalAlignVisualizationInterface : public ReceivingInterface
 public:
   ClientGlobalAlignVisualizationInterface(
     const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientGlobalAlignVisualizationPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -236,6 +236,36 @@ private:
   ::SharedPtr client_global_align_visualization_poses_pub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseArray>
   ::SharedPtr client_global_align_visualization_landmarks_poses_pub_;
+};
+
+
+class ClientExpandMapVisualizationInterface : public ReceivingInterface
+{
+public:
+  ClientExpandMapVisualizationInterface(
+    const Poco::Net::IPAddress& hostadress,
+    const Poco::UInt16 binaryClientExpandMapVisualizationPort,
+    ros::NodeHandle& nh);
+  size_t tryToParseData(
+    const std::vector<char>& datagram,
+    rclcpp::Node::SharedPtr node) override;
+
+private:
+  rclcpp::Publisher<bosch_locator_bridge::msg::ClientExpandMapVisualization>::SharedPtr client_expand_map_visualization_pub_;
+
+class ClientExpandMapPriorMapInterface : public ReceivingInterface
+{
+public:
+  ClientExpandMapPriorMapInterface(
+    const Poco::Net::IPAddress& hostadress,
+    const Poco::UInt16 binaryClientExpandMapPriorMapPort,
+    ros::NodeHandle& nh);
+  size_t tryToParseData(
+    const std::vector<char>& datagram
+    rclcpp::Node::SharedPtr node) override;
+
+private:
+  rclcpp::Publisher<sensor_msgs::PointCloud2>::SharedPtr client_expand_map_priormap_pub_;
 };
 
 #endif  // BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_

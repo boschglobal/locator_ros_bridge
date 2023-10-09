@@ -83,8 +83,9 @@ void ReceivingInterface::run()
 
 ClientControlModeInterface::ClientControlModeInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientControlModePort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_CONTROL_MODE_PORT, node)
+: ReceivingInterface(hostadress, binaryClientControlModePort, node)
 {
   // Setup publisher (use QoS settings to emulate a latched topic (ROS 1))
   client_control_mode_pub_ = node->create_publisher<bosch_locator_bridge::msg::ClientControlMode>(
@@ -110,8 +111,9 @@ size_t ClientControlModeInterface::tryToParseData(
 
 ClientMapMapInterface::ClientMapMapInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientMapMapPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_MAP_MAP_PORT, node)
+: ReceivingInterface(hostadress, binaryClientMapMapPort, node)
 {
   // Setup publisher
   client_map_map_pub_ =
@@ -136,8 +138,9 @@ size_t ClientMapMapInterface::tryToParseData(
 
 ClientMapVisualizationInterface::ClientMapVisualizationInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientMapVisualizationPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_MAP_VISUALIZATION_PORT, node)
+: ReceivingInterface(hostadress, binaryClientMapVisualizationPort, node)
 {
   // Setup publisher
   client_map_visualization_pub_ =
@@ -176,8 +179,9 @@ size_t ClientMapVisualizationInterface::tryToParseData(
 
 ClientRecordingMapInterface::ClientRecordingMapInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientRecordingMapPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_MAP_PORT, node)
+: ReceivingInterface(hostadress, binaryClientRecordingMapPort, node)
 {
   // Setup publisher
   client_recording_map_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
@@ -202,8 +206,9 @@ size_t ClientRecordingMapInterface::tryToParseData(
 
 ClientRecordingVisualizationInterface::ClientRecordingVisualizationInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientRecordingVisualizationPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_RECORDING_VISUALIZATION_PORT, node)
+: ReceivingInterface(hostadress, binaryClientRecordingVisualizationPort, node)
 {
   // Setup publisher
   client_recording_visualization_pub_ =
@@ -246,8 +251,9 @@ size_t ClientRecordingVisualizationInterface::tryToParseData(
 
 ClientLocalizationMapInterface::ClientLocalizationMapInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientLocalizationMapPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_MAP_PORT, node)
+: ReceivingInterface(hostadress, binaryClientLocalizationMapPort, node)
 {
   // Setup publisher (use QoS settings to emulate a latched topic (ROS 1))
   client_localization_map_pub_ = node->create_publisher<sensor_msgs::msg::PointCloud2>(
@@ -271,8 +277,10 @@ size_t ClientLocalizationMapInterface::tryToParseData(
 }
 
 ClientLocalizationVisualizationInterface::ClientLocalizationVisualizationInterface(
-  const Poco::Net::IPAddress & hostadress, rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_VISUALIZATION_PORT, node)
+  const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientLocalizationVisualizationPort,
+  rclcpp::Node::SharedPtr node)
+: ReceivingInterface(hostadress, binaryClientLocalizationVisualizationPort, node)
 {
   // Setup publisher
   client_localization_visualization_pub_ =
@@ -310,8 +318,9 @@ size_t ClientLocalizationVisualizationInterface::tryToParseData(
 
 ClientLocalizationPoseInterface::ClientLocalizationPoseInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientLocalizationPosePort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_LOCALIZATION_POSE_PORT, node)
+: ReceivingInterface(hostadress, binaryClientLocalizationPosePort, node)
 {
   // Setup publisher
   client_localization_pose_pub_ =
@@ -361,8 +370,9 @@ size_t ClientLocalizationPoseInterface::tryToParseData(
 
 ClientGlobalAlignVisualizationInterface::ClientGlobalAlignVisualizationInterface(
   const Poco::Net::IPAddress & hostadress,
+  const Poco::UInt16 binaryClientGlobalAlignVisualizationPort,
   rclcpp::Node::SharedPtr node)
-: ReceivingInterface(hostadress, BINARY_CLIENT_GLOBAL_ALIGN_VISUALIZATION_PORT, node)
+: ReceivingInterface(hostadress, binaryClientGlobalAlignVisualizationPort, node)
 {
   // Setup publisher
   client_global_align_visualization_pub_ =
@@ -396,4 +406,54 @@ size_t ClientGlobalAlignVisualizationInterface::tryToParseData(
     client_global_align_visualization_landmarks_poses_pub_->publish(landmark_poses);
   }
   return bytes_parsed;
+}
+
+ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(
+  const Poco::Net::IPAddress& hostadress,
+  const Poco::UInt16 binaryClientExpandMapVisualizationPort,
+  rclcpp::Node::SharedPtr node)
+  : ReceivingInterface(hostadress, binaryClientExpandMapVisualizationPort, node)
+{
+  // Setup publisher
+  client_expand_map_visualization_pub_ =
+    node->create_publisher<bosch_locator_bridge::msg::ClientExpandMapVisualization>(
+    "~/client_expandmap_visualization", 5);
+}
+
+size_t ClientExpandMapVisualizationInterface::tryToParseData(const std::vector<char>& datagram)
+{
+  // convert datagram to ros message
+  bosch_locator_bridge::msg::ClientExpandMapVisualization client_expandmap_visualization;
+  const auto bytes_parsed = RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(datagram, client_expandmap_visualization);
+  if (bytes_parsed > 0)
+  {
+    // publish
+    client_expand_map_visualization_pub_->publish(client_expandmap_visualization);
+  }
+  return bytes_parsed;
+}
+
+ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(
+  const Poco::Net::IPAddress& hostadress,
+  const Poco::UInt16 binaryClientExpandMapPriorMapPort,
+  rclcpp::Node::SharedPtr node)
+  : ReceivingInterface(hostadress, binaryClientExpandMapPriorMapPort, node)
+{
+  // Setup publisher
+  client_expand_map_priormap_pub_ =
+    node->create_publisher<sensor_msgs::PointCloud2>(
+    "~/client_expandmap_priormap", 5);
+}
+
+size_t ClientExpandMapPriorMapInterface::tryToParseData(const std::vector<char>& datagram)
+{
+  // convert datagram to ros message
+  sensor_msgs::PointCloud2 map;
+  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
+  if (parsed_bytes > 0)
+  {
+    // publish
+    client_expand_map_priormap_pub_->publish(map);
+  }
+  return parsed_bytes;
 }

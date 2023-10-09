@@ -31,8 +31,11 @@ uint8 recording_state
 # This mode is RUN-state while the user works on aligning the map
 uint8 alignment_state
 
-# This mode is RUN-state while the user is creating a mask for the laser scans
+# This mode is RUN-state while the user is retrieving data from the laser scanners, for example to create a mask for the laser scans
 uint8 mask_state
+
+# This mode is RUN-state while the map expansion is activated for overwriting or expanding the prior map
+uint8 expandmap_state
 
 
 # Constants

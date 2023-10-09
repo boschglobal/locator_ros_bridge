@@ -36,6 +36,7 @@
 #include "bosch_locator_bridge/msg/client_control_mode.hpp"
 #include "bosch_locator_bridge/msg/client_global_align_visualization.hpp"
 #include "bosch_locator_bridge/msg/client_map_visualization.hpp"
+#include "bosch_locator_bridge/msg/client_expand_map_visualization.hpp"
 #include "bosch_locator_bridge/msg/client_localization_pose.hpp"
 #include "bosch_locator_bridge/msg/client_localization_visualization.hpp"
 #include "bosch_locator_bridge/msg/client_recording_visualization.hpp"
@@ -169,7 +170,7 @@ public:
    * @brief convertLaserScan2DataGram Converts a sensor_msgs::msg::LaserScan message from ros and converts
    *                                  it to the datagram structure required for the binary interface of the locator.
    * @param msg The laser scan message
-   * @oaram scan_num The current scan number
+   * @param scan_num The current scan number
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertLaserScan2DataGram(
@@ -180,13 +181,24 @@ public:
    * @brief convertOdometry2DataGram Converts a nav_msgs::msg::Odometry message from ros and converts
    *                                  it to the datagram structure required for the binary interface of the locator.
    * @param msg The odometry message
-   * @oaram odom_num The current odomerty observation number
+   * @param odom_num The current odomerty observation number
+   * @param velocitySet If velocity is unknown (false) velocity entries within the datagram will be ignored.
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertOdometry2DataGram(
-    const nav_msgs::msg::Odometry::SharedPtr msg, size_t odom_num, rclcpp::Node::SharedPtr node);
+    const nav_msgs::msg::Odometry::SharedPtr msg, size_t odom_num, bool velocitySet, rclcpp::Node::SharedPtr node);
 
   static Poco::JSON::Object makePose2d(const geometry_msgs::msg::Pose2D & pose);
+
+  /**
+   * @brief convertClientExpandMapVisualizationDatagram2Message
+   * @param datagram The binary data input datagram [INPUT]
+   * @param client_expandmap_visualization ClientExpandMapVisualization message [OUTPUT]
+   * @return number of bytes parsed successfully
+   */
+  static size_t convertClientExpandMapVisualizationDatagram2Message(
+      const std::vector<char>& datagram,
+      bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization);
 
 private:
   static size_t convertMapDatagram2Message(
