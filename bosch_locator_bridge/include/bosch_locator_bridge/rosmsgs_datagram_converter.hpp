@@ -198,7 +198,7 @@ public:
    */
   static size_t convertClientExpandMapVisualizationDatagram2Message(
       const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization);
+      bosch_locator_bridge::msg::ClientExpandMapVisualization& client_expandmap_visualization);
 
 private:
   static size_t convertMapDatagram2Message(

@@ -253,6 +253,7 @@ public:
 
 private:
   rclcpp::Publisher<bosch_locator_bridge::msg::ClientExpandMapVisualization>::SharedPtr client_expand_map_visualization_pub_;
+};
 
 class ClientExpandMapPriorMapInterface : public ReceivingInterface
 {

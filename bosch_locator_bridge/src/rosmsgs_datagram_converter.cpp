@@ -631,7 +631,7 @@ std::vector<uint64_t> RosMsgsDatagramConverter::readSensorOffsets(
 
 size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(
       const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization)
+      bosch_locator_bridge::msg::ClientExpandMapVisualization& client_expandmap_visualization)
 {
     Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
     auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
@@ -639,7 +639,7 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
 
     double stamp;
     binary_reader >> stamp;
-    client_expandmap_visualization.timestamp = ros::Time(stamp);
+    client_expandmap_visualization.timestamp = rclcpp::Time(stamp * 1e9);
     binary_reader >> client_expandmap_visualization.visualization_id;
 
     // Get zones
@@ -647,12 +647,12 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
     binary_reader >> zones_length;
     for (unsigned int i = 0; i < zones_length; i++)
     {
-      bosch_locator_bridge::ClientExpandMapOverwriteZoneInformation zone;
+      bosch_locator_bridge::msg::ClientExpandMapOverwriteZoneInformation zone;
       uint32_t polygon_length;
       binary_reader >> polygon_length;
       for (unsigned int i = 0; i < polygon_length; i++)
       {
-        geometry_msgs::Point32 point;
+        geometry_msgs::msg::Point32 point;
         binary_reader >> point.x >> point.y;
         zone.polygon.push_back(std::move(point));
       }
@@ -677,7 +677,7 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
 
     for (unsigned int i = 0; i < poses_length; i++)
     {
-      geometry_msgs::Pose nextPose;
+      geometry_msgs::msg::Pose nextPose;
       convertPose2DSingleDatagram2Message(binary_reader, nextPose);
       client_expandmap_visualization.prior_map_poses.poses.push_back(nextPose);
     }

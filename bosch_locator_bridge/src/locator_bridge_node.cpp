@@ -418,9 +418,9 @@ bool LocatorBridgeNode::clientLocalizationStopCb(
 //Todo fix format for ROS2
 bool LocatorBridgeNode::clientExpandMapEnableCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Request> req,
-  std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response> res)
+  std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response> /*res*/)
 {
-  const std::string prior_map_name = req.prior_map_name.empty() ? last_map_name_ : req.prior_map_name;
+  const std::string prior_map_name = req->prior_map_name.empty() ? last_map_name_ : req->prior_map_name;
 
   auto query = loc_client_interface_->getSessionQuery();
   query.set("priorMapName", prior_map_name);
@@ -429,8 +429,8 @@ bool LocatorBridgeNode::clientExpandMapEnableCb(
 }
 
 bool LocatorBridgeNode::clientExpandMapDisableCb(
-  const std::shared_ptr<std_srvs::srv::Empty::Request> req,
-  std::shared_ptr<std_srvs::srv::Empty::Response> res)
+  const std::shared_ptr<std_srvs::srv::Empty::Request> /*req*/,
+  std::shared_ptr<std_srvs::srv::Empty::Response> /*res*/)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientExpandMapDisable", query);
@@ -439,11 +439,11 @@ bool LocatorBridgeNode::clientExpandMapDisableCb(
 
 bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Response> res)
+    std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Response> /*res*/)
 {
   auto query = loc_client_interface_->getSessionQuery();
 
-  query.set("pose", RosMsgsDatagramConverter::makePose2d(req.pose));
+  query.set("pose", RosMsgsDatagramConverter::makePose2d(req->pose));
   auto response = loc_client_interface_->call("clientRecordingSetCurrentPose", query);
   return true;
 }
@@ -696,7 +696,7 @@ void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string & host, 
   client_recording_map_interface_.reset(
     new ClientRecordingMapInterface(
       Poco::Net::IPAddress(host),
-      binaryClientRecordingMapPort
+      binaryClientRecordingMapPort,
       shared_from_this()));
   client_recording_map_interface_thread_.start(*client_recording_map_interface_);
   // Create binary interface for client recording visualization

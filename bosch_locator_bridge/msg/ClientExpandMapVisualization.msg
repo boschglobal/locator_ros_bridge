@@ -16,3 +16,15 @@
 
 # The time at which the Localization Client received the ClientExpandMapVisualizationDatagram
 builtin_interfaces/Time timestamp
+
+# A unique id for matching datagrams that were emitted at the same time but by different visualization interfaces
+uint64 visualization_id
+
+# A set of OverwriteZones
+bosch_locator_bridge/ClientExpandMapOverwriteZoneInformation[] zones
+
+# The poses in the prior map
+geometry_msgs/PoseArray prior_map_poses
+
+# The type of the poses in the prior map
+int32[] prior_map_pose_types
