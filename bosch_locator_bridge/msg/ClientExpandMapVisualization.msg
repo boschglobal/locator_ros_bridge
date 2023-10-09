@@ -15,4 +15,4 @@
 # limitations under the License.
 
 # The time at which the Localization Client received the ClientExpandMapVisualizationDatagram
-time timestamp
+builtin_interfaces/Time timestamp

@@ -441,14 +441,14 @@ ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(
 {
   // Setup publisher
   client_expand_map_priormap_pub_ =
-    node->create_publisher<sensor_msgs::PointCloud2>(
+    node->create_publisher<sensor_msgs::msg::PointCloud2>(
     "~/client_expandmap_priormap", 5);
 }
 
 size_t ClientExpandMapPriorMapInterface::tryToParseData(const std::vector<char>& datagram)
 {
   // convert datagram to ros message
-  sensor_msgs::PointCloud2 map;
+  sensor_msgs::msg::PointCloud2 map;
   const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, ros::Time::now(), map);
   if (parsed_bytes > 0)
   {

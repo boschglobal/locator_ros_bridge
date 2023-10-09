@@ -36,6 +36,7 @@
 #include "bosch_locator_bridge/msg/client_localization_visualization.hpp"
 #include "bosch_locator_bridge/msg/client_map_visualization.hpp"
 #include "bosch_locator_bridge/msg/client_recording_visualization.hpp"
+#include "bosch_locator_bridge/msg/client_expand_map_visualization.hpp"
 
 /**
  * @brief The ReceivingInterface class is the base class for all receiving interfaces, such as
@@ -245,7 +246,7 @@ public:
   ClientExpandMapVisualizationInterface(
     const Poco::Net::IPAddress& hostadress,
     const Poco::UInt16 binaryClientExpandMapVisualizationPort,
-    ros::NodeHandle& nh);
+    rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char>& datagram,
     rclcpp::Node::SharedPtr node) override;
@@ -259,13 +260,13 @@ public:
   ClientExpandMapPriorMapInterface(
     const Poco::Net::IPAddress& hostadress,
     const Poco::UInt16 binaryClientExpandMapPriorMapPort,
-    ros::NodeHandle& nh);
+    rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
-    const std::vector<char>& datagram
+    const std::vector<char>& datagram,
     rclcpp::Node::SharedPtr node) override;
 
 private:
-  rclcpp::Publisher<sensor_msgs::PointCloud2>::SharedPtr client_expand_map_priormap_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr client_expand_map_priormap_pub_;
 };
 
 #endif  // BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_
