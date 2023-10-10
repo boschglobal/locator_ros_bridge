@@ -59,11 +59,12 @@ limitations under the License.-->
   <arg name="scan_topic" default="/scan"/>
   <arg name="scan2_topic" default="/scan2"/>
   <arg name="odom_topic" default="/odom"/>
+  <arg name="odometry_velocity_set" default="false" description="set to true if the velocity in the odometry should be used"/>
 
-  <node pkg="bosch_locator_bridge" exec="node" name="$(arg bridge_node_name)" output="screen">
+  <node pkg="bosch_locator_bridge" exec="node" name="$(var bridge_node_name)" output="screen">
     <param name="locator_host" value="$(var locator_ip)" />
-    <param name="locator_RPC_Port" value="$(arg locator_RPC_Port)" />
-    <param name="locator_binaryPortsStart" value="$(arg locator_binaryPortsStart)" />
+    <param name="locator_RPC_Port" value="$(var locator_RPC_Port)" />
+    <param name="locator_binaryPortsStart" value="$(var locator_binaryPortsStart)" />
     <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
     <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
     <param name="odom_datagram_port" value="$(var odom_datagram_port)"/>
@@ -72,7 +73,7 @@ limitations under the License.-->
     <param name="scan_topic" value="$(var scan_topic)"/>
     <param name="scan2_topic" value="$(var scan2_topic)"/>
     <param name="odom_topic" value="$(var odom_topic)"/>
-    <param name="odometry_velocity_set" value="$(arg odometry_velocity_set)"/>
+    <param name="odometry_velocity_set" value="$(var odometry_velocity_set)"/>
 
     <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
          (instead of using one of the laser drivers built into the locator software) -->
