@@ -31,7 +31,9 @@
 class ReceivingInterface : public Poco::Runnable
 {
 public:
-  ReceivingInterface(const Poco::Net::IPAddress& hostadress, Poco::UInt16 port, ros::NodeHandle& nh);
+  ReceivingInterface(const Poco::Net::IPAddress& hostadress,
+                     Poco::UInt16 port,
+                     ros::NodeHandle& nh);
 
   virtual ~ReceivingInterface();
 
@@ -41,10 +43,11 @@ public:
 
 protected:
   /**
-   * @brief Actual function to be overwritten by child to handle data, e.g., convert to ros messages and
-   * publish
+   * @brief Actual function to be overwritten by child to handle data,
+   * e.g., convert to ros messages and publish
    * @param datagram_buffer The data received via the binary connection socket
-   * @return amount of bytes successfully parsed and can be removed from the buffer (0 if not parsing failed)
+   * @return amount of bytes successfully parsed and can be removed from the buffer
+   * (0 if not parsing failed)
    */
   virtual size_t tryToParseData(const std::vector<char>& datagram_buffer) = 0;
 
@@ -64,76 +67,101 @@ private:
 class ClientControlModeInterface : public ReceivingInterface
 {
 public:
-  ClientControlModeInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientControlModePort, ros::NodeHandle& nh);
+  ClientControlModeInterface(const Poco::Net::IPAddress& hostadress,
+                             const Poco::UInt16 binaryClientControlModePort,
+                             ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientMapMapInterface : public ReceivingInterface
 {
 public:
-  ClientMapMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientMapMapPort, ros::NodeHandle& nh);
+  ClientMapMapInterface(const Poco::Net::IPAddress& hostadress,
+                        const Poco::UInt16 binaryClientMapMapPort,
+                        ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientMapVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientMapVisualizationPort, ros::NodeHandle& nh);
+  ClientMapVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                  const Poco::UInt16 binaryClientMapVisualizationPort,
+                                  ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientRecordingMapInterface : public ReceivingInterface
 {
 public:
-  ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientRecordingMapPort, ros::NodeHandle& nh);
+  ClientRecordingMapInterface(const Poco::Net::IPAddress& hostadress,
+                              const Poco::UInt16 binaryClientRecordingMapPort,
+                              ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientRecordingVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientRecordingVisualizationPort, ros::NodeHandle& nh);
+  ClientRecordingVisualizationInterface(const Poco::Net::IPAddress& hostadress,
+                                        const Poco::UInt16 binaryClientRecordingVisualizationPort,
+                                        ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationMapInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientLocalizationMapPort, ros::NodeHandle& nh);
+  ClientLocalizationMapInterface(const Poco::Net::IPAddress& hostadress,
+                                 const Poco::UInt16 binaryClientLocalizationMapPort,
+                                 ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientLocalizationVisualizationPort, ros::NodeHandle& nh);
+  ClientLocalizationVisualizationInterface(
+    const Poco::Net::IPAddress& hostadress,
+    const Poco::UInt16 binaryClientLocalizationVisualizationPort,
+    ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientLocalizationPoseInterface : public ReceivingInterface
 {
 public:
-  ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientLocalizationPosePort, ros::NodeHandle& nh);
+  ClientLocalizationPoseInterface(const Poco::Net::IPAddress& hostadress,
+                                  const Poco::UInt16 binaryClientLocalizationPosePort,
+                                  ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientGlobalAlignVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientGlobalAlignVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientGlobalAlignVisualizationPort, ros::NodeHandle& nh);
+  ClientGlobalAlignVisualizationInterface(
+    const Poco::Net::IPAddress& hostadress,
+    const Poco::UInt16 binaryClientGlobalAlignVisualizationPort,
+    ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientExpandMapVisualizationInterface : public ReceivingInterface
 {
 public:
-  ClientExpandMapVisualizationInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientExpandMapVisualizationPort, ros::NodeHandle& nh);
+  ClientExpandMapVisualizationInterface(
+    const Poco::Net::IPAddress& hostadress,
+    const Poco::UInt16 binaryClientExpandMapVisualizationPort,
+    ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };
 
 class ClientExpandMapPriorMapInterface : public ReceivingInterface
 {
 public:
-  ClientExpandMapPriorMapInterface(const Poco::Net::IPAddress& hostadress, const Poco::UInt16 binaryClientExpandMapPriorMapPort, ros::NodeHandle& nh);
+  ClientExpandMapPriorMapInterface(const Poco::Net::IPAddress& hostadress,
+                                   const Poco::UInt16 binaryClientExpandMapPriorMapPort,
+                                   ros::NodeHandle& nh);
   size_t tryToParseData(const std::vector<char>& datagram) override;
 };

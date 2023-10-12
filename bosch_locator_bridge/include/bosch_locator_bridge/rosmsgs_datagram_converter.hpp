@@ -53,8 +53,10 @@ public:
    * @param client_control_mode Describes the state of the localization client [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertClientControlMode2Message(const std::vector<char>& datagram, const ros::Time& stamp,
-                                                 bosch_locator_bridge::ClientControlMode& client_control_mode);
+  static size_t convertClientControlMode2Message(
+    const std::vector<char>& datagram,
+    const ros::Time& stamp,
+    bosch_locator_bridge::ClientControlMode& client_control_mode);
 
   /**
    * @brief convertMapDatagram2Message
@@ -63,15 +65,16 @@ public:
    * @param out_pointcloud Resulting converted map as point cloud [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertMapDatagram2Message(const std::vector<char>& datagram, const ros::Time& stamp,
+  static size_t convertMapDatagram2Message(const std::vector<char>& datagram,
+                                           const ros::Time& stamp,
                                            sensor_msgs::PointCloud2& out_pointcloud);
 
   /**
    * @brief convertClientGlobalAlignVisualizationDatagram2Message
    * @param datagram The binary data input datagram [INPUT]
    * @param client_global_align_visualization ClientGlobalAlignVisualization message [OUTPUT]
-   * @param poses A set of poses previously visited by the platform. The platform may have observed landmarks from some
-   * of these poses [OUTPUT]
+   * @param poses A set of poses previously visited by the platform. The platform may have
+   * observed landmarks from some of these poses [OUTPUT]
    * @param landmark_poses The array of poses according to the landmarks [OUTPUT]
    * @return number of bytes parsed successfully
    */
@@ -90,8 +93,11 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientLocalizationPoseDatagram2Message(
-      const std::vector<char>& datagram, bosch_locator_bridge::ClientLocalizationPose& client_localization_pose,
-      geometry_msgs::PoseStamped& pose, double covariance[6], geometry_msgs::PoseStamped& lidar_odo_pose);
+      const std::vector<char>& datagram,
+      bosch_locator_bridge::ClientLocalizationPose& client_localization_pose,
+      geometry_msgs::PoseStamped& pose,
+      double covariance[6],
+      geometry_msgs::PoseStamped& lidar_odo_pose);
 
   /**
    * @brief convertClientLocalizationVisualizationDatagram2Message
@@ -116,8 +122,11 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientMapVisualizationDatagram2Message(
-      const std::vector<char>& datagram, bosch_locator_bridge::ClientMapVisualization& client_map_visualization,
-      geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan, geometry_msgs::PoseArray& path_poses);
+      const std::vector<char>& datagram,
+      bosch_locator_bridge::ClientMapVisualization& client_map_visualization,
+      geometry_msgs::PoseStamped& pose,
+      sensor_msgs::PointCloud2& scan,
+      geometry_msgs::PoseArray& path_poses);
 
   /**
    * @brief convertClientRecordingVisualizationDatagram2Message
@@ -131,45 +140,56 @@ public:
   static size_t convertClientRecordingVisualizationDatagram2Message(
       const std::vector<char>& datagram,
       bosch_locator_bridge::ClientRecordingVisualization& client_recording_visualization,
-      geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan, geometry_msgs::PoseArray& path_poses);
+      geometry_msgs::PoseStamped& pose,
+      sensor_msgs::PointCloud2& scan,
+      geometry_msgs::PoseArray& path_poses);
 
   /**
-   * @brief convertPose2DDoubleDatagram2Message Takes a binary_reader with a DOUBLE precision pose datagram coming next
-   * and converts to a geometry_msgs::Pose
+   * @brief convertPose2DDoubleDatagram2Message Takes a binary_reader with a DOUBLE precision
+   * pose datagram coming next and converts to a geometry_msgs::Pose
    * @param binary_reader The binary_reader pointing to a DOUBLE precision pose datagram
    * @param pose Converted pose [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertPose2DDoubleDatagram2Message(Poco::BinaryReader& binary_reader, geometry_msgs::Pose& pose);
+  static size_t convertPose2DDoubleDatagram2Message(Poco::BinaryReader& binary_reader,
+                                                    geometry_msgs::Pose& pose);
 
   /**
-   * @brief convertPose2DSingleDatagram2Message Takes a binary_reader with a SINGLE precision pose datagram coming next
-   * and converts to a geometry_msgs::Pose
+   * @brief convertPose2DSingleDatagram2Message Takes a binary_reader with a SINGLE precision pose
+   * datagram coming next and converts to a geometry_msgs::Pose
    * @param binary_reader The binary_reader pointing to a SINGLE precision pose datagram
    * @param pose Converted pose [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertPose2DSingleDatagram2Message(Poco::BinaryReader& binary_reader, geometry_msgs::Pose& pose);
+  static size_t convertPose2DSingleDatagram2Message(Poco::BinaryReader& binary_reader,
+                                                    geometry_msgs::Pose& pose);
 
   /**
-   * @brief convertLaserScan2DataGram Converts a sensor_msgs::LaserScan message from ros and converts
-   *                                  it to the datagram structure required for the binary interface of the locator.
+   * @brief convertLaserScan2DataGram Converts a sensor_msgs::LaserScan message from ros and
+   * converts it to the datagram structure required for the binary interface of the locator.
    * @param msg The laser scan message
    * @param scan_num The current scan number
    * @param scan_time Time between scans [seconds], if not specified in scan message
    * @return The data shaped into the datagram structure required by the locator
    */
-  static Poco::Buffer<char> convertLaserScan2DataGram(const sensor_msgs::LaserScan& msg, size_t scan_num, float scan_time = 0.0f);
+  static Poco::Buffer<char> convertLaserScan2DataGram(
+    const sensor_msgs::LaserScan& msg,
+    size_t scan_num,
+    float scan_time = 0.0f);
 
   /**
    * @brief convertOdometry2DataGram Converts a nav_msgs::Odometry message from ros and converts
-   *                                  it to the datagram structure required for the binary interface of the locator.
+   * it to the datagram structure required for the binary interface of the locator.
    * @param msg The odometry message
    * @param odom_num The current odomerty observation number
-   * @param velocitySet If velocity is unknown (false) velocity entries within the datagram will be ignored.
+   * @param velocitySet If velocity is unknown (false) velocity entries within the datagram
+   * will be ignored.
    * @return The data shaped into the datagram structure required by the locator
    */
-  static Poco::Buffer<char> convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num, bool velocitySet);
+  static Poco::Buffer<char> convertOdometry2DataGram(
+    const nav_msgs::Odometry& msg,
+    size_t odom_num,
+    bool velocitySet);
 
   static Poco::JSON::Object makePose2d(const geometry_msgs::Pose2D& pose);
 
@@ -184,8 +204,10 @@ public:
       bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization);
 
 private:
-  static size_t convertMapDatagram2Message(Poco::BinaryReader& binary_reader, const ros::Time& stamp,
-                                           sensor_msgs::PointCloud2& out_pointcloud);
+  static size_t convertMapDatagram2Message(
+    Poco::BinaryReader& binary_reader,
+    const ros::Time& stamp,
+    sensor_msgs::PointCloud2& out_pointcloud);
   static size_t convertMapDatagram2PointCloud(Poco::BinaryReader& binary_reader,
                                               pcl::PointCloud<pcl::PointXYZRGB>& out_pointcloud);
   static void colorizePointCloud(pcl::PointCloud<pcl::PointXYZRGB>& point_cloud,

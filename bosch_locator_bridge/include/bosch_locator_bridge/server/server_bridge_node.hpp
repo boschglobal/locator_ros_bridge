@@ -66,7 +66,8 @@ private:
 };
 
 template<typename T>
-std::vector<T> ServerBridgeNode::convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const
+std::vector<T> ServerBridgeNode::convert_value_array_to_vector(
+  const XmlRpc::XmlRpcValue& array) const
 {
   std::vector<T> vec;
   for (int i = 0; i != array.size(); ++i)

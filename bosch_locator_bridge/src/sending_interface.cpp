@@ -37,7 +37,8 @@ void SendingInterface::run()
       {
         Poco::Net::SocketAddress clientAddr;
         Poco::Net::StreamSocket sock = socket_.acceptConnection(clientAddr);
-        ROS_INFO_STREAM("accepted connection from " << clientAddr << " at " << sock.address().toString());
+        ROS_INFO_STREAM("accepted connection from " << clientAddr << " at "
+                                                    << sock.address().toString());
         sock.setNoDelay(true);
         {
           std::lock_guard<std::mutex> lock(connections_mutex_);
@@ -66,7 +67,8 @@ SendingInterface::SendingStatus SendingInterface::sendData(void* data, size_t si
   if (connections_.size() == 0)
   {
     ROS_INFO_STREAM_THROTTLE_NAMED(10, std::to_string(size),
-                                   "Cannot send data of size " << size << " to any peer (no connections available)");
+                                   "Cannot send data of size " << size
+                                   << " to any peer (no connections available)");
     ret = SendingStatus::NO_CONNECTIONS;
   }
   for (size_t i = 0; i < connections_.size(); i++)
@@ -87,7 +89,8 @@ SendingInterface::SendingStatus SendingInterface::sendData(void* data, size_t si
       {
         good_connections.push_back(connections_[i]);
         ROS_INFO_STREAM_THROTTLE_NAMED(10, std::to_string(size),
-                                       size << " bytes successfully sent via " << connections_[i].address());
+                                       size << " bytes successfully sent via "
+                                            << connections_[i].address());
       }
       else
       {

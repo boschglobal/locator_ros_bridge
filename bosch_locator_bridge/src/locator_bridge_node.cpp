@@ -104,24 +104,42 @@ void LocatorBridgeNode::init()
       nh_.advertiseService("get_config_entry", &LocatorBridgeNode::clientConfigGetEntryCb, this));
 
   services_.push_back(
-      nh_.advertiseService("start_visual_recording", &LocatorBridgeNode::clientRecordingStartVisualRecordingCb, this));
+      nh_.advertiseService("start_visual_recording",
+                           &LocatorBridgeNode::clientRecordingStartVisualRecordingCb,
+                           this));
   services_.push_back(
-      nh_.advertiseService("stop_visual_recording", &LocatorBridgeNode::clientRecordingStopVisualRecordingCb, this));
+      nh_.advertiseService("stop_visual_recording",
+                           &LocatorBridgeNode::clientRecordingStopVisualRecordingCb,
+                           this));
 
-  services_.push_back(nh_.advertiseService("start_map", &LocatorBridgeNode::clientMapStartCb, this));
+  services_.push_back(nh_.advertiseService("start_map",
+                                           &LocatorBridgeNode::clientMapStartCb,
+                                           this));
   services_.push_back(nh_.advertiseService("stop_map", &LocatorBridgeNode::clientMapStopCb, this));
 
-  services_.push_back(nh_.advertiseService("start_localization", &LocatorBridgeNode::clientLocalizationStartCb, this));
-  services_.push_back(nh_.advertiseService("stop_localization", &LocatorBridgeNode::clientLocalizationStopCb, this));
+  services_.push_back(nh_.advertiseService("start_localization",
+                                           &LocatorBridgeNode::clientLocalizationStartCb,
+                                           this));
+  services_.push_back(nh_.advertiseService("stop_localization",
+                                           &LocatorBridgeNode::clientLocalizationStopCb,
+                                           this));
 
   services_.push_back(nh_.advertiseService("send_map", &LocatorBridgeNode::clientMapSendCb, this));
   services_.push_back(nh_.advertiseService("set_map", &LocatorBridgeNode::clientMapSetCb, this));
-  services_.push_back(nh_.advertiseService("list_client_maps", &LocatorBridgeNode::clientMapList, this));
+  services_.push_back(nh_.advertiseService("list_client_maps",
+                                           &LocatorBridgeNode::clientMapList,
+                                           this));
 
-  services_.push_back(nh_.advertiseService("enable_map_expansion", &LocatorBridgeNode::clientExpandMapEnableCb, this));
-  services_.push_back(nh_.advertiseService("disable_map_expansion", &LocatorBridgeNode::clientExpandMapDisableCb, this));
+  services_.push_back(nh_.advertiseService("enable_map_expansion",
+                                           &LocatorBridgeNode::clientExpandMapEnableCb,
+                                           this));
+  services_.push_back(nh_.advertiseService("disable_map_expansion",
+                                           &LocatorBridgeNode::clientExpandMapDisableCb,
+                                           this));
 
-  services_.push_back(nh_.advertiseService("recording_set_current_pose", &LocatorBridgeNode::clientRecordingSetCurrentPoseCb, this));
+  services_.push_back(nh_.advertiseService("recording_set_current_pose",
+                                           &LocatorBridgeNode::clientRecordingSetCurrentPoseCb,
+                                           this));
 
 
   // subscribe to default topic published by rviz "2D Pose Estimate" button for setting seed
@@ -193,14 +211,17 @@ bool LocatorBridgeNode::check_module_versions(
     }
     const auto& actual_version = actual_version_iter->second;
     // major version number needs to match, minor version number equal or bigger
-    if ((actual_version.first == required_version.first) && (actual_version.second >= required_version.second))
+    if ((actual_version.first == required_version.first) &&
+        (actual_version.second >= required_version.second))
     {
       ROS_DEBUG_STREAM("locator module " << module_name << ": version ok!");
     }
     else
     {
-      ROS_WARN_STREAM("---------8 module: " << module_name << " required version: " << required_version.first << "."
-                                            << required_version.second << " (actual version: " << actual_version.first
+      ROS_WARN_STREAM("---------8 module: " << module_name << " required version: "
+                                            << required_version.first << "."
+                                            << required_version.second << " (actual version: "
+                                            << actual_version.first
                                             << "." << actual_version.second << ")");
       return false;
     }
@@ -221,8 +242,10 @@ void LocatorBridgeNode::laser_callback(const sensor_msgs::LaserScan& msg)
     prev_laser_timestamp_ = laser_timestamp;
   }
 
-  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_, scan_time);
-  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
+  Poco::Buffer<char> laserscan_datagram =
+    RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan_num_, scan_time);
+  if (laser_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size())
+    == SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser");
   }
@@ -241,8 +264,10 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
     prev_laser2_timestamp_ = laser_timestamp;
   }
 
-  Poco::Buffer<char> laserscan_datagram = RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan2_num_, scan_time);
-  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size()) == SendingInterface::SendingStatus::IO_EXCEPTION)
+  Poco::Buffer<char> laserscan_datagram =
+    RosMsgsDatagramConverter::convertLaserScan2DataGram(msg, ++scan2_num_, scan_time);
+  if (laser2_sending_interface_->sendData(laserscan_datagram.begin(), laserscan_datagram.size())
+    == SendingInterface::SendingStatus::IO_EXCEPTION)
   {
     checkLaserScan(msg, "laser2");
   }
@@ -250,12 +275,14 @@ void LocatorBridgeNode::laser2_callback(const sensor_msgs::LaserScan& msg)
 
 void LocatorBridgeNode::odom_callback(const nav_msgs::Odometry& msg)
 {
-  Poco::Buffer<char> odom_datagram = RosMsgsDatagramConverter::convertOdometry2DataGram(msg, ++odom_num_, odometry_velocity_set_);
+  Poco::Buffer<char> odom_datagram =
+    RosMsgsDatagramConverter::convertOdometry2DataGram(msg, ++odom_num_, odometry_velocity_set_);
   odom_sending_interface_->sendData(odom_datagram.begin(), odom_datagram.size());
 }
 
-bool LocatorBridgeNode::clientConfigGetEntryCb(bosch_locator_bridge::ClientConfigGetEntry::Request& req,
-                                               bosch_locator_bridge::ClientConfigGetEntry::Response& res)
+bool LocatorBridgeNode::clientConfigGetEntryCb(
+  bosch_locator_bridge::ClientConfigGetEntry::Request& req,
+  bosch_locator_bridge::ClientConfigGetEntry::Response& res)
 {
   return get_config_entry(req.name, res.value);
 }
@@ -298,24 +325,30 @@ bool LocatorBridgeNode::clientMapList(bosch_locator_bridge::ClientMapList::Reque
   return true;
 }
 
-bool LocatorBridgeNode::clientLocalizationStartCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+bool LocatorBridgeNode::clientLocalizationStartCb(
+  std_srvs::Empty::Request& req,
+  std_srvs::Empty::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientLocalizationStart", query);
   return true;
 }
 
-bool LocatorBridgeNode::clientLocalizationStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+bool LocatorBridgeNode::clientLocalizationStopCb(
+  std_srvs::Empty::Request& req,
+  std_srvs::Empty::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientLocalizationStop", query);
   return true;
 }
 
-bool LocatorBridgeNode::clientExpandMapEnableCb(bosch_locator_bridge::ClientExpandMapEnable::Request& req,
-                                                bosch_locator_bridge::ClientExpandMapEnable::Response& res)
+bool LocatorBridgeNode::clientExpandMapEnableCb(
+  bosch_locator_bridge::ClientExpandMapEnable::Request& req,
+  bosch_locator_bridge::ClientExpandMapEnable::Response& res)
 {
-  const std::string prior_map_name = req.prior_map_name.empty() ? last_map_name_ : req.prior_map_name;
+  const std::string prior_map_name =
+    req.prior_map_name.empty() ? last_map_name_ : req.prior_map_name;
 
   auto query = loc_client_interface_->getSessionQuery();
   query.set("priorMapName", prior_map_name);
@@ -323,14 +356,18 @@ bool LocatorBridgeNode::clientExpandMapEnableCb(bosch_locator_bridge::ClientExpa
   return true;
 }
 
-bool LocatorBridgeNode::clientExpandMapDisableCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+bool LocatorBridgeNode::clientExpandMapDisableCb(
+  std_srvs::Empty::Request& req,
+  std_srvs::Empty::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientExpandMapDisable", query);
   return true;
 }
 
-bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req, bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res)
+bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(
+  bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req,
+  bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
 
@@ -343,8 +380,9 @@ void LocatorBridgeNode::setSeedCallback(const geometry_msgs::PoseWithCovarianceS
 {
   if (msg.header.frame_id != MAP_FRAME_ID)
   {
-    ROS_ERROR_STREAM("2D Pose Estimate sent in wrong frame! Is: " << msg.header.frame_id << " but should be "
-                                                                  << MAP_FRAME_ID);
+    ROS_ERROR_STREAM("2D Pose Estimate sent in wrong frame! Is: "
+      << msg.header.frame_id << " but should be "
+      << MAP_FRAME_ID);
     return;
   }
   auto query = loc_client_interface_->getSessionQuery();
@@ -364,8 +402,9 @@ void LocatorBridgeNode::setSeedCallback(const geometry_msgs::PoseWithCovarianceS
   auto response = loc_client_interface_->call("clientLocalizationSetSeed", query);
 }
 
-bool LocatorBridgeNode::clientRecordingStartVisualRecordingCb(bosch_locator_bridge::StartRecording::Request& req,
-                                                              bosch_locator_bridge::StartRecording::Response& res)
+bool LocatorBridgeNode::clientRecordingStartVisualRecordingCb(
+  bosch_locator_bridge::StartRecording::Request& req,
+  bosch_locator_bridge::StartRecording::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
   query.set("recordingName", req.name);  // TODO: rename srv attributes
@@ -385,8 +424,10 @@ bool LocatorBridgeNode::clientRecordingStopVisualRecordingCb(std_srvs::Empty::Re
 bool LocatorBridgeNode::clientMapStartCb(bosch_locator_bridge::ClientMapStart::Request& req,
                                          bosch_locator_bridge::ClientMapStart::Response& res)
 {
-  const std::string recording_name = req.recording_name.empty() ? last_recording_name_ : req.recording_name;
-  const std::string client_map_name = req.client_map_name.empty() ? "map-from-" + recording_name : req.client_map_name;
+  const std::string recording_name =
+    req.recording_name.empty() ? last_recording_name_ : req.recording_name;
+  const std::string client_map_name =
+    req.client_map_name.empty() ? "map-from-" + recording_name : req.client_map_name;
 
   auto query = loc_client_interface_->getSessionQuery();
   query.set("recordingName", recording_name);
@@ -396,7 +437,9 @@ bool LocatorBridgeNode::clientMapStartCb(bosch_locator_bridge::ClientMapStart::R
   return true;
 }
 
-bool LocatorBridgeNode::clientMapStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+bool LocatorBridgeNode::clientMapStopCb(
+  std_srvs::Empty::Request& req,
+  std_srvs::Empty::Response& res)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientMapStop", query);
@@ -484,28 +527,32 @@ void LocatorBridgeNode::syncConfig()
 
   if (loc_client_config["ClientSensor.laser.type"].toString() == "simple")
   {
-    ROS_INFO_STREAM("ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString()
-                                                << ". Will provide laser data.");
+    ROS_INFO_STREAM("ClientSensor.laser.type:"
+      << loc_client_config["ClientSensor.laser.type"].toString()
+      << ". Will provide laser data.");
     provide_laser_data_ = true;
   }
   else
   {
-    ROS_INFO_STREAM("ClientSensor.laser.type:" << loc_client_config["ClientSensor.laser.type"].toString()
-                                                << ". Laser data will not be provided.");
+    ROS_INFO_STREAM("ClientSensor.laser.type:"
+      << loc_client_config["ClientSensor.laser.type"].toString()
+      << ". Laser data will not be provided.");
     provide_laser_data_ = false;
   }
 
   if (loc_client_config["ClientSensor.enableLaser2"].toString() == "true" &&
       loc_client_config["ClientSensor.laser2.type"].toString() == "simple")
   {
-    ROS_INFO_STREAM("ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString()
-                                                << ". Will provide laser2 data.");
+    ROS_INFO_STREAM("ClientSensor.laser2.type:"
+      << loc_client_config["ClientSensor.laser2.type"].toString()
+      << ". Will provide laser2 data.");
     provide_laser2_data_ = true;
   }
   else
   {
-    ROS_INFO_STREAM("ClientSensor.laser2.type:" << loc_client_config["ClientSensor.laser2.type"].toString()
-                                                << ". Laser2 data will not be provided.");
+    ROS_INFO_STREAM("ClientSensor.laser2.type:"
+      << loc_client_config["ClientSensor.laser2.type"].toString()
+      << ". Laser2 data will not be provided.");
     provide_laser2_data_ = false;
   }
 
@@ -563,59 +610,86 @@ void LocatorBridgeNode::checkLaserScan(const sensor_msgs::LaserScan& msg,
   }
 }
 
-void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string& host, const Poco::UInt16 binaryPortsStart)
+void LocatorBridgeNode::setupBinaryReceiverInterfaces(
+  const std::string& host,
+  const Poco::UInt16 binaryPortsStart)
 {
   // port definitions for the different interfaces. See Locator API documentation section 12.8
   Poco::UInt16 binaryClientControlModePort{ binaryPortsStart /*default: 9004*/ };
   Poco::UInt16 binaryClientMapMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 1) };
   Poco::UInt16 binaryClientMapVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 2) };
   Poco::UInt16 binaryClientRecordingMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 3) };
-  Poco::UInt16 binaryClientRecordingVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 4) };
-  Poco::UInt16 binaryClientLocalizationMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 5) };
-  Poco::UInt16 binaryClientLocalizationVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 6) };
-  Poco::UInt16 binaryClientLocalizationPosePort{ static_cast<Poco::UInt16>(binaryPortsStart + 7) };
-  Poco::UInt16 binaryClientGlobalAlignVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 8) };
-  Poco::UInt16 binaryClientExpandMapVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 9) };
-  Poco::UInt16 binaryClientExpandMapPriorMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 10) };
+  Poco::UInt16 binaryClientRecordingVisualizationPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 4) };
+  Poco::UInt16 binaryClientLocalizationMapPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 5) };
+  Poco::UInt16 binaryClientLocalizationVisualizationPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 6) };
+  Poco::UInt16 binaryClientLocalizationPosePort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 7) };
+  Poco::UInt16 binaryClientGlobalAlignVisualizationPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 8) };
+  Poco::UInt16 binaryClientExpandMapVisualizationPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 9) };
+  Poco::UInt16 binaryClientExpandMapPriorMapPort{
+    static_cast<Poco::UInt16>(binaryPortsStart + 10) };
 
   // Create binary interface for client control mode
-  client_control_mode_interface_.reset(new ClientControlModeInterface(Poco::Net::IPAddress(host), binaryClientControlModePort, nh_));
+  client_control_mode_interface_.reset(
+    new ClientControlModeInterface(Poco::Net::IPAddress(host), binaryClientControlModePort, nh_));
   client_control_mode_interface_thread_.start(*client_control_mode_interface_);
   // Create binary interface for client map map
-  client_map_map_interface_.reset(new ClientMapMapInterface(Poco::Net::IPAddress(host), binaryClientMapMapPort, nh_));
+  client_map_map_interface_.reset(
+    new ClientMapMapInterface(Poco::Net::IPAddress(host), binaryClientMapMapPort, nh_));
   client_map_map_interface_thread_.start(*client_map_map_interface_);
   // Create binary interface for client map visualization
-  client_map_visualization_interface_.reset(new ClientMapVisualizationInterface(Poco::Net::IPAddress(host), binaryClientMapVisualizationPort, nh_));
+  client_map_visualization_interface_.reset(
+    new ClientMapVisualizationInterface(Poco::Net::IPAddress(host),
+                                        binaryClientMapVisualizationPort, nh_));
   client_map_visualization_interface_thread_.start(*client_map_visualization_interface_);
   // Create binary interface for client recording map
-  client_recording_map_interface_.reset(new ClientRecordingMapInterface(Poco::Net::IPAddress(host), binaryClientRecordingMapPort, nh_));
+  client_recording_map_interface_.reset(
+    new ClientRecordingMapInterface(Poco::Net::IPAddress(host), binaryClientRecordingMapPort, nh_));
   client_recording_map_interface_thread_.start(*client_recording_map_interface_);
   // Create binary interface for client recording visualization
   client_recording_visualization_interface_.reset(
-      new ClientRecordingVisualizationInterface(Poco::Net::IPAddress(host), binaryClientRecordingVisualizationPort, nh_));
-  client_recording_visualization_interface_thread_.start(*client_recording_visualization_interface_);
+    new ClientRecordingVisualizationInterface(Poco::Net::IPAddress(host),
+                                              binaryClientRecordingVisualizationPort, nh_));
+  client_recording_visualization_interface_thread_.start(
+    *client_recording_visualization_interface_);
   // Create binary interface for client localization map
-  client_localization_map_interface_.reset(new ClientLocalizationMapInterface(Poco::Net::IPAddress(host), binaryClientLocalizationMapPort, nh_));
+  client_localization_map_interface_.reset(
+    new ClientLocalizationMapInterface(Poco::Net::IPAddress(host),
+                                       binaryClientLocalizationMapPort, nh_));
   client_localization_map_interface_thread_.start(*client_localization_map_interface_);
   // Create binary interface for ClientLocalizationVisualizationInterface
   client_localization_visualization_interface_.reset(
-      new ClientLocalizationVisualizationInterface(Poco::Net::IPAddress(host), binaryClientLocalizationVisualizationPort, nh_));
-  client_localization_visualization_interface_thread_.start(*client_localization_visualization_interface_);
+    new ClientLocalizationVisualizationInterface(Poco::Net::IPAddress(host),
+                                                 binaryClientLocalizationVisualizationPort, nh_));
+  client_localization_visualization_interface_thread_.start(
+    *client_localization_visualization_interface_);
   // Create binary interface for ClientLocalizationPoseInterface
-  client_localization_pose_interface_.reset(new ClientLocalizationPoseInterface(Poco::Net::IPAddress(host), binaryClientLocalizationPosePort, nh_));
+  client_localization_pose_interface_.reset(
+    new ClientLocalizationPoseInterface(Poco::Net::IPAddress(host),
+                                        binaryClientLocalizationPosePort, nh_));
   client_localization_pose_interface_thread_.start(*client_localization_pose_interface_);
   // Create binary interface for ClientGlobalAlignVisualizationInterface
   client_global_align_visualization_interface_.reset(
-      new ClientGlobalAlignVisualizationInterface(Poco::Net::IPAddress(host), binaryClientGlobalAlignVisualizationPort, nh_));
-  client_global_align_visualization_interface_thread_.start(*client_global_align_visualization_interface_);
+    new ClientGlobalAlignVisualizationInterface(Poco::Net::IPAddress(host),
+                                                binaryClientGlobalAlignVisualizationPort, nh_));
+  client_global_align_visualization_interface_thread_.start(
+    *client_global_align_visualization_interface_);
 
   // Create binary interface for ClientExpandMapVisualizationInterface
   client_expandmap_visualization_interface_.reset(
-      new ClientExpandMapVisualizationInterface(Poco::Net::IPAddress(host), binaryClientExpandMapVisualizationPort, nh_));
-  client_expandmap_visualization_interface_thread_.start(*client_expandmap_visualization_interface_);
+    new ClientExpandMapVisualizationInterface(Poco::Net::IPAddress(host),
+                                              binaryClientExpandMapVisualizationPort, nh_));
+  client_expandmap_visualization_interface_thread_.start(
+    *client_expandmap_visualization_interface_);
 
   // Create binary interface for ClientExpandMapPriorMapInterface
   client_expandmap_priormap_interface_.reset(
-      new ClientExpandMapPriorMapInterface(Poco::Net::IPAddress(host), binaryClientExpandMapPriorMapPort, nh_));
+    new ClientExpandMapPriorMapInterface(Poco::Net::IPAddress(host),
+                                         binaryClientExpandMapPriorMapPort, nh_));
   client_expandmap_priormap_interface_thread_.start(*client_expandmap_priormap_interface_);
 }

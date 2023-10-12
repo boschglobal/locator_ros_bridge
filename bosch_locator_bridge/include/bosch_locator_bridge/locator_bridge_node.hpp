@@ -62,7 +62,8 @@ public:
   void init();
 
 private:
-  bool check_module_versions(const std::unordered_map<std::string, std::pair<int32_t, int32_t>>& module_versions);
+  bool check_module_versions(const std::unordered_map<std::string,
+    std::pair<int32_t, int32_t>>& module_versions);
   template<typename T>
   std::vector<T> convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const;
   template<typename T>
@@ -91,16 +92,20 @@ private:
 
   bool clientRecordingStartVisualRecordingCb(bosch_locator_bridge::StartRecording::Request& req,
                                              bosch_locator_bridge::StartRecording::Response& res);
-  bool clientRecordingStopVisualRecordingCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+  bool clientRecordingStopVisualRecordingCb(std_srvs::Empty::Request& req,
+    std_srvs::Empty::Response& res);
 
   bool clientMapStartCb(bosch_locator_bridge::ClientMapStart::Request& req,
                         bosch_locator_bridge::ClientMapStart::Response& res);
   bool clientMapStopCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 
-  bool clientExpandMapEnableCb(bosch_locator_bridge::ClientExpandMapEnable::Request& req, bosch_locator_bridge::ClientExpandMapEnable::Response& res);
+  bool clientExpandMapEnableCb(bosch_locator_bridge::ClientExpandMapEnable::Request& req,
+    bosch_locator_bridge::ClientExpandMapEnable::Response& res);
   bool clientExpandMapDisableCb(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
 
-  bool clientRecordingSetCurrentPoseCb(bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req, bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res);
+  bool clientRecordingSetCurrentPoseCb(
+    bosch_locator_bridge::ClientRecordingSetCurrentPose::Request& req,
+    bosch_locator_bridge::ClientRecordingSetCurrentPose::Response& res);
 
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
@@ -117,7 +122,8 @@ private:
 
   std::vector<ros::ServiceServer> services_;
 
-  // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
+  // Flag to indicate if the bridge should send odometry data to the locator.
+  // Value retrieved by the locator settings.
   bool provide_odometry_data_;
   bool odometry_velocity_set_;
   ros::Subscriber laser_sub_;
@@ -129,7 +135,8 @@ private:
 
   ros::Subscriber set_seed_sub_;
 
-  // Flag to indicate if the bridge should send odometry data to the locator. Value retrieved by the locator settings.
+  // Flag to indicate if the bridge should send odometry data to the locator.
+  // Value retrieved by the locator settings.
   bool provide_laser_data_;
   bool provide_laser2_data_;
   ros::Subscriber odom_sub_;
@@ -149,11 +156,13 @@ private:
   Poco::Thread client_recording_visualization_interface_thread_;
   std::unique_ptr<ClientLocalizationMapInterface> client_localization_map_interface_;
   Poco::Thread client_localization_map_interface_thread_;
-  std::unique_ptr<ClientLocalizationVisualizationInterface> client_localization_visualization_interface_;
+  std::unique_ptr<ClientLocalizationVisualizationInterface>
+    client_localization_visualization_interface_;
   Poco::Thread client_localization_visualization_interface_thread_;
   std::unique_ptr<ClientLocalizationPoseInterface> client_localization_pose_interface_;
   Poco::Thread client_localization_pose_interface_thread_;
-  std::unique_ptr<ClientGlobalAlignVisualizationInterface> client_global_align_visualization_interface_;
+  std::unique_ptr<ClientGlobalAlignVisualizationInterface>
+    client_global_align_visualization_interface_;
   Poco::Thread client_global_align_visualization_interface_thread_;
    std::unique_ptr<ClientExpandMapVisualizationInterface> client_expandmap_visualization_interface_;
   Poco::Thread client_expandmap_visualization_interface_thread_;
@@ -172,7 +181,8 @@ private:
 };
 
 template<typename T>
-std::vector<T> LocatorBridgeNode::convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const
+std::vector<T> LocatorBridgeNode::convert_value_array_to_vector(
+  const XmlRpc::XmlRpcValue& array) const
 {
   std::vector<T> vec;
   for (int i = 0; i != array.size(); ++i)

@@ -30,7 +30,7 @@ limitations under the License.-->
 
     <param name="user_name" value="$(arg locator_user)"/>
     <param name="password" value="$(arg locator_password)"/>
-    
+
     <rosparam ns="localization_server_config" subst_value="true">
 
     </rosparam>

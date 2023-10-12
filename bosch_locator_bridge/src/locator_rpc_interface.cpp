@@ -57,7 +57,8 @@ Poco::JSON::Object makeConfigEntry(const std::string& key, const Poco::Dynamic::
   return obj;
 }
 
-Poco::JSON::Object makeConfigEntryArrayMessage(const std::string& session_id, const Poco::DynamicStruct& config)
+Poco::JSON::Object makeConfigEntryArrayMessage(const std::string& session_id,
+                                               const Poco::DynamicStruct& config)
 {
   Poco::JSON::Object obj = makeSessionQueryMessage(session_id);
   Poco::JSON::Array config_entries;
@@ -69,7 +70,8 @@ Poco::JSON::Object makeConfigEntryArrayMessage(const std::string& session_id, co
   return obj;
 }
 
-LocatorRPCInterface::LocatorRPCInterface(const std::string& host, uint16_t port) : session_(host, port), query_id_(0)
+LocatorRPCInterface::LocatorRPCInterface(const std::string& host, uint16_t port)
+  : session_(host, port), query_id_(0)
 {
 }
 LocatorRPCInterface::~LocatorRPCInterface()
@@ -79,7 +81,8 @@ LocatorRPCInterface::~LocatorRPCInterface()
 
 void LocatorRPCInterface::login(const std::string& user, const std::string& password)
 {
-  Poco::JSON::Object login_msg = makeSessionLoginMessage(user, password, makeTimeInterval(true, 600, 1));
+  Poco::JSON::Object login_msg =
+    makeSessionLoginMessage(user, password, makeTimeInterval(true, 600, 1));
   const auto resp = json_rpc_call(session_, "sessionLogin", login_msg);
   session_id_ = resp.getValue<std::string>("sessionId");
 }
@@ -91,17 +94,20 @@ Poco::JSON::Object LocatorRPCInterface::getSessionQuery() const
 
 void LocatorRPCInterface::refresh()
 {
-  const auto logout_resp = json_rpc_call(session_, "sessionRefresh", makeSessionQueryMessage(session_id_));
+  const auto logout_resp =
+    json_rpc_call(session_, "sessionRefresh", makeSessionQueryMessage(session_id_));
 }
 
 void LocatorRPCInterface::logout()
 {
-  const auto logout_resp = json_rpc_call(session_, "sessionLogout", makeSessionQueryMessage(session_id_));
+  const auto logout_resp =
+    json_rpc_call(session_, "sessionLogout", makeSessionQueryMessage(session_id_));
 }
 
 std::string LocatorRPCInterface::getAboutBuildList()
 {
-  const auto about_build_resp = json_rpc_call(session_, "aboutBuildList", makeSessionQueryMessage(session_id_));
+  const auto about_build_resp =
+    json_rpc_call(session_, "aboutBuildList", makeSessionQueryMessage(session_id_));
   return about_build_resp.getValue<std::string>("aboutString");
 }
 
@@ -118,7 +124,9 @@ std::unordered_map<std::string, std::pair<int32_t, int32_t>> LocatorRPCInterface
     {
       const auto obj = modules->getObject(i);
       result.insert({ obj->getValue<std::string>("name"),
-                      std::make_pair(obj->getValue<int32_t>("majorVersion"), obj->getValue<int32_t>("minorVersion")) });
+                      std::make_pair(obj->getValue<int32_t>("majorVersion"),
+                                     obj->getValue<int32_t>("minorVersion"))
+                    });
     }
   }
 
@@ -127,7 +135,8 @@ std::unordered_map<std::string, std::pair<int32_t, int32_t>> LocatorRPCInterface
 
 Poco::DynamicStruct LocatorRPCInterface::getConfigList()
 {
-  auto config_list_resp = json_rpc_call(session_, "configList", makeSessionQueryMessage(session_id_));
+  auto config_list_resp =
+    json_rpc_call(session_, "configList", makeSessionQueryMessage(session_id_));
   Poco::DynamicStruct config;
   if (config_list_resp.has("configEntries"))
   {
@@ -155,7 +164,8 @@ bool LocatorRPCInterface::setConfigList(const Poco::DynamicStruct& config)
   return true;
 }
 
-Poco::JSON::Object LocatorRPCInterface::call(const std::string& method, const Poco::JSON::Object& query_obj)
+Poco::JSON::Object LocatorRPCInterface::call(const std::string& method,
+                                             const Poco::JSON::Object& query_obj)
 {
   Poco::JSON::Object resp;
 
@@ -171,7 +181,8 @@ Poco::JSON::Object LocatorRPCInterface::call(const std::string& method, const Po
   return resp;
 }
 
-Poco::JSON::Object LocatorRPCInterface::json_rpc_call(Poco::Net::HTTPClientSession& session, const std::string& method,
+Poco::JSON::Object LocatorRPCInterface::json_rpc_call(Poco::Net::HTTPClientSession& session,
+                                                      const std::string& method,
                                                       const Poco::JSON::Object& query_obj)
 {
   std::lock_guard<std::mutex> lock(json_rpc_call_mutex_);  // just one call at a time
@@ -227,10 +238,12 @@ Poco::JSON::Object LocatorRPCInterface::json_rpc_call(Poco::Net::HTTPClientSessi
       response_obj->getObject("result")->getObject("response")->getValue<uint64_t>("responseCode");
   if (response_code != 0)
   {
-    const auto error_str = stringifyCommonResponseCode(static_cast<CommonResponseCode>(response_code));
+    const auto error_str =
+      stringifyCommonResponseCode(static_cast<CommonResponseCode>(response_code));
     const auto module_str = stringifyModuleId(static_cast<ModuleIdentifier>(response_code >> 48));
     std::stringstream sstr;
-    sstr << "ERROR: response code != 0; response code 0x" << std::hex << response_code << "; module: " << module_str;
+    sstr << "ERROR: response code != 0; response code 0x" << std::hex
+         << response_code << "; module: " << module_str;
     if (!error_str.empty())
     {
       sstr << "; error: " << error_str;
