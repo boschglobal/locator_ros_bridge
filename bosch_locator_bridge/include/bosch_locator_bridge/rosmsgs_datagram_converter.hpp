@@ -13,18 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef BOSCH_LOCATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_
+#define BOSCH_LOCATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_
+
 #pragma once
 
-#include <iostream>
+#include <Poco/BinaryReader.h>
+#include <Poco/JSON/Object.h>
 
-#include <geometry_msgs/Pose2D.h>
-#include <geometry_msgs/PoseArray.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <nav_msgs/Odometry.h>
-#include <pcl_conversions/pcl_conversions.h>
-#include <ros/ros.h>
-#include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/PointCloud2.h>
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+#include "geometry_msgs/Pose2D.h"
+#include "geometry_msgs/PoseArray.h"
+#include "geometry_msgs/PoseStamped.h"
+#include "nav_msgs/Odometry.h"
+#include "pcl_conversions/pcl_conversions.h"
+#include "ros/ros.h"
+#include "sensor_msgs/LaserScan.h"
+#include "sensor_msgs/PointCloud2.h"
 
 #include "bosch_locator_bridge/ClientControlMode.h"
 #include "bosch_locator_bridge/ClientRecordingVisualization.h"
@@ -34,8 +42,6 @@
 #include "bosch_locator_bridge/ClientLocalizationPose.h"
 #include "bosch_locator_bridge/ClientGlobalAlignVisualization.h"
 
-#include <Poco/BinaryReader.h>
-#include <Poco/JSON/Object.h>
 
 #define MAP_FRAME_ID "map"
 #define ODOM_FRAME_ID "odom"
@@ -54,9 +60,9 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientControlMode2Message(
-    const std::vector<char>& datagram,
-    const ros::Time& stamp,
-    bosch_locator_bridge::ClientControlMode& client_control_mode);
+    const std::vector<char> & datagram,
+    const ros::Time & stamp,
+    bosch_locator_bridge::ClientControlMode & client_control_mode);
 
   /**
    * @brief convertMapDatagram2Message
@@ -65,9 +71,10 @@ public:
    * @param out_pointcloud Resulting converted map as point cloud [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertMapDatagram2Message(const std::vector<char>& datagram,
-                                           const ros::Time& stamp,
-                                           sensor_msgs::PointCloud2& out_pointcloud);
+  static size_t convertMapDatagram2Message(
+    const std::vector<char> & datagram,
+    const ros::Time & stamp,
+    sensor_msgs::PointCloud2 & out_pointcloud);
 
   /**
    * @brief convertClientGlobalAlignVisualizationDatagram2Message
@@ -79,9 +86,9 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientGlobalAlignVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientGlobalAlignVisualization& client_global_align_visualization,
-      geometry_msgs::PoseArray& poses, geometry_msgs::PoseArray& landmark_poses);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientGlobalAlignVisualization & client_global_align_visualization,
+    geometry_msgs::PoseArray & poses, geometry_msgs::PoseArray & landmark_poses);
 
   /**
    * @brief convertClientLocalizationPoseDatagram2Message
@@ -93,11 +100,11 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientLocalizationPoseDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientLocalizationPose& client_localization_pose,
-      geometry_msgs::PoseStamped& pose,
-      double covariance[6],
-      geometry_msgs::PoseStamped& lidar_odo_pose);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientLocalizationPose & client_localization_pose,
+    geometry_msgs::PoseStamped & pose,
+    double covariance[6],
+    geometry_msgs::PoseStamped & lidar_odo_pose);
 
   /**
    * @brief convertClientLocalizationVisualizationDatagram2Message
@@ -108,9 +115,9 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientLocalizationVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientLocalizationVisualization& client_localization_visualization,
-      geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientLocalizationVisualization & client_localization_visualization,
+    geometry_msgs::PoseStamped & pose, sensor_msgs::PointCloud2 & scan);
 
   /**
    * @brief convertClientMapVisualizationDatagram2Message
@@ -122,11 +129,11 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientMapVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientMapVisualization& client_map_visualization,
-      geometry_msgs::PoseStamped& pose,
-      sensor_msgs::PointCloud2& scan,
-      geometry_msgs::PoseArray& path_poses);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientMapVisualization & client_map_visualization,
+    geometry_msgs::PoseStamped & pose,
+    sensor_msgs::PointCloud2 & scan,
+    geometry_msgs::PoseArray & path_poses);
 
   /**
    * @brief convertClientRecordingVisualizationDatagram2Message
@@ -138,11 +145,11 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientRecordingVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientRecordingVisualization& client_recording_visualization,
-      geometry_msgs::PoseStamped& pose,
-      sensor_msgs::PointCloud2& scan,
-      geometry_msgs::PoseArray& path_poses);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientRecordingVisualization & client_recording_visualization,
+    geometry_msgs::PoseStamped & pose,
+    sensor_msgs::PointCloud2 & scan,
+    geometry_msgs::PoseArray & path_poses);
 
   /**
    * @brief convertPose2DDoubleDatagram2Message Takes a binary_reader with a DOUBLE precision
@@ -151,8 +158,9 @@ public:
    * @param pose Converted pose [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertPose2DDoubleDatagram2Message(Poco::BinaryReader& binary_reader,
-                                                    geometry_msgs::Pose& pose);
+  static size_t convertPose2DDoubleDatagram2Message(
+    Poco::BinaryReader & binary_reader,
+    geometry_msgs::Pose & pose);
 
   /**
    * @brief convertPose2DSingleDatagram2Message Takes a binary_reader with a SINGLE precision pose
@@ -161,8 +169,9 @@ public:
    * @param pose Converted pose [OUTPUT]
    * @return number of bytes parsed successfully
    */
-  static size_t convertPose2DSingleDatagram2Message(Poco::BinaryReader& binary_reader,
-                                                    geometry_msgs::Pose& pose);
+  static size_t convertPose2DSingleDatagram2Message(
+    Poco::BinaryReader & binary_reader,
+    geometry_msgs::Pose & pose);
 
   /**
    * @brief convertLaserScan2DataGram Converts a sensor_msgs::LaserScan message from ros and
@@ -173,7 +182,7 @@ public:
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertLaserScan2DataGram(
-    const sensor_msgs::LaserScan& msg,
+    const sensor_msgs::LaserScan & msg,
     size_t scan_num,
     float scan_time = 0.0f);
 
@@ -187,11 +196,11 @@ public:
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertOdometry2DataGram(
-    const nav_msgs::Odometry& msg,
+    const nav_msgs::Odometry & msg,
     size_t odom_num,
     bool velocitySet);
 
-  static Poco::JSON::Object makePose2d(const geometry_msgs::Pose2D& pose);
+  static Poco::JSON::Object makePose2d(const geometry_msgs::Pose2D & pose);
 
   /**
    * @brief convertClientExpandMapVisualizationDatagram2Message
@@ -200,25 +209,29 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientExpandMapVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::ClientExpandMapVisualization& client_expandmap_visualization);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::ClientExpandMapVisualization & client_expandmap_visualization);
 
 private:
   static size_t convertMapDatagram2Message(
-    Poco::BinaryReader& binary_reader,
-    const ros::Time& stamp,
-    sensor_msgs::PointCloud2& out_pointcloud);
-  static size_t convertMapDatagram2PointCloud(Poco::BinaryReader& binary_reader,
-                                              pcl::PointCloud<pcl::PointXYZRGB>& out_pointcloud);
-  static void colorizePointCloud(pcl::PointCloud<pcl::PointXYZRGB>& point_cloud,
-                                 const std::vector<uint64_t>& sensor_offsets);
-  static size_t discardExtension(Poco::BinaryReader& binary_reader);
-  static void readIntensities(Poco::BinaryReader& binary_reader);
-  static std::vector<uint64_t> readSensorOffsets(Poco::BinaryReader& binary_reader);
+    Poco::BinaryReader & binary_reader,
+    const ros::Time & stamp,
+    sensor_msgs::PointCloud2 & out_pointcloud);
+  static size_t convertMapDatagram2PointCloud(
+    Poco::BinaryReader & binary_reader,
+    pcl::PointCloud<pcl::PointXYZRGB> & out_pointcloud);
+  static void colorizePointCloud(
+    pcl::PointCloud<pcl::PointXYZRGB> & point_cloud,
+    const std::vector<uint64_t> & sensor_offsets);
+  static size_t discardExtension(Poco::BinaryReader & binary_reader);
+  static void readIntensities(Poco::BinaryReader & binary_reader);
+  static std::vector<uint64_t> readSensorOffsets(Poco::BinaryReader & binary_reader);
 
   /// clamp scan data to specified range
   static float clamp_range(float r, float min, float max)
   {
-    return std::min({ std::max({ r, min }), max });
-  };
+    return std::min({std::max({r, min}), max});
+  }
 };
+
+#endif  // BOSCH_LOCATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_
