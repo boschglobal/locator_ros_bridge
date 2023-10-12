@@ -420,11 +420,14 @@ ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(
     "~/client_expandmap_visualization", 5);
 }
 
-size_t ClientExpandMapVisualizationInterface::tryToParseData(const std::vector<char>& datagram, rclcpp::Node::SharedPtr /*node*/)
+size_t ClientExpandMapVisualizationInterface::tryToParseData(
+  const std::vector<char>& datagram, rclcpp::Node::SharedPtr /*node*/)
 {
   // convert datagram to ros message
   bosch_locator_bridge::msg::ClientExpandMapVisualization client_expandmap_visualization;
-  const auto bytes_parsed = RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(datagram, client_expandmap_visualization);
+  const auto bytes_parsed =
+    RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(
+      datagram, client_expandmap_visualization);
   if (bytes_parsed > 0)
   {
     // publish
@@ -445,11 +448,13 @@ ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(
     "~/client_expandmap_priormap", 5);
 }
 
-size_t ClientExpandMapPriorMapInterface::tryToParseData(const std::vector<char>& datagram, rclcpp::Node::SharedPtr node)
+size_t ClientExpandMapPriorMapInterface::tryToParseData(
+  const std::vector<char>& datagram, rclcpp::Node::SharedPtr node)
 {
   // convert datagram to ros message
   sensor_msgs::msg::PointCloud2 map;
-  const auto parsed_bytes = RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, node->now(), map);
+  const auto parsed_bytes =
+    RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, node->now(), map);
   if (parsed_bytes > 0)
   {
     // publish
