@@ -186,7 +186,10 @@ public:
    * @return The data shaped into the datagram structure required by the locator
    */
   static Poco::Buffer<char> convertOdometry2DataGram(
-    const nav_msgs::msg::Odometry::SharedPtr msg, size_t odom_num, bool velocitySet, rclcpp::Node::SharedPtr node);
+    const nav_msgs::msg::Odometry::SharedPtr msg,
+    size_t odom_num,
+    bool velocitySet,
+    rclcpp::Node::SharedPtr node);
 
   static Poco::JSON::Object makePose2d(const geometry_msgs::msg::Pose2D & pose);
 

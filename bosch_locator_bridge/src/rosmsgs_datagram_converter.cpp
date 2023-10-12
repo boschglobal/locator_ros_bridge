@@ -513,7 +513,8 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(
 }
 
 Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(
-  const nav_msgs::msg::Odometry::SharedPtr msg, size_t odom_num, bool velocitySet, rclcpp::Node::SharedPtr node)
+  const nav_msgs::msg::Odometry::SharedPtr msg, size_t odom_num,
+  bool velocitySet, rclcpp::Node::SharedPtr node)
 {
   // convert the ROS message to a locator ClientSensorLaserDatagram
   const size_t resulting_msg_size = 8 +      // timestamp
@@ -635,8 +636,10 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
 {
     Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
     auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-    binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
-
+    binary_reader.setExceptions(
+      std::ifstream::failbit |
+      std::ifstream::badbit |
+      std::ifstream::eofbit);
     double stamp;
     binary_reader >> stamp;
     client_expandmap_visualization.timestamp = rclcpp::Time(stamp * 1e9);
@@ -669,10 +672,11 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
       zone.name = std::string(name.begin(), name.end());
     }
 
-    // Get prior map poses    
+    // Get prior map poses
     uint32_t poses_length;
     binary_reader >> poses_length;
-    client_expandmap_visualization.prior_map_poses.header.stamp = client_expandmap_visualization.timestamp;
+    client_expandmap_visualization.prior_map_poses.header.stamp =
+      client_expandmap_visualization.timestamp;
     client_expandmap_visualization.prior_map_poses.header.frame_id = MAP_FRAME_ID;
 
     for (unsigned int i = 0; i < poses_length; i++)
@@ -690,7 +694,7 @@ size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Mes
     for (unsigned int i = 0; i < pose_types_length; i++)
     {
       binary_reader >> client_expandmap_visualization.prior_map_pose_types[i];
-    }    
+    }
 
     return datagram.size() - binary_reader.available();
 }

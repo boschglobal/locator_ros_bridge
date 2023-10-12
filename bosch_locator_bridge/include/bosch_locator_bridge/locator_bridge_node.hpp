@@ -116,7 +116,7 @@ private:
   bool clientMapStopCb(
     const std::shared_ptr<std_srvs::srv::Empty::Request> req,
     std::shared_ptr<std_srvs::srv::Empty::Response> res);
-  
+
   bool clientExpandMapEnableCb(
     const std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Request> req,
     std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response> res);

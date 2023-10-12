@@ -132,7 +132,7 @@ class ClientRecordingMapInterface : public ReceivingInterface
 public:
   ClientRecordingMapInterface(
     const Poco::Net::IPAddress & hostadress,
-    const Poco::UInt16 binaryClientRecordingMapPort, 
+    const Poco::UInt16 binaryClientRecordingMapPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
@@ -252,7 +252,8 @@ public:
     rclcpp::Node::SharedPtr node) override;
 
 private:
-  rclcpp::Publisher<bosch_locator_bridge::msg::ClientExpandMapVisualization>::SharedPtr client_expand_map_visualization_pub_;
+  rclcpp::Publisher<bosch_locator_bridge::msg::ClientExpandMapVisualization>
+  ::SharedPtr client_expand_map_visualization_pub_;
 };
 
 class ClientExpandMapPriorMapInterface : public ReceivingInterface
