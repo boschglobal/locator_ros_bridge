@@ -21,6 +21,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "pcl_conversions/pcl_conversions.h"
 #include "tf2/convert.h"
@@ -631,70 +632,65 @@ std::vector<uint64_t> RosMsgsDatagramConverter::readSensorOffsets(
 }
 
 size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::msg::ClientExpandMapVisualization& client_expandmap_visualization)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::msg::ClientExpandMapVisualization & client_expandmap_visualization)
 {
-    Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
-    auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-    binary_reader.setExceptions(
-      std::ifstream::failbit |
-      std::ifstream::badbit |
-      std::ifstream::eofbit);
-    double stamp;
-    binary_reader >> stamp;
-    client_expandmap_visualization.timestamp = rclcpp::Time(stamp * 1e9);
-    binary_reader >> client_expandmap_visualization.visualization_id;
+  Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
+  auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
+  double stamp;
+  binary_reader >> stamp;
+  client_expandmap_visualization.timestamp = rclcpp::Time(stamp * 1e9);
+  binary_reader >> client_expandmap_visualization.visualization_id;
 
-    // Get zones
-    uint32_t zones_length;
-    binary_reader >> zones_length;
-    for (unsigned int i = 0; i < zones_length; i++)
-    {
-      bosch_locator_bridge::msg::ClientExpandMapOverwriteZoneInformation zone;
-      uint32_t polygon_length;
-      binary_reader >> polygon_length;
-      for (unsigned int i = 0; i < polygon_length; i++)
-      {
-        geometry_msgs::msg::Point32 point;
-        binary_reader >> point.x >> point.y;
-        zone.polygon.push_back(std::move(point));
-      }
-
-      binary_reader >> zone.id >> zone.type;
-
-      uint32_t name_length;
-      binary_reader >> name_length;
-      std::vector<char> name(name_length);
-      for (unsigned int j = 0; j < name_length; j++)
-      {
-        binary_reader >> name[j];
-      }
-      zone.name = std::string(name.begin(), name.end());
+  // Get zones
+  uint32_t zones_length;
+  binary_reader >> zones_length;
+  for (unsigned int i = 0; i < zones_length; i++) {
+    bosch_locator_bridge::msg::ClientExpandMapOverwriteZoneInformation zone;
+    uint32_t polygon_length;
+    binary_reader >> polygon_length;
+    for (unsigned int i = 0; i < polygon_length; i++) {
+      geometry_msgs::msg::Point32 point;
+      binary_reader >> point.x >> point.y;
+      zone.polygon.push_back(std::move(point));
     }
 
-    // Get prior map poses
-    uint32_t poses_length;
-    binary_reader >> poses_length;
-    client_expandmap_visualization.prior_map_poses.header.stamp =
-      client_expandmap_visualization.timestamp;
-    client_expandmap_visualization.prior_map_poses.header.frame_id = MAP_FRAME_ID;
+    binary_reader >> zone.id >> zone.type;
 
-    for (unsigned int i = 0; i < poses_length; i++)
-    {
-      geometry_msgs::msg::Pose nextPose;
-      convertPose2DSingleDatagram2Message(binary_reader, nextPose);
-      client_expandmap_visualization.prior_map_poses.poses.push_back(nextPose);
+    uint32_t name_length;
+    binary_reader >> name_length;
+    std::vector<char> name(name_length);
+    for (unsigned int j = 0; j < name_length; j++) {
+      binary_reader >> name[j];
     }
+    zone.name = std::string(name.begin(), name.end());
+  }
 
-    // Get prior map pose types
-    uint32_t pose_types_length;
-    binary_reader >> pose_types_length;
+  // Get prior map poses
+  uint32_t poses_length;
+  binary_reader >> poses_length;
+  client_expandmap_visualization.prior_map_poses.header.stamp =
+    client_expandmap_visualization.timestamp;
+  client_expandmap_visualization.prior_map_poses.header.frame_id = MAP_FRAME_ID;
 
-    client_expandmap_visualization.prior_map_pose_types.resize(pose_types_length);
-    for (unsigned int i = 0; i < pose_types_length; i++)
-    {
-      binary_reader >> client_expandmap_visualization.prior_map_pose_types[i];
-    }
+  for (unsigned int i = 0; i < poses_length; i++) {
+    geometry_msgs::msg::Pose nextPose;
+    convertPose2DSingleDatagram2Message(binary_reader, nextPose);
+    client_expandmap_visualization.prior_map_poses.poses.push_back(nextPose);
+  }
 
-    return datagram.size() - binary_reader.available();
+  // Get prior map pose types
+  uint32_t pose_types_length;
+  binary_reader >> pose_types_length;
+
+  client_expandmap_visualization.prior_map_pose_types.resize(pose_types_length);
+  for (unsigned int i = 0; i < pose_types_length; i++) {
+    binary_reader >> client_expandmap_visualization.prior_map_pose_types[i];
+  }
+
+  return datagram.size() - binary_reader.available();
 }

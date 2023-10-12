@@ -422,7 +422,7 @@ bool LocatorBridgeNode::clientLocalizationStopCb(
 
 bool LocatorBridgeNode::clientExpandMapEnableCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Request> req,
-  std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response> /*res*/)
+  std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response>/*res*/)
 {
   const std::string prior_map_name =
     req->prior_map_name.empty() ? last_map_name_ : req->prior_map_name;
@@ -434,8 +434,8 @@ bool LocatorBridgeNode::clientExpandMapEnableCb(
 }
 
 bool LocatorBridgeNode::clientExpandMapDisableCb(
-  const std::shared_ptr<std_srvs::srv::Empty::Request> /*req*/,
-  std::shared_ptr<std_srvs::srv::Empty::Response> /*res*/)
+  const std::shared_ptr<std_srvs::srv::Empty::Request>/*req*/,
+  std::shared_ptr<std_srvs::srv::Empty::Response>/*res*/)
 {
   auto query = loc_client_interface_->getSessionQuery();
   auto response = loc_client_interface_->call("clientExpandMapDisable", query);
@@ -444,7 +444,7 @@ bool LocatorBridgeNode::clientExpandMapDisableCb(
 
 bool LocatorBridgeNode::clientRecordingSetCurrentPoseCb(
   const std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Request> req,
-    std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Response> /*res*/)
+  std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Response>/*res*/)
 {
   auto query = loc_client_interface_->getSessionQuery();
 
@@ -660,28 +660,29 @@ void LocatorBridgeNode::checkLaserScan(
   }
 }
 
-void LocatorBridgeNode::setupBinaryReceiverInterfaces(const std::string & host,
-const Poco::UInt16 binaryPortsStart)
+void LocatorBridgeNode::setupBinaryReceiverInterfaces(
+  const std::string & host,
+  const Poco::UInt16 binaryPortsStart)
 {
   // port definitions for the different interfaces. See Locator API documentation section 12.8
-  Poco::UInt16 binaryClientControlModePort{ binaryPortsStart /*default: 9004*/ };
-  Poco::UInt16 binaryClientMapMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 1) };
-  Poco::UInt16 binaryClientMapVisualizationPort{ static_cast<Poco::UInt16>(binaryPortsStart + 2) };
-  Poco::UInt16 binaryClientRecordingMapPort{ static_cast<Poco::UInt16>(binaryPortsStart + 3) };
+  Poco::UInt16 binaryClientControlModePort{binaryPortsStart /*default: 9004*/};
+  Poco::UInt16 binaryClientMapMapPort{static_cast<Poco::UInt16>(binaryPortsStart + 1)};
+  Poco::UInt16 binaryClientMapVisualizationPort{static_cast<Poco::UInt16>(binaryPortsStart + 2)};
+  Poco::UInt16 binaryClientRecordingMapPort{static_cast<Poco::UInt16>(binaryPortsStart + 3)};
   Poco::UInt16 binaryClientRecordingVisualizationPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 4) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 4)};
   Poco::UInt16 binaryClientLocalizationMapPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 5) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 5)};
   Poco::UInt16 binaryClientLocalizationVisualizationPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 6) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 6)};
   Poco::UInt16 binaryClientLocalizationPosePort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 7) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 7)};
   Poco::UInt16 binaryClientGlobalAlignVisualizationPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 8) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 8)};
   Poco::UInt16 binaryClientExpandMapVisualizationPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 9) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 9)};
   Poco::UInt16 binaryClientExpandMapPriorMapPort{
-    static_cast<Poco::UInt16>(binaryPortsStart + 10) };
+    static_cast<Poco::UInt16>(binaryPortsStart + 10)};
 
   // Create binary interface for client control mode
   client_control_mode_interface_.reset(

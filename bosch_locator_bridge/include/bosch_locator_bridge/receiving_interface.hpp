@@ -79,9 +79,10 @@ private:
 class ClientControlModeInterface : public ReceivingInterface
 {
 public:
-  ClientControlModeInterface(const Poco::Net::IPAddress & hostadress,
-  const Poco::UInt16 binaryClientControlModePort,
-  rclcpp::Node::SharedPtr node);
+  ClientControlModeInterface(
+    const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientControlModePort,
+    rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
@@ -94,9 +95,10 @@ private:
 class ClientMapMapInterface : public ReceivingInterface
 {
 public:
-  ClientMapMapInterface(const Poco::Net::IPAddress & hostadress,
-  const Poco::UInt16 binaryClientMapMapPort,
-  rclcpp::Node::SharedPtr node);
+  ClientMapMapInterface(
+    const Poco::Net::IPAddress & hostadress,
+    const Poco::UInt16 binaryClientMapMapPort,
+    rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
     const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
@@ -244,11 +246,11 @@ class ClientExpandMapVisualizationInterface : public ReceivingInterface
 {
 public:
   ClientExpandMapVisualizationInterface(
-    const Poco::Net::IPAddress& hostadress,
+    const Poco::Net::IPAddress & hostadress,
     const Poco::UInt16 binaryClientExpandMapVisualizationPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
-    const std::vector<char>& datagram,
+    const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
 
 private:
@@ -260,11 +262,11 @@ class ClientExpandMapPriorMapInterface : public ReceivingInterface
 {
 public:
   ClientExpandMapPriorMapInterface(
-    const Poco::Net::IPAddress& hostadress,
+    const Poco::Net::IPAddress & hostadress,
     const Poco::UInt16 binaryClientExpandMapPriorMapPort,
     rclcpp::Node::SharedPtr node);
   size_t tryToParseData(
-    const std::vector<char>& datagram,
+    const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;
 
 private:

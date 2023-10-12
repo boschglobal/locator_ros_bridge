@@ -409,10 +409,10 @@ size_t ClientGlobalAlignVisualizationInterface::tryToParseData(
 }
 
 ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(
-  const Poco::Net::IPAddress& hostadress,
+  const Poco::Net::IPAddress & hostadress,
   const Poco::UInt16 binaryClientExpandMapVisualizationPort,
   rclcpp::Node::SharedPtr node)
-  : ReceivingInterface(hostadress, binaryClientExpandMapVisualizationPort, node)
+: ReceivingInterface(hostadress, binaryClientExpandMapVisualizationPort, node)
 {
   // Setup publisher
   client_expand_map_visualization_pub_ =
@@ -421,15 +421,14 @@ ClientExpandMapVisualizationInterface::ClientExpandMapVisualizationInterface(
 }
 
 size_t ClientExpandMapVisualizationInterface::tryToParseData(
-  const std::vector<char>& datagram, rclcpp::Node::SharedPtr /*node*/)
+  const std::vector<char> & datagram, rclcpp::Node::SharedPtr /*node*/)
 {
   // convert datagram to ros message
   bosch_locator_bridge::msg::ClientExpandMapVisualization client_expandmap_visualization;
   const auto bytes_parsed =
     RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(
-      datagram, client_expandmap_visualization);
-  if (bytes_parsed > 0)
-  {
+    datagram, client_expandmap_visualization);
+  if (bytes_parsed > 0) {
     // publish
     client_expand_map_visualization_pub_->publish(client_expandmap_visualization);
   }
@@ -437,10 +436,10 @@ size_t ClientExpandMapVisualizationInterface::tryToParseData(
 }
 
 ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(
-  const Poco::Net::IPAddress& hostadress,
+  const Poco::Net::IPAddress & hostadress,
   const Poco::UInt16 binaryClientExpandMapPriorMapPort,
   rclcpp::Node::SharedPtr node)
-  : ReceivingInterface(hostadress, binaryClientExpandMapPriorMapPort, node)
+: ReceivingInterface(hostadress, binaryClientExpandMapPriorMapPort, node)
 {
   // Setup publisher
   client_expand_map_priormap_pub_ =
@@ -449,14 +448,13 @@ ClientExpandMapPriorMapInterface::ClientExpandMapPriorMapInterface(
 }
 
 size_t ClientExpandMapPriorMapInterface::tryToParseData(
-  const std::vector<char>& datagram, rclcpp::Node::SharedPtr node)
+  const std::vector<char> & datagram, rclcpp::Node::SharedPtr node)
 {
   // convert datagram to ros message
   sensor_msgs::msg::PointCloud2 map;
   const auto parsed_bytes =
     RosMsgsDatagramConverter::convertMapDatagram2Message(datagram, node->now(), map);
-  if (parsed_bytes > 0)
-  {
+  if (parsed_bytes > 0) {
     // publish
     client_expand_map_priormap_pub_->publish(map);
   }

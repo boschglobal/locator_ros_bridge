@@ -200,8 +200,8 @@ public:
    * @return number of bytes parsed successfully
    */
   static size_t convertClientExpandMapVisualizationDatagram2Message(
-      const std::vector<char>& datagram,
-      bosch_locator_bridge::msg::ClientExpandMapVisualization& client_expandmap_visualization);
+    const std::vector<char> & datagram,
+    bosch_locator_bridge::msg::ClientExpandMapVisualization & client_expandmap_visualization);
 
 private:
   static size_t convertMapDatagram2Message(
