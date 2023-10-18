@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__ENUMS_HPP_
 #define BOSCH_LOCATOR_BRIDGE__ENUMS_HPP_
 
-#pragma once
-
 #include <stdint.h>
 #include <string>
 

@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_
 #define BOSCH_LOCATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_
 
-#pragma once
-
 #include <Poco/BinaryReader.h>
 #include <Poco/JSON/Object.h>
 

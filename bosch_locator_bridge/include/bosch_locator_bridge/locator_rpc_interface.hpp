@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__LOCATOR_RPC_INTERFACE_HPP_
 #define BOSCH_LOCATOR_BRIDGE__LOCATOR_RPC_INTERFACE_HPP_
 
-#pragma once
-
 #include <Poco/Net/HTTPClientSession.h>
 #include <Poco/JSON/Object.h>
 

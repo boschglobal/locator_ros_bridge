@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
 #define BOSCH_LOCATOR_BRIDGE__LOCATOR_BRIDGE_NODE_HPP_
 
-#pragma once
-
 #include <Poco/Thread.h>
 
 #include <memory>

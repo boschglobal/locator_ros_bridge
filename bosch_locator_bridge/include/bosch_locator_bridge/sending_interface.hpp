@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__SENDING_INTERFACE_HPP_
 #define BOSCH_LOCATOR_BRIDGE__SENDING_INTERFACE_HPP_
 
-#pragma once
-
 #include <Poco/Net/ServerSocket.h>
 #include <Poco/Net/StreamSocket.h>
 

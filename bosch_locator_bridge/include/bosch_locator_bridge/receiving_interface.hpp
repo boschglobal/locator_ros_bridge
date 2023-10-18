@@ -16,8 +16,6 @@
 #ifndef BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_
 #define BOSCH_LOCATOR_BRIDGE__RECEIVING_INTERFACE_HPP_
 
-#pragma once
-
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Net/SocketNotification.h>
