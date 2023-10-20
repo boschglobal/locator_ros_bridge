@@ -2,6 +2,18 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.0.10 (2023-10-20)
+-----------
+* Update to ROKIT Locator version 1.6
+* Document the map expansion workflow
+* Add rviz config files for map expansion
+* Add services and interfaces for map expansion
+* Add expandmap_state in control mode
+* Remove field distanceToLastLC in ClientLocalizationVisualizationDatagram
+* Introduce parameter odometry_velocity_set of odometry message
+* Configurable Locator ports
+* Contributors: Sheung Ying Yuen-Wille
+
 1.0.9 (2023-03-21)
 ------------------
 * Try to stop everything before setting config list (`#38 <https://github.com/boschglobal/locator_ros_bridge/issues/38>`_)
