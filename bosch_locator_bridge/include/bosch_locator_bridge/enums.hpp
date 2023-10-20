@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef BOSCH_LOCATOR_BRIDGE__ENUMS_HPP_
+#define BOSCH_LOCATOR_BRIDGE__ENUMS_HPP_
 
-#include <string>
 #include <stdint.h>
+#include <string>
 
 /**
  * Module identifiers. See api documentation, section 6.2
@@ -48,8 +49,7 @@ enum ModuleIdentifier : uint16_t
 
 inline std::string stringifyModuleId(ModuleIdentifier id)
 {
-  switch (id)
-  {
+  switch (id) {
     case COMMON:
       return "Common";
     case ABOUT_MODULES:
@@ -116,8 +116,7 @@ enum CommonResponseCode : uint64_t
 
 inline std::string stringifyCommonResponseCode(CommonResponseCode c)
 {
-  switch (c)
-  {
+  switch (c) {
     case OK:
       return "OK";
     case WARNING:
@@ -152,3 +151,5 @@ inline std::string stringifyCommonResponseCode(CommonResponseCode c)
       return "";
   }
 }
+
+#endif  // BOSCH_LOCATOR_BRIDGE__ENUMS_HPP_

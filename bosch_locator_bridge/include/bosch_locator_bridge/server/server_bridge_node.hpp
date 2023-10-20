@@ -14,14 +14,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <unordered_map>
+#ifndef BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_
+#define BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_
 
 #include <Poco/Thread.h>
 
-#include <ros/ros.h>
-#include <std_srvs/Empty.h>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "ros/ros.h"
+#include "std_srvs/Empty.h"
 
 #include "bosch_locator_bridge/ServerMapGetImageWithResolution.h"
 #include "bosch_locator_bridge/ServerMapList.h"
@@ -33,7 +38,8 @@ class LocatorRPCInterface;
  * This is the main ROS node. It binds together the ROS interface and the
  * Locator API.
  */
-class ServerBridgeNode {
+class ServerBridgeNode
+{
 public:
   ServerBridgeNode();
   virtual ~ServerBridgeNode();
@@ -42,17 +48,18 @@ public:
 
 private:
   bool check_module_versions(
-      const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
-          &module_versions);
+    const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
+    & module_versions);
   template<typename T>
-  std::vector<T> convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const;
+  std::vector<T> convert_value_array_to_vector(const XmlRpc::XmlRpcValue & array) const;
 
-  bool serverMapListCb(bosch_locator_bridge::ServerMapList::Request &req,
-                       bosch_locator_bridge::ServerMapList::Response &res);
+  bool serverMapListCb(
+    bosch_locator_bridge::ServerMapList::Request & req,
+    bosch_locator_bridge::ServerMapList::Response & res);
 
   bool serverMapGetImageWithResolutionCb(
-      bosch_locator_bridge::ServerMapGetImageWithResolution::Request &req,
-      bosch_locator_bridge::ServerMapGetImageWithResolution::Response &res);
+    bosch_locator_bridge::ServerMapGetImageWithResolution::Request & req,
+    bosch_locator_bridge::ServerMapGetImageWithResolution::Response & res);
 
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
@@ -66,13 +73,15 @@ private:
 };
 
 template<typename T>
-std::vector<T> ServerBridgeNode::convert_value_array_to_vector(const XmlRpc::XmlRpcValue& array) const
+std::vector<T> ServerBridgeNode::convert_value_array_to_vector(
+  const XmlRpc::XmlRpcValue & array) const
 {
   std::vector<T> vec;
-  for (int i = 0; i != array.size(); ++i)
-  {
+  for (int i = 0; i != array.size(); ++i) {
     vec.push_back(static_cast<T>(array[i]));
   }
 
   return vec;
 }
+
+#endif  // BOSCH_LOCATOR_BRIDGE__SERVER__SERVER_BRIDGE_NODE_HPP_

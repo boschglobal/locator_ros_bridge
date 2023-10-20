@@ -13,52 +13,69 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <Poco/BinaryWriter.h>
+#include <Poco/MemoryStream.h>
+
+#include <fstream>
+#include <string>
+#include <vector>
+#include <utility>
+
 #include "rosmsgs_datagram_converter.hpp"
 
 #include "bosch_locator_bridge/ClientGlobalAlignLandmarkObservationNotice.h"
 #include "bosch_locator_bridge/ClientGlobalAlignLandmarkVisualizationInformation.h"
 
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <tf2/convert.h>
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2/convert.h"
 
-#include <Poco/BinaryWriter.h>
-#include <Poco/MemoryStream.h>
-
-#include <fstream>
 
 size_t
-RosMsgsDatagramConverter::convertClientControlMode2Message(const std::vector<char>& datagram, const ros::Time& stamp,
-                                                           bosch_locator_bridge::ClientControlMode& client_control_mode)
+RosMsgsDatagramConverter::convertClientControlMode2Message(
+  const std::vector<char> & datagram, const ros::Time & stamp,
+  bosch_locator_bridge::ClientControlMode & client_control_mode)
 {
-  if (datagram.size() < 4)
-  {
+  if (datagram.size() < 4) {
     return 0;
   }
   client_control_mode.stamp = stamp;
 
-  uint32_t client_control_mode_datagram = *reinterpret_cast<const uint32_t*>(&(datagram[0]));
+  uint32_t client_control_mode_datagram = *reinterpret_cast<const uint32_t *>(&(datagram[0]));
 
-  client_control_mode.mask_state = static_cast<uint8_t>(client_control_mode_datagram & 0b111);
-  client_control_mode.alignment_state = static_cast<uint8_t>((client_control_mode_datagram >> 3) & 0b111);
-  client_control_mode.recording_state = static_cast<uint8_t>((client_control_mode_datagram >> 6) & 0b111);
-  client_control_mode.localization_state = static_cast<uint8_t>((client_control_mode_datagram >> 9) & 0b111);
-  client_control_mode.map_state = static_cast<uint8_t>((client_control_mode_datagram >> 12) & 0b111);
-  client_control_mode.visual_recording_state = static_cast<uint8_t>((client_control_mode_datagram >> 15) & 0b111);
+  client_control_mode.mask_state =
+    static_cast<uint8_t>(client_control_mode_datagram & 0b111);
+  client_control_mode.alignment_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 3) & 0b111);
+  client_control_mode.recording_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 6) & 0b111);
+  client_control_mode.localization_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 9) & 0b111);
+  client_control_mode.map_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 12) & 0b111);
+  client_control_mode.visual_recording_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 15) & 0b111);
+  client_control_mode.expandmap_state =
+    static_cast<uint8_t>((client_control_mode_datagram >> 18) & 0b111);
   return 4;
 }
 
-size_t RosMsgsDatagramConverter::convertMapDatagram2Message(const std::vector<char>& datagram, const ros::Time& stamp,
-                                                            sensor_msgs::PointCloud2& out_pointcloud)
+size_t RosMsgsDatagramConverter::convertMapDatagram2Message(
+  const std::vector<char> & datagram, const ros::Time & stamp,
+  sensor_msgs::PointCloud2 & out_pointcloud)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
   return convertMapDatagram2Message(binary_reader, stamp, out_pointcloud);
 }
 
-size_t RosMsgsDatagramConverter::convertMapDatagram2Message(Poco::BinaryReader& binary_reader, const ros::Time& stamp,
-                                                            sensor_msgs::PointCloud2& out_pointcloud)
+size_t RosMsgsDatagramConverter::convertMapDatagram2Message(
+  Poco::BinaryReader & binary_reader, const ros::Time & stamp,
+  sensor_msgs::PointCloud2 & out_pointcloud)
 {
   // Convert datagram to point cloud
   pcl::PointCloud<pcl::PointXYZ> point_cloud;
@@ -66,8 +83,7 @@ size_t RosMsgsDatagramConverter::convertMapDatagram2Message(Poco::BinaryReader& 
   binary_reader >> map_length;
   size_t bytes_parsed = 4;
 
-  for (unsigned int i = 0; i < map_length; i++)
-  {
+  for (unsigned int i = 0; i < map_length; i++) {
     pcl::PointXYZ pt(0.f, 0.f, 0.f);
     binary_reader >> pt.x >> pt.y;
     bytes_parsed += 8;
@@ -85,16 +101,16 @@ size_t RosMsgsDatagramConverter::convertMapDatagram2Message(Poco::BinaryReader& 
   return bytes_parsed;
 }
 
-size_t RosMsgsDatagramConverter::convertMapDatagram2PointCloud(Poco::BinaryReader& binary_reader,
-                                                               pcl::PointCloud<pcl::PointXYZRGB>& out_pointcloud)
+size_t RosMsgsDatagramConverter::convertMapDatagram2PointCloud(
+  Poco::BinaryReader & binary_reader,
+  pcl::PointCloud<pcl::PointXYZRGB> & out_pointcloud)
 {
   // Convert datagram to point cloud
   uint32_t map_length;
   binary_reader >> map_length;
   size_t bytes_parsed = 4;
 
-  for (unsigned int i = 0; i < map_length; i++)
-  {
+  for (unsigned int i = 0; i < map_length; i++) {
     pcl::PointXYZRGB pt(0.f, 0.f, 0.f);
     binary_reader >> pt.x >> pt.y;
     bytes_parsed += 8;
@@ -105,13 +121,16 @@ size_t RosMsgsDatagramConverter::convertMapDatagram2PointCloud(Poco::BinaryReade
 }
 
 size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2Message(
-    const std::vector<char>& datagram,
-    bosch_locator_bridge::ClientGlobalAlignVisualization& client_global_align_visualization,
-    geometry_msgs::PoseArray& poses, geometry_msgs::PoseArray& landmark_poses)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientGlobalAlignVisualization & client_global_align_visualization,
+  geometry_msgs::PoseArray & poses, geometry_msgs::PoseArray & landmark_poses)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
 
   double stamp;
   binary_reader >> stamp;
@@ -123,8 +142,7 @@ size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2M
   binary_reader >> num_poses;
   poses.header.stamp = client_global_align_visualization.timestamp;
   poses.header.frame_id = MAP_FRAME_ID;
-  for (unsigned int i = 0; i < num_poses; i++)
-  {
+  for (unsigned int i = 0; i < num_poses; i++) {
     geometry_msgs::Pose pose;
     convertPose2DSingleDatagram2Message(binary_reader, pose);
     poses.poses.push_back(pose);
@@ -135,8 +153,7 @@ size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2M
   binary_reader >> num_landmarks;
   landmark_poses.header.stamp = client_global_align_visualization.timestamp;
   landmark_poses.header.frame_id = MAP_FRAME_ID;
-  for (unsigned int i = 0; i < num_landmarks; i++)
-  {
+  for (unsigned int i = 0; i < num_landmarks; i++) {
     geometry_msgs::Pose pose;
     convertPose2DSingleDatagram2Message(binary_reader, pose);
     landmark_poses.poses.push_back(pose);
@@ -150,8 +167,7 @@ size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2M
     uint32_t name_length;
     binary_reader >> name_length;
     std::vector<char> name(name_length);
-    for (unsigned int j = 0; j < name_length; j++)
-    {
+    for (unsigned int j = 0; j < name_length; j++) {
       binary_reader >> name[j];
     }
     vis_info.name = std::string(name.begin(), name.end());
@@ -162,8 +178,7 @@ size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2M
   // retrieve observations
   uint32_t num_observations;
   binary_reader >> num_observations;
-  for (unsigned int i = 0; i < num_observations; i++)
-  {
+  for (unsigned int i = 0; i < num_observations; i++) {
     bosch_locator_bridge::ClientGlobalAlignLandmarkObservationNotice notice;
     binary_reader >> notice.pose_index >> notice.landmark_index;
     client_global_align_visualization.observations.push_back(notice);
@@ -172,12 +187,17 @@ size_t RosMsgsDatagramConverter::convertClientGlobalAlignVisualizationDatagram2M
 }
 
 size_t RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
-    const std::vector<char>& datagram, bosch_locator_bridge::ClientLocalizationPose& client_localization_pose,
-    geometry_msgs::PoseStamped& pose, double covariance[6], geometry_msgs::PoseStamped& lidar_odo_pose)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientLocalizationPose & client_localization_pose,
+  geometry_msgs::PoseStamped & pose, double covariance[6],
+  geometry_msgs::PoseStamped & lidar_odo_pose)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
 
   double age, stamp;
   binary_reader >> age >> stamp;
@@ -191,8 +211,7 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
   pose.header.frame_id = MAP_FRAME_ID;
   convertPose2DDoubleDatagram2Message(binary_reader, pose.pose);
 
-  for (int i = 0; i < 6; ++i)
-  {
+  for (int i = 0; i < 6; ++i) {
     binary_reader >> covariance[i];
   }
 
@@ -204,26 +223,30 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationPoseDatagram2Message(
 
   // Get lidar-odo-pose
   lidar_odo_pose.header.stamp = client_localization_pose.timestamp;
-  lidar_odo_pose.header.frame_id =
-      ODOM_FRAME_ID;  // TODO here we might have an different reference frame (arbitrary according to API)
+  // TODO(): here we might have an different reference frame (arbitrary according to API)
+  lidar_odo_pose.header.frame_id = ODOM_FRAME_ID;
   convertPose2DDoubleDatagram2Message(binary_reader, lidar_odo_pose.pose);
 
   return datagram.size() - binary_reader.available();
 }
 
 size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2Message(
-    const std::vector<char>& datagram,
-    bosch_locator_bridge::ClientLocalizationVisualization& client_localization_visualization,
-    geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientLocalizationVisualization & client_localization_visualization,
+  geometry_msgs::PoseStamped & pose, sensor_msgs::PointCloud2 & scan)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
 
   double stamp;
   binary_reader >> stamp;
   client_localization_visualization.timestamp = ros::Time(stamp);
-  binary_reader >> client_localization_visualization.unique_id >> client_localization_visualization.loc_state;
+  binary_reader >> client_localization_visualization.unique_id >>
+  client_localization_visualization.loc_state;
 
   // Get pose
   pose.header.stamp = client_localization_visualization.timestamp;
@@ -253,12 +276,17 @@ size_t RosMsgsDatagramConverter::convertClientLocalizationVisualizationDatagram2
 }
 
 size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
-    const std::vector<char>& datagram, bosch_locator_bridge::ClientMapVisualization& client_map_visualization,
-    geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan, geometry_msgs::PoseArray& path_poses)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientMapVisualization & client_map_visualization,
+  geometry_msgs::PoseStamped & pose, sensor_msgs::PointCloud2 & scan,
+  geometry_msgs::PoseArray & path_poses)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
   double stamp;
   binary_reader >> stamp;
   client_map_visualization.timestamp = ros::Time(stamp);
@@ -270,7 +298,7 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   convertPose2DDoubleDatagram2Message(binary_reader, pose.pose);
 
   binary_reader >> client_map_visualization.distanceToLastLC >> client_map_visualization.delay >>
-      client_map_visualization.progress;
+  client_map_visualization.progress;
   pcl::PointCloud<pcl::PointXYZRGB> point_cloud;
   convertMapDatagram2PointCloud(binary_reader, point_cloud);
 
@@ -280,8 +308,7 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   uint32_t path_poses_length;
   binary_reader >> path_poses_length;
 
-  for (unsigned int i = 0; i < path_poses_length; i++)
-  {
+  for (unsigned int i = 0; i < path_poses_length; i++) {
     geometry_msgs::Pose nextPose;
     convertPose2DSingleDatagram2Message(binary_reader, nextPose);
     path_poses.poses.push_back(nextPose);
@@ -292,8 +319,7 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
   binary_reader >> path_types_length;
 
   client_map_visualization.path_types.resize(path_types_length);
-  for (unsigned int i = 0; i < path_types_length; i++)
-  {
+  for (unsigned int i = 0; i < path_types_length; i++) {
     binary_reader >> client_map_visualization.path_types[i];
   }
 
@@ -316,26 +342,31 @@ size_t RosMsgsDatagramConverter::convertClientMapVisualizationDatagram2Message(
 }
 
 size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Message(
-    const std::vector<char>& datagram,
-    bosch_locator_bridge::ClientRecordingVisualization& client_recording_visualization,
-    geometry_msgs::PoseStamped& pose, sensor_msgs::PointCloud2& scan, geometry_msgs::PoseArray& path_poses)
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientRecordingVisualization & client_recording_visualization,
+  geometry_msgs::PoseStamped & pose, sensor_msgs::PointCloud2 & scan,
+  geometry_msgs::PoseArray & path_poses)
 {
   Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
   auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
-  binary_reader.setExceptions(std::ifstream::failbit | std::ifstream::badbit | std::ifstream::eofbit);
-
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
   double stamp;
   binary_reader >> stamp;
   client_recording_visualization.timestamp = ros::Time(stamp);
-  binary_reader >> client_recording_visualization.visualization_id >> client_recording_visualization.status;
+  binary_reader >> client_recording_visualization.visualization_id >>
+  client_recording_visualization.status;
 
   // Get pose
   pose.header.stamp = client_recording_visualization.timestamp;
   pose.header.frame_id = MAP_FRAME_ID;
   convertPose2DDoubleDatagram2Message(binary_reader, pose.pose);
 
-  binary_reader >> client_recording_visualization.distanceToLastLC >> client_recording_visualization.delay >>
-      client_recording_visualization.progress;
+  binary_reader >> client_recording_visualization.distanceToLastLC >>
+  client_recording_visualization.delay >>
+  client_recording_visualization.progress;
   pcl::PointCloud<pcl::PointXYZRGB> point_cloud;
   convertMapDatagram2PointCloud(binary_reader, point_cloud);
 
@@ -345,8 +376,7 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   uint32_t path_poses_length;
   binary_reader >> path_poses_length;
 
-  for (unsigned int i = 0; i < path_poses_length; i++)
-  {
+  for (unsigned int i = 0; i < path_poses_length; i++) {
     geometry_msgs::Pose nextPose;
     convertPose2DSingleDatagram2Message(binary_reader, nextPose);
     path_poses.poses.push_back(nextPose);
@@ -357,8 +387,7 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   binary_reader >> path_types_length;
 
   client_recording_visualization.path_types.resize(path_types_length);
-  for (unsigned int i = 0; i < path_types_length; i++)
-  {
+  for (unsigned int i = 0; i < path_types_length; i++) {
     binary_reader >> client_recording_visualization.path_types[i];
   }
 
@@ -380,8 +409,9 @@ size_t RosMsgsDatagramConverter::convertClientRecordingVisualizationDatagram2Mes
   return datagram.size() - binary_reader.available();
 }
 
-size_t RosMsgsDatagramConverter::convertPose2DDoubleDatagram2Message(Poco::BinaryReader& binary_reader,
-                                                                     geometry_msgs::Pose& pose)
+size_t RosMsgsDatagramConverter::convertPose2DDoubleDatagram2Message(
+  Poco::BinaryReader & binary_reader,
+  geometry_msgs::Pose & pose)
 {
   double pose_x, pose_y, pose_yaw;
   binary_reader >> pose_x >> pose_y >> pose_yaw;
@@ -394,8 +424,9 @@ size_t RosMsgsDatagramConverter::convertPose2DDoubleDatagram2Message(Poco::Binar
   return 3 * 8;
 }
 
-size_t RosMsgsDatagramConverter::convertPose2DSingleDatagram2Message(Poco::BinaryReader& binary_reader,
-                                                                     geometry_msgs::Pose& pose)
+size_t RosMsgsDatagramConverter::convertPose2DSingleDatagram2Message(
+  Poco::BinaryReader & binary_reader,
+  geometry_msgs::Pose & pose)
 {
   float pose_x, pose_y, pose_yaw;
   binary_reader >> pose_x >> pose_y >> pose_yaw;
@@ -409,22 +440,25 @@ size_t RosMsgsDatagramConverter::convertPose2DSingleDatagram2Message(Poco::Binar
   return 3 * 4;
 }
 
-Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sensor_msgs::LaserScan& msg,
-                                                                       size_t scan_num, float scan_time)
+Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(
+  const sensor_msgs::LaserScan & msg,
+  size_t scan_num, float scan_time)
 {
   // convert the ROS message to a locator ClientSensorLaserDatagram
-  const size_t resulting_msg_size = 2        // scanNum
-                                    + 5 * 8  // time_start, uniqueId, duration_beam, duration_scan, duration_rotate
-                                    + 6 * 4  // numBeams, angleStart, angleEnd, angleInc, minRange, maxRange
-                                    + 4      // ranges->length
-                                    + msg.ranges.size() * 4        // ranges->elements
-                                    + 1                            // hasIntensities
-                                    + 2 * 4                        // minIntensity, maxIntensity
-                                    + 4                            // intensities->length
-                                    + msg.intensities.size() * 4;  // intensities->elements
+  const size_t resulting_msg_size =
+    2 +      // scanNum
+    5 * 8 +  // time_start, uniqueId, duration_beam, duration_scan, duration_rotate
+    6 * 4 +  // numBeams, angleStart, angleEnd, angleInc, minRange, maxRange
+    4 +      // ranges->length
+    msg.ranges.size() * 4 +        // ranges->elements
+    1 +                            // hasIntensities
+    2 * 4 +                        // minIntensity, maxIntensity
+    4 +                            // intensities->length
+    msg.intensities.size() * 4;    // intensities->elements
 
   Poco::Buffer<char> buffer(resulting_msg_size);
-  Poco::MemoryBinaryWriter writer(buffer, Poco::BinaryWriter::StreamByteOrder::LITTLE_ENDIAN_BYTE_ORDER);
+  Poco::MemoryBinaryWriter writer(buffer,
+    Poco::BinaryWriter::StreamByteOrder::LITTLE_ENDIAN_BYTE_ORDER);
 
   // scanNum
   writer << static_cast<uint16_t>(scan_num);
@@ -434,8 +468,9 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   writer << static_cast<uint64_t>(0);
   // duration_beam
   double duration_beam = static_cast<double>(msg.time_increment != 0.0f ?
-        fabs(msg.time_increment) :
-        (msg.angle_max - msg.angle_min) * (scan_time != 0.0f ? scan_time : msg.scan_time) / (2.0 * M_PI * (msg.ranges.size() - 1)));
+    fabs(msg.time_increment) :
+    (msg.angle_max - msg.angle_min) * (scan_time != 0.0f ? scan_time : msg.scan_time) /
+    (2.0 * M_PI * (msg.ranges.size() - 1)));
   writer << duration_beam;
   // duration_scan
   writer << duration_beam * static_cast<double>(msg.ranges.size() - 1);
@@ -456,8 +491,7 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   // ranges.length
   writer << static_cast<uint32_t>(msg.ranges.size());
   // ranges.elements
-  for (const auto r : msg.ranges)
-  {
+  for (const auto r : msg.ranges) {
     writer << static_cast<float>(std::isnan(r) ? -1e4f : clamp_range(r, -1e4f, 1e4f));
   }
   writer << static_cast<char>(!msg.intensities.empty());
@@ -469,28 +503,31 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(const sen
   // intensitites.length
   writer << static_cast<uint32_t>(msg.intensities.size());
   // intensities.elements
-  for (const auto intensity : msg.intensities)
-  {
+  for (const auto intensity : msg.intensities) {
     writer << static_cast<float>(intensity);
   }
   writer.flush();
 
-  ROS_ERROR_STREAM_COND(resulting_msg_size != buffer.size(), "convertLaserScan2DataGram: message size mismatch!");
+  ROS_ERROR_STREAM_COND(
+    resulting_msg_size != buffer.size(),
+    "convertLaserScan2DataGram: message size mismatch!");
 
   return buffer;
 }
 
-Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_msgs::Odometry& msg, size_t odom_num)
+Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(
+  const nav_msgs::Odometry & msg, size_t odom_num, bool velocitySet)
 {
   // convert the ROS message to a locator ClientSensorLaserDatagram
-  const size_t resulting_msg_size = 8        // timestamp
-                                    + 4      // odomNum
-                                    + 8      // epoch
-                                    + 6 * 8  // x,y,yaw,v_x,v_y,omega
-                                    + 1;     // velocitySet
+  const size_t resulting_msg_size = 8 +      // timestamp
+    4 +                                      // odomNum
+    8 +                                      // epoch
+    6 * 8 +                                  // x,y,yaw,v_x,v_y,omega
+    1;                                       // velocitySet
 
   Poco::Buffer<char> buffer(resulting_msg_size);
-  Poco::MemoryBinaryWriter writer(buffer, Poco::BinaryWriter::StreamByteOrder::LITTLE_ENDIAN_BYTE_ORDER);
+  Poco::MemoryBinaryWriter writer(buffer,
+    Poco::BinaryWriter::StreamByteOrder::LITTLE_ENDIAN_BYTE_ORDER);
 
   // timestamp
   writer << msg.header.stamp.toSec();
@@ -500,8 +537,10 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_
   writer << static_cast<uint64_t>(0);
 
   // Extract yaw from quaternion
-  tf2::Quaternion quaternion(msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z,
-                             msg.pose.pose.orientation.w);
+  tf2::Quaternion quaternion(msg.pose.pose.orientation.x,
+    msg.pose.pose.orientation.y,
+    msg.pose.pose.orientation.z,
+    msg.pose.pose.orientation.w);
   tf2::Matrix3x3 mat(quaternion);
   double roll, pitch, yaw;
   mat.getRPY(roll, pitch, yaw);
@@ -512,18 +551,19 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2DataGram(const nav_
   // Write velocity
   writer << msg.twist.twist.linear.x << msg.twist.twist.linear.y << msg.twist.twist.angular.z;
 
-  // velocity
-  // (available in the nav_msgs::Odometry message though its reliability cannot be judged at this stage, activate)
-  writer << static_cast<char>(true);
+  // velocitySet: Indicates whether or not the velocity is known.
+  writer << static_cast<char>(velocitySet);
 
   writer.flush();
 
-  ROS_ERROR_STREAM_COND(resulting_msg_size != buffer.size(), "convertOdometry2DataGram: message size mismatch!");
+  ROS_ERROR_STREAM_COND(
+    resulting_msg_size != buffer.size(),
+    "convertOdometry2DataGram: message size mismatch!");
 
   return buffer;
 }
 
-Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::Pose2D& pose)
+Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::Pose2D & pose)
 {
   Poco::JSON::Object obj;
   obj.set("x", pose.x);
@@ -532,8 +572,9 @@ Poco::JSON::Object RosMsgsDatagramConverter::makePose2d(const geometry_msgs::Pos
   return obj;
 }
 
-void RosMsgsDatagramConverter::colorizePointCloud(pcl::PointCloud<pcl::PointXYZRGB>& point_cloud,
-                                                  const std::vector<uint64_t>& sensor_offsets)
+void RosMsgsDatagramConverter::colorizePointCloud(
+  pcl::PointCloud<pcl::PointXYZRGB> & point_cloud,
+  const std::vector<uint64_t> & sensor_offsets)
 {
   for (unsigned int i = sensor_offsets[0];
     i < (sensor_offsets.size() == 2 ? sensor_offsets[1] : point_cloud.size()); i++)
@@ -542,10 +583,8 @@ void RosMsgsDatagramConverter::colorizePointCloud(pcl::PointCloud<pcl::PointXYZR
     point_cloud[i].g = 41;
     point_cloud[i].b = 41;
   }
-  if (sensor_offsets.size() == 2)
-  {
-    for (unsigned int i = sensor_offsets[1]; i < point_cloud.size(); i++)
-    {
+  if (sensor_offsets.size() == 2) {
+    for (unsigned int i = sensor_offsets[1]; i < point_cloud.size(); i++) {
       point_cloud[i].r = 114;
       point_cloud[i].g = 159;
       point_cloud[i].b = 207;
@@ -553,7 +592,7 @@ void RosMsgsDatagramConverter::colorizePointCloud(pcl::PointCloud<pcl::PointXYZR
   }
 }
 
-size_t RosMsgsDatagramConverter::discardExtension(Poco::BinaryReader& binary_reader)
+size_t RosMsgsDatagramConverter::discardExtension(Poco::BinaryReader & binary_reader)
 {
   uint32_t extensionSize {0u};
   binary_reader >> extensionSize;
@@ -566,7 +605,7 @@ size_t RosMsgsDatagramConverter::discardExtension(Poco::BinaryReader& binary_rea
   return extensionSize;
 }
 
-void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader& binary_reader)
+void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader & binary_reader)
 {
   bool has_intensities;
   float min_intensity, max_intensity;
@@ -574,22 +613,86 @@ void RosMsgsDatagramConverter::readIntensities(Poco::BinaryReader& binary_reader
   binary_reader >> has_intensities >> min_intensity >> max_intensity >> intensities_length;
 
   std::vector<float> intensities(intensities_length);
-  for (unsigned int i = 0; i < intensities_length; i++)
-  {
+  for (unsigned int i = 0; i < intensities_length; i++) {
     binary_reader >> intensities[i];
   }
 }
 
-std::vector<uint64_t> RosMsgsDatagramConverter::readSensorOffsets(Poco::BinaryReader& binary_reader)
+std::vector<uint64_t> RosMsgsDatagramConverter::readSensorOffsets(
+  Poco::BinaryReader & binary_reader)
 {
   uint32_t sensor_offsets_length;
   binary_reader >> sensor_offsets_length;
 
   std::vector<uint64_t> sensor_offsets(sensor_offsets_length);
-  for (unsigned int i = 0; i < sensor_offsets_length; i++)
-  {
+  for (unsigned int i = 0; i < sensor_offsets_length; i++) {
     binary_reader >> sensor_offsets[i];
   }
 
   return sensor_offsets;
+}
+
+size_t RosMsgsDatagramConverter::convertClientExpandMapVisualizationDatagram2Message(
+  const std::vector<char> & datagram,
+  bosch_locator_bridge::ClientExpandMapVisualization & client_expandmap_visualization)
+{
+  Poco::MemoryInputStream inStream(&datagram[0], datagram.size());
+  auto binary_reader = Poco::BinaryReader(inStream, Poco::BinaryReader::LITTLE_ENDIAN_BYTE_ORDER);
+  binary_reader.setExceptions(
+    std::ifstream::failbit |
+    std::ifstream::badbit |
+    std::ifstream::eofbit);
+
+  double stamp;
+  binary_reader >> stamp;
+  client_expandmap_visualization.timestamp = ros::Time(stamp);
+  binary_reader >> client_expandmap_visualization.visualization_id;
+
+  // Get zones
+  uint32_t zones_length;
+  binary_reader >> zones_length;
+  for (unsigned int i = 0; i < zones_length; i++) {
+    bosch_locator_bridge::ClientExpandMapOverwriteZoneInformation zone;
+    uint32_t polygon_length;
+    binary_reader >> polygon_length;
+    for (unsigned int i = 0; i < polygon_length; i++) {
+      geometry_msgs::Point32 point;
+      binary_reader >> point.x >> point.y;
+      zone.polygon.push_back(std::move(point));
+    }
+
+    binary_reader >> zone.id >> zone.type;
+
+    uint32_t name_length;
+    binary_reader >> name_length;
+    std::vector<char> name(name_length);
+    for (unsigned int j = 0; j < name_length; j++) {
+      binary_reader >> name[j];
+    }
+    zone.name = std::string(name.begin(), name.end());
+  }
+
+  // Get prior map poses
+  uint32_t poses_length;
+  binary_reader >> poses_length;
+  client_expandmap_visualization.prior_map_poses.header.stamp =
+    client_expandmap_visualization.timestamp;
+  client_expandmap_visualization.prior_map_poses.header.frame_id = MAP_FRAME_ID;
+
+  for (unsigned int i = 0; i < poses_length; i++) {
+    geometry_msgs::Pose nextPose;
+    convertPose2DSingleDatagram2Message(binary_reader, nextPose);
+    client_expandmap_visualization.prior_map_poses.poses.push_back(nextPose);
+  }
+
+  // Get prior map pose types
+  uint32_t pose_types_length;
+  binary_reader >> pose_types_length;
+
+  client_expandmap_visualization.prior_map_pose_types.resize(pose_types_length);
+  for (unsigned int i = 0; i < pose_types_length; i++) {
+    binary_reader >> client_expandmap_visualization.prior_map_pose_types[i];
+  }
+
+  return datagram.size() - binary_reader.available();
 }
