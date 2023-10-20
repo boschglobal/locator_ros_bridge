@@ -21,7 +21,10 @@ It also allows to control the ROKIT Locator via ROS service calls.
 
 There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
-* ROS 2: Foxy (this branch), Rolling (branch [main](../../tree/main), will likely also work on Galactic)
+* ROS 2:
+  * _DEPRECATED_: Foxy (this branch) for ROKIT Locator <= 1.6
+  * _DEPRECATED_: Rolling (branch [main](../../tree/main)), will likely also work on Galactic)
+  * Humble (branch [humble](../../tree/hubmle)) for ROKIT Locator >= 1.8
 
 The following video (click on image) gives more information about the ROKIT Locator.
 [![Rexroth ROKIT Locator](https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg)](https://www.youtube.com/watch?v=g6SIUlXn9Bk)

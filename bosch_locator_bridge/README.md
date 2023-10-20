@@ -11,6 +11,7 @@ It also allows to control the ROKIT Locator via ROS 2 service calls.
 The package has been tested under [ROS 2] Foxy and Ubuntu 20.04.
 The bridge is compatible with ROKIT Locator version 1.6.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
+For later versions the bridge is available for ROS 2 Humble and Ubuntu 22.04. Foxy is no longer supported.
 
 ## Quick Start
 
@@ -288,7 +289,11 @@ To avoid this, make sure `LaserScan` messages are sent to the bridge before swit
 
 ## Support of earlier versions of ROKIT Locator
 
-If you have version 1.5 of ROKIT Locator, checkout the corresponding tag:
+If you have version 1.6 of ROKIT Locator, checkout the corresponding tag:
+
+	git checkout 2.0.10 -b foxy-v1.6
+
+And if you have version 1.5:
 
 	git checkout 2.0.9 -b foxy-v1.5
 
