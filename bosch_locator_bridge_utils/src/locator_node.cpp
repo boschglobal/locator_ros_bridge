@@ -25,7 +25,7 @@ using std::placeholders::_1;
 namespace bosch_locator_bridge_utils
 {
 LocatorNode::LocatorNode(const std::string & node_name)
-: nav2_util::LifecycleNode(node_name, "", true)
+: nav2_util::LifecycleNode(node_name, "")
 {
   add_parameter(
     "base_frame_id", rclcpp::ParameterValue(std::string("base_footprint")),
@@ -66,13 +66,13 @@ nav2_util::CallbackReturn LocatorNode::on_configure(const rclcpp_lifecycle::Stat
   transform_tolerance_ = tf2::durationFromSec(transform_tolerance);
 
   // Initialize transform listener and broadcaster
-  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(rclcpp_node_->get_clock());
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(get_clock());
   auto timer_interface = std::make_shared<tf2_ros::CreateTimerROS>(
-    rclcpp_node_->get_node_base_interface(),
-    rclcpp_node_->get_node_timers_interface());
+    get_node_base_interface(),
+    get_node_timers_interface());
   tf_buffer_->setCreateTimerInterface(timer_interface);
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(rclcpp_node_);
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(shared_from_this());
 
   odom_to_map_ = tf2::Transform::getIdentity();
 
