@@ -31,6 +31,8 @@
 #include "nav_msgs/msg/odometry.hpp"
 
 #include "bosch_locator_bridge/srv/client_config_get_entry.hpp"
+#include "bosch_locator_bridge/srv/client_expand_map_enable.hpp"
+#include "bosch_locator_bridge/srv/client_recording_set_current_pose.hpp"
 #include "bosch_locator_bridge/srv/client_map_list.hpp"
 #include "bosch_locator_bridge/srv/client_map_send.hpp"
 #include "bosch_locator_bridge/srv/client_map_set.hpp"
@@ -51,6 +53,8 @@ class ClientLocalizationMapInterface;
 class ClientLocalizationVisualizationInterface;
 class ClientLocalizationPoseInterface;
 class ClientGlobalAlignVisualizationInterface;
+class ClientExpandMapVisualizationInterface;
+class ClientExpandMapPriorMapInterface;
 
 /**
  * This is the main ROS node. It binds together the ROS interface and the Locator API.
@@ -113,6 +117,17 @@ private:
     const std::shared_ptr<std_srvs::srv::Empty::Request> req,
     std::shared_ptr<std_srvs::srv::Empty::Response> res);
 
+  bool clientExpandMapEnableCb(
+    const std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Request> req,
+    std::shared_ptr<bosch_locator_bridge::srv::ClientExpandMapEnable::Response> res);
+  bool clientExpandMapDisableCb(
+    const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+    std::shared_ptr<std_srvs::srv::Empty::Response> res);
+
+  bool clientRecordingSetCurrentPoseCb(
+    const std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Request> req,
+    std::shared_ptr<bosch_locator_bridge::srv::ClientRecordingSetCurrentPose::Response> res);
+
   /// read out ROS parameters and use them to update the locator config
   void syncConfig();
 
@@ -120,7 +135,7 @@ private:
   void checkLaserScan(
     const sensor_msgs::msg::LaserScan::SharedPtr msg,
     const std::string & laser) const;
-  void setupBinaryReceiverInterfaces(const std::string & host);
+  void setupBinaryReceiverInterfaces(const std::string & host, const Poco::UInt16 binaryPortsStart);
 
   std::unique_ptr<LocatorRPCInterface> loc_client_interface_;
 
@@ -132,6 +147,7 @@ private:
   // Flag to indicate if the bridge should send odometry data to the locator.
   // Value retrieved by the locator settings.
   bool provide_odometry_data_;
+  bool odometry_velocity_set_;
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_sub_;
   std::unique_ptr<SendingInterface> laser_sending_interface_;
   Poco::Thread laser_sending_interface_thread_;
@@ -171,6 +187,10 @@ private:
   std::unique_ptr<ClientGlobalAlignVisualizationInterface>
   client_global_align_visualization_interface_;
   Poco::Thread client_global_align_visualization_interface_thread_;
+  std::unique_ptr<ClientExpandMapVisualizationInterface> client_expandmap_visualization_interface_;
+  Poco::Thread client_expandmap_visualization_interface_thread_;
+  std::unique_ptr<ClientExpandMapPriorMapInterface> client_expandmap_priormap_interface_;
+  Poco::Thread client_expandmap_priormap_interface_thread_;
 
   size_t scan_num_ {0};
   size_t scan2_num_ {0};

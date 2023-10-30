@@ -8,22 +8,22 @@ on:
   schedule:
     # Run once per day to detect broken dependencies.
     - cron: '33 6 * * *'
-  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
-        os: [ ubuntu-22.04 ]
-        ros_distribution: [ rolling ]
+        include:
+          - ros_distribution: "rolling"
+            os: "ubuntu-22.04"
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: ros-tooling/setup-ros@v0.3
+    - uses: actions/checkout@v3
+    - uses: ros-tooling/setup-ros@v0.6
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
-    - uses : ros-tooling/action-ros-ci@v0.2
+    - uses : ros-tooling/action-ros-ci@v0.3
       with:
         package-name: bosch_locator_bridge
         vcs-repo-file-url: ''
@@ -33,5 +33,5 @@ jobs:
             "build": {
               "mixin": ["coverage-gcc"]
             }
-          }       
+          }
         colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml

@@ -1,4 +1,4 @@
-name: "Build action (utils): Galactic"
+name: "Build action (utils): Humble"
 
 on:
   push:
@@ -16,14 +16,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
-        os: [ ubuntu-20.04 ]
-        ros_distribution: [ galactic ]
+        os: [ ubuntu-22.04 ]
+        ros_distribution: [ humble ]
     steps:
-    - uses: ros-tooling/setup-ros@v0.5
+    - uses: ros-tooling/setup-ros@v0.6
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
-    - uses : ros-tooling/action-ros-ci@v0.2
+    - uses : ros-tooling/action-ros-ci@v0.3
       with:
         package-name: bosch_locator_bridge_utils
         vcs-repo-file-url: ''

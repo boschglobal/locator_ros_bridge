@@ -7,7 +7,7 @@
 [![Build action: Galactic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml)
 [![Build action: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml)
 [![Build action: Rolling](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_rolling.yml)
-[![Build action (utils): Galactic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_galactic.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_galactic.yml)
+[![Build action (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml/badge.svg?branch=main)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml)
 
 ---
 **Level Up Your Mobile Robots. Rexroth ROKIT Locator – Your Easy-to-Use Laser Localization Software**
