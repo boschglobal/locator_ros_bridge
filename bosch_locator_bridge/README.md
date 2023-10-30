@@ -351,7 +351,7 @@ To avoid this, make sure `LaserScan` messages are sent to the bridge before swit
 
 If you have version 1.6 of ROKIT Locator, checkout the corresponding tag:
 
-    git checkout 2.1.9 -b main-v1.5
+    git checkout 2.1.9 -b main-v1.6
 
 And if you have version 1.5:
 

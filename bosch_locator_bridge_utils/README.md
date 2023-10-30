@@ -7,7 +7,7 @@ General information about this repository, including legal information and build
 This package provides utilities to use `bosch_locator_bridge` directly with [Nav2].
 It provides the ROKIT Locator map as a grid map, and calculates the corresponding transformation from the localization poses.
 
-The package has been tested under [ROS 2] Galactic and Ubuntu 20.04.
+The package has been tested under [ROS 2] Humble and Ubuntu 22.04.
 
 ## Quick Start
 
@@ -34,6 +34,5 @@ To see the map and the transformation tree, start RViz with
 
 Now everything is ready in terms of localization to start navigating...
 
-
 [Nav2]: https://navigation.ros.org/
-[ROS 2]: https://docs.ros.org/en/galactic
+[ROS 2]: https://docs.ros.org/en/humble
