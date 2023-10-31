@@ -2,6 +2,18 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.10 (2023-10-31)
+-----------
+* update compatible Locator version to 1.8
+* Document the map expansion workflow
+* Add rviz config files for map expansion
+* Add services and interfaces for map expansion
+* Add expandmap_state in control mode
+* Remove field distanceToLastLC in ClientLocalizationVisualizationDatagram
+* Introduce parameter odometry_velocity_set of odometry message
+* Configurable Locator ports
+* Contributors: Sheung Ying Yuen-Wille, Stefan Laible
+
 2.1.9 (2023-03-23)
 ------------------
 * Try to stop everything before setting config list (`#35 <https://github.com/boschglobal/locator_ros_bridge/issues/35>`_)
