@@ -4,7 +4,7 @@ Changelog for package bosch_locator_bridge
 
 1.0.10 (2023-10-20)
 -----------
-* Update to ROKIT Locator version 1.6
+* Update to ROKIT Locator version 1.8
 * Document the map expansion workflow
 * Add rviz config files for map expansion
 * Add services and interfaces for map expansion
