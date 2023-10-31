@@ -9,7 +9,7 @@ It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT
 It also allows to control the ROKIT Locator via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
-The bridge is compatible with ROKIT Locator version 1.6.
+The bridge is compatible with ROKIT Locator version 1.8.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
 ## Quick Start
