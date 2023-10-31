@@ -8,7 +8,7 @@ This package provides a [ROS 2] interface to the [Rexroth ROKIT Locator].
 It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
 It also allows to control the ROKIT Locator via ROS 2 service calls.
 
-The package has been tested under [ROS 2] Rolling and Ubuntu 20.04.
+The package has been tested under [ROS 2] Humble and Ubuntu 22.04.
 The bridge is compatible with ROKIT Locator version 1.8.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
@@ -370,7 +370,7 @@ And if you have version 1.2:
     git checkout 2.1.2 -b main-v1.2
 
 
-[ROS 2]: https://docs.ros.org/en/rolling
+[ROS 2]: https://docs.ros.org/en/humble
 [Rexroth ROKIT Locator]: https://www.boschrexroth.com/en/xc/products/product-groups/components-for-mobile-robotics/index
 [Poco]: https://pocoproject.org/
 [sensor_msgs/msg/LaserScan]: https://github.com/ros2/common_interfaces/blob/master/sensor_msgs/msg/LaserScan.msg
