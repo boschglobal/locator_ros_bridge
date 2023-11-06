@@ -2,7 +2,6 @@
 [![Build status](http://build.ros.org/job/Ndev__locator_ros_bridge__ubuntu_focal_amd64/badge/icon?subject=Build%20farm%3A%20Noetic)](http://build.ros.org/job/Ndev__locator_ros_bridge__ubuntu_focal_amd64/)
 [![Build status](http://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/badge/icon?subject=Build%20farm%3A%20Humble)](http://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/)
 [![Build action: Noetic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml/badge.svg?branch=noetic)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml)
-[![Build action: Galactic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml)
 [![Build action: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml)
 
 ---
@@ -18,7 +17,7 @@ It also allows to control the ROKIT Locator via ROS service calls.
 
 There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (this branch, will likely also work on Melodic)
-* ROS 2: Humble (branch [humble](../../tree/humble), will likely also work on Galactic)
+* ROS 2: Humble (branch [humble](../../tree/humble))
 
 The following video (click on image) gives more information about the ROKIT Locator.
 [![Rexroth ROKIT Locator](https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg)](https://www.youtube.com/watch?v=g6SIUlXn9Bk)
