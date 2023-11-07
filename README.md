@@ -2,8 +2,6 @@
 [![Build status](http://build.ros.org/job/Ndev__locator_ros_bridge__ubuntu_focal_amd64/badge/icon?subject=Build%20farm%3A%20Noetic)](http://build.ros.org/job/Ndev__locator_ros_bridge__ubuntu_focal_amd64/)
 [![Build status](http://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/badge/icon?subject=Build%20farm%3A%20Humble)](https://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/)
 [![Build action: Noetic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml/badge.svg?branch=noetic)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_noetic.yml)
-[![Build action: Foxy](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_foxy.yml/badge.svg?branch=foxy)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_foxy.yml)
-[![Build action: Galactic](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_galactic.yml)
 [![Build action: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml)
 [![Build action (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml)
 
@@ -20,7 +18,7 @@ It also allows to control the ROKIT Locator via ROS service calls.
 
 There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
-* ROS 2: Humble (this branch, will likely also work on Galactic)
+* ROS 2: Humble (this branch)
 
 The repository also contains the [bosch_locator_bridge_utils](bosch_locator_bridge_utils) package, which provides an interface between the bosch_locator_bridge and [Nav2], the navigation stack of ROS 2.
 
