@@ -2,9 +2,9 @@ name: "Build action (utils): Humble"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ humble ]
   pull_request:
-    branches: [ main ]
+    branches: [ humble ]
   schedule:
     # Run once per day to detect broken dependencies.
     - cron: '33 6 * * *'
