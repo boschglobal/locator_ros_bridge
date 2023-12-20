@@ -19,7 +19,7 @@ jobs:
         os: [ ubuntu-22.04 ]
         ros_distribution: [ humble ]
     steps:
-    - uses: ros-tooling/setup-ros@v0.6
+    - uses: ros-tooling/setup-ros@v0.7
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
     - uses : ros-tooling/action-ros-ci@v0.3
