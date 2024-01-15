@@ -485,7 +485,7 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertLaserScan2DataGram(
   // angleInc
   writer << static_cast<float>(msg.angle_increment);
   // minRange
-  writer << static_cast<float>(msg.range_min);
+  writer << static_cast<float>(std::max(0.0f, msg->range_min));
   // maxRange
   writer << static_cast<float>(msg.range_max);
   // ranges.length
