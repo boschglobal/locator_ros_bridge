@@ -19,7 +19,7 @@ jobs:
         os: [ ubuntu-20.04 ]
         ros_distribution: [ noetic ]
     steps:
-    - uses: ros-tooling/setup-ros@v0.3
+    - uses: ros-tooling/setup-ros@v0.7
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
     - uses : ros-tooling/action-ros-ci@v0.2
@@ -32,5 +32,5 @@ jobs:
             "build": {
               "mixin": ["coverage-gcc"]
             }
-          }        
+          }
         colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
