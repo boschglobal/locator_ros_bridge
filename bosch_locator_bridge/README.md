@@ -198,7 +198,7 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
     Latest estimated pose of the laser sensor during the recording process.
 
-* **`/bridge_node/client_recording_visualization/scan`** ([sensor_msgs/msg/LaserScan])
+* **`/bridge_node/client_recording_visualization/scan`** ([sensor_msgs/msg/PointCloud2])
 
     Latest processed laser scan during the recording process.
 
@@ -228,7 +228,7 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
     Localization information.
 
-* **`/bridge_node/client_localization_pose/pose`** ([geometry_msgs/msg/PoseStamped])
+* **`/bridge_node/client_localization_pose/pose`** ([geometry_msgs/msg/PoseWithCovarianceStamped])
 
     6 DoF pose of the laser sensor during localization process.
 
@@ -238,11 +238,11 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
 ##### Map Expansion
 
-* **`/bridge_node/client_expandmap_priormap`** ([sensor_msgs/PointCloud2])
+* **`/bridge_node/client_expandmap_priormap`** ([sensor_msgs/msg/PointCloud2])
 
     Prior map as point cloud.
 
-* **`/bridge_node/client_expandmap_visualization`** ([bosch_locator_bridge/ClientExpandMapVisualization](./msg/ClientExpandMapVisualization.msg))
+* **`/bridge_node/client_expandmap_visualization`** ([bosch_locator_bridge/msg/ClientExpandMapVisualization](./msg/ClientExpandMapVisualization.msg))
 
     Map expansion information, e.g. zones.
 
@@ -288,7 +288,7 @@ To correctly forward the laser scan data, it is important that `ClientSensor.las
 
     Enable the map expansion
 
-* **`/bridge_node/disable_map_expansion`** ([std_srvs/Empty])
+* **`/bridge_node/disable_map_expansion`** ([std_srvs/srv/Empty])
 
     Disable the map expansion
 
