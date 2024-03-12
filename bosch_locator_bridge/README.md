@@ -355,6 +355,8 @@ But if you want to build [`bosch_locator_bridge`](bosch_locator_bridge) only, yo
 touch locator_ros_bridge/bosch_locator_bridge_utils/COLCON_IGNORE
 ```
 
+But if you need the `bosch_locator_bridge_utils` package, see [issue #50](https://github.com/boschglobal/locator_ros_bridge/issues/50).
+
 If you have version 1.6, checkout the corresponding tag:
 
     git checkout 2.1.9 -b galactic-v1.6
