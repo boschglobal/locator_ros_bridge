@@ -349,25 +349,33 @@ To avoid this, make sure `LaserScan` messages are sent to the bridge before swit
 
 ## Support of earlier versions of ROKIT Locator
 
-If you have version 1.6 of ROKIT Locator, checkout the corresponding tag:
+Note that version 1.6 and earlier of ROKIT Locator were developed for ROS Galactic, and [`bosch_locator_bridge_utils`](bosch_locator_bridge_utils) does not built with ROS Humble.
+But if you want to build [`bosch_locator_bridge`](bosch_locator_bridge) only, you can ignore `bosch_locator_bridge_utils` by putting a file named `COLCON_IGNORE` in the package folder:
+```
+touch locator_ros_bridge/bosch_locator_bridge_utils/COLCON_IGNORE
+```
 
-    git checkout 2.1.9 -b main-v1.6
+But if you need the `bosch_locator_bridge_utils` package, see [issue #50](https://github.com/boschglobal/locator_ros_bridge/issues/50).
+
+If you have version 1.6, checkout the corresponding tag:
+
+    git checkout 2.1.9 -b galactic-v1.6
 
 And if you have version 1.5:
 
-    git checkout 2.1.8 -b main-v1.5
+    git checkout 2.1.8 -b galactic-v1.5
 
 And if you have version 1.4:
 
-    git checkout 2.1.6 -b main-v1.4
+    git checkout 2.1.6 -b galactic-v1.4
 
 And if you have version 1.3:
 
-    git checkout 2.1.4 -b main-v1.3
+    git checkout 2.1.4 -b galactic-v1.3
 
 And if you have version 1.2:
 
-    git checkout 2.1.2 -b main-v1.2
+    git checkout 2.1.2 -b galactic-v1.2
 
 
 [ROS 2]: https://docs.ros.org/en/humble
