@@ -31,25 +31,26 @@
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
   {"Session", {3, 1}},
-//  {"Diagnostic", {5, 0}},
-  {"Licensing", {7, 0}},
-  {"Config", {7, 0}},
+  {"System", {3, 2}},
+//  {"Diagnostic", {5, 1}},
+  {"Licensing", {7, 1}},
+  {"Config", {8, 0}},
   {"AboutBuild", {3, 1}},
   {"Certificate", {3, 0}},
-  {"System", {3, 2}},
+//  {"User", {1, 0}},
 //  {"ClientApplication", {1, 1}},
   {"ClientControl", {3, 2}},
   {"ClientRecording", {4, 0}},
   {"ClientMap", {4, 0}},
-  {"ClientLocalization", {7, 1}},
+  {"ClientLocalization", {7, 2}},
 //  {"ClientManualAlign", {5, 0}},
   {"ClientGlobalAlign", {4, 0}},
 //  {"ClientLaserMask", {6, 0}},
-  {"ClientSensor", {6, 0}},
+  {"ClientSensor", {7, 0}},
 //  {"ClientUser", {4, 0}},
-//  {"User", {1, 0}},
-  {"ClientExpandMap", {3, 0}},
+  {"ClientExpandMap", {4, 0}},
 });
+
 
 LocatorBridgeNode::LocatorBridgeNode()
 : nh_("~")
