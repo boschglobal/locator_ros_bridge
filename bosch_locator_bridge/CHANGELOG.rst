@@ -3,7 +3,7 @@ Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 2.1.11 (2024-06-04)
------------
+---------------------------
 * made server compatible with Locator version 1.9 (`#61 <https://github.com/boschglobal/locator_ros_bridge/issues/61>`_)
 * compatible with 1.9 (`#58 <https://github.com/boschglobal/locator_ros_bridge/issues/58>`_)
 * Note in the Readme for earlier versions (`#57 <https://github.com/boschglobal/locator_ros_bridge/issues/57>`_)
@@ -18,7 +18,7 @@ Changelog for package bosch_locator_bridge
 * Contributors: Sheung Ying Yuen-Wille, Stefan Laible, TAN Hongkui, Fleer David
 
 2.1.10 (2023-10-31)
------------
+---------------------------
 * update compatible Locator version to 1.8
 * Document the map expansion workflow
 * Add rviz config files for map expansion
