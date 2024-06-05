@@ -2,6 +2,9 @@
 Changelog for package bosch_locator_bridge_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.11 (2024-06-04)
+-----------
+
 2.1.10 (2023-10-31)
 -----------
 * update to humble

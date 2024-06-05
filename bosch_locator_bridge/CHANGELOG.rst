@@ -2,6 +2,21 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.1.11 (2024-06-04)
+-----------
+* made server compatible with Locator version 1.9 (`#61 <https://github.com/boschglobal/locator_ros_bridge/issues/61>`_)
+* compatible with 1.9 (`#58 <https://github.com/boschglobal/locator_ros_bridge/issues/58>`_)
+* Note in the Readme for earlier versions (`#57 <https://github.com/boschglobal/locator_ros_bridge/issues/57>`_)
+* correct some messages types of bridge_node in README (`#55 <https://github.com/boschglobal/locator_ros_bridge/issues/55>`_)
+  Message type error of service /bridge_node/disable_map_expansion is found by slaible (Stefan Laible).
+* Make minRange non-negative (`#53 <https://github.com/boschglobal/locator_ros_bridge/issues/53>`_)
+  In order to tolerate SICK picoScan150, which could produce LaserScan messages with little negative minRange, and avoid minRange validation failure errors raised by Locator.
+  set lower limit range_min to 0
+* Update server_bridge_node.cpp
+  made compatible with Locator version 1.8
+* update to humble (`#48 <https://github.com/boschglobal/locator_ros_bridge/issues/48>`_)
+* Contributors: Sheung Ying Yuen-Wille, Stefan Laible, TAN Hongkui, Fleer David
+
 2.1.10 (2023-10-31)
 -----------
 * update compatible Locator version to 1.8
