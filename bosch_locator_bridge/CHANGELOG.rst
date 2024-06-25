@@ -3,7 +3,7 @@ Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.0.11 (2024-06-04)
------------
+-----------------------
 * made server compatible with Locator version 1.9 (`#60 <https://github.com/boschglobal/locator_ros_bridge/issues/60>`_)
 * compatible with 1.9 and ubuntu22 (`#59 <https://github.com/boschglobal/locator_ros_bridge/issues/59>`_)
 * Fix msg operator
@@ -11,17 +11,12 @@ Changelog for package bosch_locator_bridge
 * Update server_bridge_node.cpp (`#52 <https://github.com/boschglobal/locator_ros_bridge/issues/52>`_)
   made compatible with Locator version 1.8
   Co-authored-by: TAN Hongkui <tanhongkui@qq.com>
-* Merge pull request `#47 <https://github.com/boschglobal/locator_ros_bridge/issues/47>`_ from boschglobal/update-doc-humble
-  Update doc humble
-* correct version in changelog
-* Contributors: Fabian König, Sheung Ying Yuen-Wille, Stefan Laible
-
 * Update doc humble (`#47 <https://github.com/boschglobal/locator_ros_bridge/issues/47>`_)
 * correct version in changelog
 * Contributors: Fabian König, Sheung Ying Yuen-Wille, Stefan Laible
 
 1.0.10 (2023-10-20)
------------
+--------------------------
 * Update to ROKIT Locator version 1.8
 * Document the map expansion workflow
 * Add rviz config files for map expansion
