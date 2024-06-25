@@ -9,7 +9,7 @@ It translates ROS 2 messages to the ROKIT Locator API (as described in the ROKIT
 It also allows to control the ROKIT Locator via ROS 2 service calls.
 
 The package has been tested under [ROS 2] Humble and Ubuntu 22.04.
-The bridge is compatible with ROKIT Locator version 1.8.
+The bridge is compatible with ROKIT Locator version 1.9.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
 ## Quick Start
@@ -356,6 +356,10 @@ touch locator_ros_bridge/bosch_locator_bridge_utils/COLCON_IGNORE
 ```
 
 But if you need the `bosch_locator_bridge_utils` package, see [issue #50](https://github.com/boschglobal/locator_ros_bridge/issues/50).
+
+If you have version 1.8, checkout the corresponding tag:
+
+    git checkout 2.1.10 -b humble-v1.8
 
 If you have version 1.6, checkout the corresponding tag:
 
