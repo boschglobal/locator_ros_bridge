@@ -354,7 +354,7 @@ To avoid this, make sure `LaserScan` messages are sent to the bridge before swit
 
 If you have version 1.9 of ROKIT Locator, checkout the corresponding tag:
 
-    git checkout 1.0.11 -b noetic-v1.9
+    git checkout 1.0.12 -b noetic-v1.9
 
 And if you have version 1.8:
 
