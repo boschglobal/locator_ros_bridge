@@ -30,27 +30,28 @@
 /// locator module versions to check against. Format is name, { major_version, minor_version }
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>> REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
-  {"Session", {3, 1}},
-  {"System", {3, 2}},
-//  {"Diagnostic", {5, 1}},
-  {"Licensing", {7, 1}},
+  {"Session", {4, 0}},
+  // {"System", {3, 2}},
+  // {"Diagnostic", {7, 0}},
+  // {"Licensing", {7, 2}},
   {"Config", {8, 0}},
   {"AboutBuild", {3, 1}},
-  {"Certificate", {3, 0}},
-//  {"User", {1, 0}},
-//  {"ClientApplication", {1, 1}},
+  // {"Certificate", {3, 0}},
+  // {"User", {1, 0}},
+  // {"Internal", {1, 1}},
+  // {"DataExchange", {1, 0}},
+  // {"ClientApplication", {1, 2}},
   {"ClientControl", {3, 2}},
-  {"ClientRecording", {4, 0}},
-  {"ClientMap", {4, 0}},
+  {"ClientRecording", {5, 0}},
+  {"ClientMap", {4, 1}},
   {"ClientLocalization", {7, 2}},
 //  {"ClientManualAlign", {5, 0}},
   {"ClientGlobalAlign", {4, 0}},
-//  {"ClientLaserMask", {6, 0}},
-  {"ClientSensor", {7, 0}},
+//  {"ClientLaserMask", {6, 1}},
+  {"ClientSensor", {7, 1}},
 //  {"ClientUser", {4, 0}},
   {"ClientExpandMap", {4, 0}},
 });
-
 
 LocatorBridgeNode::LocatorBridgeNode()
 : nh_("~")

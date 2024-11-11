@@ -31,19 +31,20 @@
 static const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
 REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
-  {"Session", {3, 1}},
-  {"System", {3, 2}},
-  {"Diagnostic", {5, 1}},
-  {"Licensing", {7, 1}},
+  {"Session", {4, 0}},
+//  {"System", {3, 2}},
+//  {"Diagnostic", {7, 0}},
+//  {"Licensing", {7, 2}},
   {"Config", {8, 0}},
   {"AboutBuild", {3, 1}},
-  {"Certificate", {3, 0}},
-  {"User", {1, 0}},
-  {"Internal", {1, 0}},
-  {"ServerInternal", {3, 0}},
-  {"ServerMap", {7, 0}},
-  {"ServerPostAlign", {1, 0}},
-  {"ServerUser", {4, 0}},
+//  {"Certificate", {3, 0}},
+//  {"User", {1, 0}},
+//  {"Internal", {1, 1}},
+//  {"DataExchange", {1, 0}},
+//  {"ServerInternal", {3, 1}},
+  {"ServerMap", {8, 0}},
+//  {"ServerPostAlign", {1, 0}},
+//  {"ServerUser", {4, 0}},
 });
 
 ServerBridgeNode::ServerBridgeNode()
