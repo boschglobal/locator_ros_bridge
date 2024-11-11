@@ -359,7 +359,7 @@ But if you need the `bosch_locator_bridge_utils` package, see [issue #50](https:
 
 If you have version 1.9, checkout the corresponding tag:
 
-    git checkout 2.1.11 -b humble-v1.9
+    git checkout 2.1.12 -b humble-v1.9
 
 If you have version 1.8, checkout the corresponding tag:
 
