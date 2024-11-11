@@ -2,6 +2,9 @@
 Changelog for package bosch_locator_bridge_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.1.11 (2024-06-04)
 ----------------------
 
