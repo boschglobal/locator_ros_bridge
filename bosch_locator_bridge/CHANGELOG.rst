@@ -2,6 +2,13 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update README.md to include Locator 1.9 `#64 <https://github.com/boschglobal/locator_ros_bridge/issues/64>`_ from thkfighter/patch-2
+* Update CHANGELOG.rst `#62 <https://github.com/boschglobal/locator_ros_bridge/issues/62>`_ from boschglobal/syyuen-changelog
+  fix format in changelog
+* Contributors: Sheung Ying Yuen-Wille, TAN Hongkui
+
 1.0.11 (2024-06-04)
 -----------------------
 * made server compatible with Locator version 1.9 (`#60 <https://github.com/boschglobal/locator_ros_bridge/issues/60>`_)
