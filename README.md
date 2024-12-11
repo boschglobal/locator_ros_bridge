@@ -18,7 +18,7 @@ It also allows to control the ROKIT Locator via ROS service calls.
 
 There are versions for the following ROS 1 and ROS 2 distributions:
 * ROS 1: Noetic (branch [noetic](../../tree/noetic), will likely also work on Melodic)
-* ROS 2: Humble (this branch)
+* ROS 2: Humble (this branch, will likely also work on Galactic)
 
 The repository also contains the [bosch_locator_bridge_utils](bosch_locator_bridge_utils) package, which provides an interface between the bosch_locator_bridge and [Nav2], the navigation stack of ROS 2.
 

@@ -32,6 +32,10 @@ find_package(tf2_ros REQUIRED)
 find_package(PCL REQUIRED)
 include_directories(include ${PCL_INCLUDE_DIRS})
 
+if("$ENV{ROS_DISTRO}" STREQUAL "galactic")
+  add_compile_definitions(ROS_GALACTIC)
+endif()
+
 add_executable(locator_map_server src/map_server_main.cpp src/map_server.cpp)
 target_include_directories(locator_map_server PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
