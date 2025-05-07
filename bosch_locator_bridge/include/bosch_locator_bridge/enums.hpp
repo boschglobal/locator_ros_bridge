@@ -27,24 +27,23 @@ enum ModuleIdentifier : uint16_t
   COMMON = 0x000,
   ABOUT_MODULES = 0x0001,
   SESSION = 0x0002,
-  // error in documentation, 0x0002 is used twice
-  // DIAGNOSTIC = 0x0002,
   LICENSINGFEATURE = 0x0003,
   CONFIG = 0x0004,
   ABOUT_BUILD = 0x0005,
   CERTIFICATES = 0x0006,
   SYSTEM = 0x0007,
+  DIAGNOSTIC = 0x0008,
   CLIENT_RECORDING = 0x0100,
   CLIENT_MAP = 0x0101,
   CLIENT_LOCALIZATION = 0x0102,
   CLIENT_MANUAL_ALIGN = 0x0103,
   CLIENT_GLOBAL_ALIGN = 0x0104,
   CLIENT_LASER_MASK = 0x0105,
-  CLIENT_USER = 0x0106,
   SERVER_MAP = 0x0200,
-  SERVER_USER = 0x0201,
+  SERVER_POSE_ALIGN = 0x0202,
   SUPPORT_REPORT = 0x0300,
   SUPPORT_RECOVERY = 0x0301,
+  SUPPORT_FLEETINFO = 0x0302,
 };
 
 inline std::string stringifyModuleId(ModuleIdentifier id)
@@ -56,18 +55,18 @@ inline std::string stringifyModuleId(ModuleIdentifier id)
       return "ABOUT_MODULES";
     case SESSION:
       return "SESSION";
-    // case DIAGNOSTIC:
-    //  return "DIAGNOSTIC";
-    case LICENSINGFEATURE:
+      case LICENSINGFEATURE:
       return "LICENSINGFEATURE";
-    case CONFIG:
+      case CONFIG:
       return "CONFIG";
-    case ABOUT_BUILD:
+      case ABOUT_BUILD:
       return "ABOUT_BUILD";
-    case CERTIFICATES:
+      case CERTIFICATES:
       return "CERTIFICATES";
-    case SYSTEM:
+      case SYSTEM:
       return "SYSTEM";
+      case DIAGNOSTIC:
+       return "DIAGNOSTIC";
     case CLIENT_RECORDING:
       return "CLIENT_RECORDING";
     case CLIENT_MAP:
@@ -80,16 +79,16 @@ inline std::string stringifyModuleId(ModuleIdentifier id)
       return "CLIENT_GLOBAL_ALIGN";
     case CLIENT_LASER_MASK:
       return "CLIENT_LASER_MASK";
-    case CLIENT_USER:
-      return "CLIENT_USER";
     case SERVER_MAP:
       return "SERVER_MAP";
-    case SERVER_USER:
-      return "SERVER_USER";
+    case SERVER_POSE_ALIGN:
+      return "SERVER_POSE_ALIGN";
     case SUPPORT_REPORT:
       return "SUPPORT_REPORT";
     case SUPPORT_RECOVERY:
       return "SUPPORT_RECOVERY";
+    case SUPPORT_FLEETINFO:
+      return "SUPPORT_FLEETINFO";
     default:
       return "<unknown module>";
   }
