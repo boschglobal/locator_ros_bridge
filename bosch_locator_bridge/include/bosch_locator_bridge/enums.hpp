@@ -55,18 +55,18 @@ inline std::string stringifyModuleId(ModuleIdentifier id)
       return "ABOUT_MODULES";
     case SESSION:
       return "SESSION";
-      case LICENSINGFEATURE:
+    case LICENSINGFEATURE:
       return "LICENSINGFEATURE";
-      case CONFIG:
+    case CONFIG:
       return "CONFIG";
-      case ABOUT_BUILD:
+    case ABOUT_BUILD:
       return "ABOUT_BUILD";
-      case CERTIFICATES:
+    case CERTIFICATES:
       return "CERTIFICATES";
-      case SYSTEM:
+    case SYSTEM:
       return "SYSTEM";
-      case DIAGNOSTIC:
-       return "DIAGNOSTIC";
+    case DIAGNOSTIC:
+      return "DIAGNOSTIC";
     case CLIENT_RECORDING:
       return "CLIENT_RECORDING";
     case CLIENT_MAP:
