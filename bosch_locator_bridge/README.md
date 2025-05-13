@@ -12,6 +12,8 @@ The package has been tested under [ROS 1] Noetic and Ubuntu 22.04.
 The bridge is compatible with ROKIT Locator version 1.11.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
+Since the last ROS 1 release Noetic will reach End Of Life in May 2025, this will be the last Noetic version of the bosch_locator_bridge. Future bosch_locator_bridge will be released uder ROS 2 (branch [humble](../../../tree/humble)).
+
 ## Quick Start
 
 This section describes how to record your environment, create a map out of the record and localize yourself within it.
