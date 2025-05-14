@@ -2,8 +2,8 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.14 (2025-05-14)
+-------------------
 * announced EOL noetic branch
 * update to 1.11 `#70 <https://github.com/boschglobal/locator_ros_bridge/issues/70>`_ from boschglobal/noetic-v1.11
 * Contributors: Sheung Ying Yuen-Wille
