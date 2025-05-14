@@ -2,10 +2,16 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* announced EOL noetic branch
+* update to 1.11 `#70 <https://github.com/boschglobal/locator_ros_bridge/issues/70>`_ from boschglobal/noetic-v1.11
+* Contributors: Sheung Ying Yuen-Wille
+
 1.0.13 (2024-11-11)
 -------------------
 * update tag compatible with Locator 1.9
-* Update to Locator 1.10 `#67 <https://github.com/boschglobal/locator_ros_bridge/issues/67>`_ from boschglobal/noetic-v1.10""  
+* Update to Locator 1.10 `#67 <https://github.com/boschglobal/locator_ros_bridge/issues/67>`_ from boschglobal/noetic-v1.10
 * Contributors: Sheung Ying Yuen-Wille
 
 1.0.12 (2024-11-11)
