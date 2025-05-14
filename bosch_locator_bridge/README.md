@@ -8,9 +8,11 @@ This package provides a [ROS 1] interface to the [Rexroth ROKIT Locator].
 It translates ROS 1 messages to the ROKIT Locator API (as described in the ROKIT Locator API documentation) and vice versa.
 It also allows to control the ROKIT Locator via ROS 1 service calls.
 
-The package has been tested under [ROS 1] Noetic and Ubuntu 20.04.
-The bridge is compatible with ROKIT Locator version 1.10.
+The package has been tested under [ROS 1] Noetic and Ubuntu 22.04.
+The bridge is compatible with ROKIT Locator version 1.11.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
+
+Since the last ROS 1 release Noetic will reach End Of Life in May 2025, this will be the last Noetic version of the bosch_locator_bridge. Future bosch_locator_bridge will be released uder ROS 2 (branch [humble](../../../tree/humble)).
 
 ## Quick Start
 
@@ -351,6 +353,10 @@ This can happen if you switch the ROKIT Locator into a mode where it requires e.
 To avoid this, make sure `LaserScan` messages are sent to the bridge before switching the ROKIT Locator mode.
 
 ## Support of earlier versions of ROKIT Locator
+
+If you have version 1.10 of ROKIT Locator, checkout the corresponding tag:
+
+    git checkout 1.0.13 -b noetic-v1.10
 
 If you have version 1.9 of ROKIT Locator, checkout the corresponding tag:
 
