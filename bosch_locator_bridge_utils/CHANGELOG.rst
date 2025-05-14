@@ -2,6 +2,12 @@
 Changelog for package bosch_locator_bridge_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add bosch_locator_bridge_utils backward compatibility for galactic (`#68 <https://github.com/boschglobal/locator_ros_bridge/issues/68>`_)
+* Add hint that humble branch might also work for galactic
+* Contributors: Fabian König
+
 2.1.13 (2024-11-11)
 -------------------
 

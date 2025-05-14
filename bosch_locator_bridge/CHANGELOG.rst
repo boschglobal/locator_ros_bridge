@@ -2,10 +2,16 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix code formatting
+* Update to ROKIT Locator version 1.11 `#69 <https://github.com/boschglobal/locator_ros_bridge/issues/69>`_ from boschglobal/humble-v1.11
+* Contributors: Sheung Ying Yuen-Wille, Stefan Laible
+
 2.1.13 (2024-11-11)
 -------------------
 * update tag compatible with Locator 1.9
-* update to Locator 1.10 `#66 <https://github.com/boschglobal/locator_ros_bridge/issues/66>`_ from boschglobal/humble-v1.10""
+* update to Locator 1.10 `#66 <https://github.com/boschglobal/locator_ros_bridge/issues/66>`_ from boschglobal/humble-v1.10
 * Contributors: Sheung Ying Yuen-Wille
 
 2.1.12 (2024-11-11)
