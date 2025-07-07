@@ -12,7 +12,10 @@ The package has been tested under [ROS 1] Noetic and Ubuntu 22.04.
 The bridge is compatible with ROKIT Locator version 1.11.
 If you have an earlier version, see [Support of earlier versions of ROKIT Locator](#support-of-earlier-versions-of-rokit-locator).
 
-Since the last ROS 1 release Noetic will reach End Of Life in May 2025, this will be the last Noetic version of the bosch_locator_bridge. Future bosch_locator_bridge will be released uder ROS 2 (branch [humble](../../../tree/humble)).
+Since the last ROS 1 release Noetic will reach End Of Life in May 2025, this will be the last Noetic version of the bosch_locator_bridge.
+The ROKIT Locator version 1.11 is a special release with MVP feature web-based aXessor, it is recommended to use the ROKIT Locator 1.10
+    with the according bosch_locator_bridge (tag 1.0.13).
+Future bosch_locator_bridge will be released uder ROS 2 (branch [humble](../../../tree/humble)).
 
 ## Quick Start
 
