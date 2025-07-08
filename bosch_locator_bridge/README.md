@@ -15,7 +15,7 @@ If you have an earlier version, see [Support of earlier versions of ROKIT Locato
 Since the last ROS 1 release Noetic will reach End Of Life in May 2025, this will be the last Noetic version of the bosch_locator_bridge.
 The ROKIT Locator version 1.11 is a special release with MVP feature web-based aXessor, it is recommended to use the ROKIT Locator 1.10
     with the according bosch_locator_bridge (tag 1.0.13).
-Future bosch_locator_bridge will be released uder ROS 2 (branch [humble](../../../tree/humble)).
+Future bosch_locator_bridge will be released under ROS 2 (branch [humble](../../../tree/humble)).
 
 ## Quick Start
 
