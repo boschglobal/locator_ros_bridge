@@ -39,17 +39,17 @@ static const std::unordered_map<std::string, std::pair<int32_t, int32_t>>
 REQUIRED_MODULE_VERSIONS({
   {"AboutModules", {5, 0}},
   {"Session", {4, 0}},
-//  {"System", {4, 0}},
+//  {"System", {4, 1}},
 //  {"Diagnostic", {7, 0}},
-//  {"Licensing", {8, 0}},
+//  {"Licensing", {8, 1}},
   {"Config", {8, 0}},
   {"AboutBuild", {3, 1}},
-//  {"Certificate", {3, 0}},
+//  {"Certificate", {4, 0}},
 //  {"User", {1, 0}},
 //  {"Internal", {1, 1}},
 //  {"DataExchange", {1, 0}},
 //  {"ServerInternal", {3, 1}},
-  {"ServerMap", {8, 1}},
+  {"ServerMap", {9, 0}},
 //  {"ServerPostAlign", {1, 1}},
 });
 
