@@ -2,6 +2,11 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update to Locator 2.0 `#74 <https://github.com/boschglobal/locator_ros_bridge/issues/74>`_ from boschglobal/humble-v2.0
+* Contributors: Sheung Ying Yuen-Wille
+
 2.1.14 (2025-05-14)
 -------------------
 * Fix code formatting
