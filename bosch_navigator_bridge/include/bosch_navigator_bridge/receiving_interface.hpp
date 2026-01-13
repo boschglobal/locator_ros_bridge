@@ -50,10 +50,10 @@ public:
    */
   virtual ~ReceivingInterface();
 
-   /**
-   * @brief Callback method invoked when data is available on the socket
-   * @param notification A smart pointer to the ReadableNotification
-   */
+  /**
+  * @brief Callback method invoked when data is available on the socket
+  * @param notification A smart pointer to the ReadableNotification
+  */
   virtual void onReadEvent(const Poco::AutoPtr<Poco::Net::ReadableNotification> & notification);
 
   /**
@@ -83,7 +83,7 @@ private:
 };
 
 /**
- * @brief Specific receiving interface for Client Motion Commands 
+ * @brief Specific receiving interface for Client Motion Commands
  *
  * This class inherits from ReceivingInterface and specializes in receiving
  * motion command data, which is then published as ROS geometry_msgs::msg::Twist messages
@@ -101,12 +101,12 @@ public:
     const Poco::Net::IPAddress & hostadress,
     const Poco::UInt16 binaryClientNavigatorPort,
     rclcpp::Node::SharedPtr node);
-      /**
-   * @brief Parses incoming raw motion command data
-   * @param datagram The buffer containing raw binary motion command data
-   * @param node A shared pointer to the ROS 2 node
-   * @return The amount of bytes successfully parsed
-   */
+  /**
+ * @brief Parses incoming raw motion command data
+ * @param datagram The buffer containing raw binary motion command data
+ * @param node A shared pointer to the ROS 2 node
+ * @return The amount of bytes successfully parsed
+ */
   size_t tryToParseData(
     const std::vector<char> & datagram,
     rclcpp::Node::SharedPtr node) override;

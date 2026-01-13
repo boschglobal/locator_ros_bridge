@@ -35,7 +35,7 @@
 class RosMsgsDatagramConverter
 {
 public:
-  /** @brief convertOdometry2FeedbackDataGram Converts velocity and Odometry from ros and converts 
+  /** @brief convertOdometry2FeedbackDataGram Converts velocity and Odometry from ros and converts
    * it to the datagram structure required for the binary interface of the navigator
    *
    * @param msg The current odomerty [INPUT]
@@ -54,8 +54,6 @@ public:
   static size_t  convertMotionCommand2Twist(
     const std::vector<char> & datagram,
     geometry_msgs::msg::Twist & twist);
-
-
 };
 
 #endif  // BOSCH_NAVIGATOR_BRIDGE__ROSMSGS_DATAGRAM_CONVERTER_HPP_

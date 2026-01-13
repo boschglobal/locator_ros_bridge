@@ -15,18 +15,17 @@
 
 #include "bosch_navigator_bridge/rosmsgs_datagram_converter.hpp"
 
-
-#include <Poco/BinaryWriter.h>
-#include <Poco/MemoryStream.h>
-
 #include <fstream>
 #include <string>
 #include <vector>
 #include <utility>
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
-#include <tf2/utils.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
+#include "Poco/BinaryWriter.h"
+#include "Poco/MemoryStream.h"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2/LinearMath/Matrix3x3.h"
+#include "tf2/utils.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 #include "bosch_navigator_bridge/enums.hpp"
 
@@ -35,43 +34,41 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2FeedbackDataGram(
   const nav_msgs::msg::Odometry::SharedPtr odometry_msg, size_t odom_num_, bool odometrySet,
   rclcpp::Node::SharedPtr node)
 {
-
-
-  constexpr size_t resulting_msg_size = 6 +  //datagram_id
-    1 +                                  //Major_version
-    1 +                                  //Minor_version
-    8 +                                  //timestamp
-    4 +                                  //feedback_number
-    8 +                                  //error_flags
-    8 +                                  //info_flags
-    1 +                                  //field_mask
-    1 +                                  //available_driving_modes
-    2 +                                  //reserved
-    8 +                                  //epoch
-    3 * 8 +                              //odometry
-    12 +                              //velocity
-    4 * 4 +                              //wheel_speeds
-    4 * 4 +                              //steering_orientations
-    1 +                                  //state_of_charge
-    1 +                                  //active_monitoring_case
-    2 +                                  //active_protection_fields_id
-    4 +                                  //allowed_max_linear_speed
-    4 +                                  //allowed_max_angular_speed
-    4 +                                  //allowed_max_linear_acceleration
-    4 +                                  //allowed_max_linear_deceleration
-    1 +                                  //custom_action1_number
-    1 +                                  //custom_action2_number
-    1 +                                  //custom_action1_status
-    1 +                                  //custom_action2_status
-    4 +                                  //custom_action1_result
-    4;                                   //custom_action2_result
+  constexpr size_t resulting_msg_size = 6 +  // datagram_id
+    1 +                                  // Major_version
+    1 +                                  // Minor_version
+    8 +                                  // timestamp
+    4 +                                  // feedback_number
+    8 +                                  // error_flags
+    8 +                                  // info_flags
+    1 +                                  // field_mask
+    1 +                                  // available_driving_modes
+    2 +                                  // reserved
+    8 +                                  // epoch
+    3 * 8 +                              // odometry
+    12 +                              // velocity
+    4 * 4 +                              // wheel_speeds
+    4 * 4 +                              // steering_orientations
+    1 +                                  // state_of_charge
+    1 +                                  // active_monitoring_case
+    2 +                                  // active_protection_fields_id
+    4 +                                  // allowed_max_linear_speed
+    4 +                                  // allowed_max_angular_speed
+    4 +                                  // allowed_max_linear_acceleration
+    4 +                                  // allowed_max_linear_deceleration
+    1 +                                  // custom_action1_number
+    1 +                                  // custom_action2_number
+    1 +                                  // custom_action1_status
+    1 +                                  // custom_action2_status
+    4 +                                  // custom_action1_result
+    4;                                   // custom_action2_result
 
 
   Poco::Buffer<char> buffer(resulting_msg_size);
   Poco::MemoryBinaryWriter writer(buffer,
     Poco::BinaryWriter::StreamByteOrder::LITTLE_ENDIAN_BYTE_ORDER);
 
-  //datagram_id
+  // datagram_id
 
   writer << static_cast<uint8_t>('R');
   writer << static_cast<uint8_t>('N');
@@ -81,108 +78,109 @@ Poco::Buffer<char> RosMsgsDatagramConverter::convertOdometry2FeedbackDataGram(
   writer << static_cast<uint8_t>('B');
 
 
-  //Major_version
+  // Major_version
   writer << static_cast<uint8_t>(1);
 
-  //Minor_version
+  // Minor_version
   writer << static_cast<uint8_t>(0);
 
 
-  //timestamp
+  // timestamp
   rclcpp::Time time_stamp = odometry_msg->header.stamp;
   writer << time_stamp.seconds();
 
-  //feedback_number
+  // feedback_number
   writer << static_cast<uint32_t>(odom_num_);
 
-  //errorFlags
+  // errorFlags
   writer << static_cast<uint64_t>(0x00);
 
-  //infoFlags
+  // infoFlags
   writer <<
     static_cast<uint64_t>(FeedbackInfoFlags::READY_TO_DRIVE | FeedbackInfoFlags::AUTOMATIC_MODE);
 
-  //fieldMask
+  // fieldMask
   if (odometrySet) {
     writer <<
       static_cast<uint8_t>(FeedbackFieldMask::ODOMETRY_VALID | FeedbackFieldMask::VELOCITY_VALID);
-  } else
-  {writer << static_cast<uint8_t>(FeedbackFieldMask::VELOCITY_VALID);}
+  } else {
+    writer << static_cast<uint8_t>(FeedbackFieldMask::VELOCITY_VALID);
+  }
 
-  //availableDrivingModes
+  // availableDrivingModes
   writer << static_cast<uint8_t>(FeedbackAvailableDrivingModes::BACKWARD_DRIVING |
   FeedbackAvailableDrivingModes::FORWARD_DRIVING | FeedbackAvailableDrivingModes::TURN_ON_SPOT |
   FeedbackAvailableDrivingModes::OMNIDIRECTIONAL_DRIVING);
 
-  //reserved
+  // reserved
   writer << static_cast<uint16_t>(0);
 
-  //epoch
+  // epoch
   writer << static_cast<uint64_t>(0);
 
-  //odometry
+  // odometry
   writer << static_cast<double>(odometry_msg->pose.pose.position.x);
   writer << static_cast<double>(odometry_msg->pose.pose.position.y);
 
- // angle from the quaternion
+  // angle from the quaternion
   double yaw = tf2::getYaw(odometry_msg->pose.pose.orientation);
 
   writer << static_cast<double>(yaw);
-  
-  //velocity
+
+  // velocity
   writer << static_cast<float>(odometry_msg->twist.twist.linear.x);
   writer << static_cast<float>(odometry_msg->twist.twist.linear.y);
   writer << static_cast<float>(odometry_msg->twist.twist.angular.z);
 
-  //wheelSpeeds
+  // wheelSpeeds
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
 
-  //steeringOrientations
+  // steeringOrientations
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
   writer << static_cast<float>(0.0);
 
-  //stateOfCharge
+  // stateOfCharge
   writer << static_cast<uint8_t>(100);
 
-  //activeMonitoringCase
+  // activeMonitoringCase
   writer << static_cast<uint8_t>(0);
 
-  //activeProtectionFieldIds
+  // activeProtectionFieldIds
   writer << static_cast<uint8_t>(0);
   writer << static_cast<uint8_t>(0);
 
-  //allowedMaxLinearSpeed
+  // allowedMaxLinearSpeed
   writer << static_cast<float>(std::numeric_limits<float>::max());
 
-  //allowedMaxAngularSpeed
+  // allowedMaxAngularSpeed
   writer << static_cast<float>(std::numeric_limits<float>::max());
 
-  //allowedMaxLinearAcceleration
+  // allowedMaxLinearAcceleration
   writer << static_cast<float>(std::numeric_limits<float>::max());
 
-  //allowedMaxLinearDeceleration
+  // allowedMaxLinearDeceleration
   writer << static_cast<float>(std::numeric_limits<float>::max());
 
-  //customAction1Number
+  // customAction1Number
   writer << static_cast<uint8_t>(0);
 
-  //customAction2Number
+  // customAction2Number
   writer << static_cast<uint8_t>(0);
 
-  //customAction1Status
+  // customAction1Status
   writer << static_cast<int8_t>(0);
 
-  //customAction2Status
+  // customAction2Status
   writer << static_cast<int8_t>(0);
 
-  //customAction1Result
+  // customAction1Result
   writer << static_cast<float>(0);
-  //customAction2Result
+  // customAction2Result
   writer << static_cast<float>(0);
 
 
@@ -219,31 +217,31 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   uint8_t majorVersion;
   binary_reader >> majorVersion;
 
-  //minorVersion
+  // minorVersion
   uint8_t minorVersion;
   binary_reader >> minorVersion;
 
-  //timestamp
+  // timestamp
   double timestamp;
   binary_reader >> timestamp;
 
-  //commandNumber
+  // commandNumber
   uint32_t commandNumber;
   binary_reader >> commandNumber;
 
-  //referenceTimestamp
+  // referenceTimestamp
   double referenceTimestamp;
   binary_reader >> referenceTimestamp;
 
-  //errorFlags
+  // errorFlags
   uint64_t errorFlags;
   binary_reader >> errorFlags;
 
-  //infoFlags
+  // infoFlags
   uint64_t infoFlags;
   binary_reader >> infoFlags;
 
-  //motionCommand
+  // motionCommand
   std::array<float, 3> motionCommand;
 
   binary_reader >> motionCommand[0];
@@ -258,7 +256,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   twist.angular.y = 0.0;
   twist.angular.z = motionCommand[2];
 
-  //vehiclePose
+  // vehiclePose
   std::array<double, 3> vehiclePose;
 
 
@@ -267,7 +265,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> vehiclePose[2];
 
 
-  //poweredWheelSpeeds
+  // poweredWheelSpeeds
   std::array<float, 4> poweredWheelSpeeds;
 
   binary_reader >> poweredWheelSpeeds[0];
@@ -275,7 +273,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> poweredWheelSpeeds[2];
   binary_reader >> poweredWheelSpeeds[3];
 
-  //steeringActorOrientations
+  // steeringActorOrientations
   std::array<float, 4> steeringActorOrientations;
 
 
@@ -284,23 +282,23 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> steeringActorOrientations[2];
   binary_reader >> steeringActorOrientations[3];
 
-  //requestMonitoringCase
+  // requestMonitoringCase
   uint8_t requestMonitoringCase;
   binary_reader >> requestMonitoringCase;
 
-  //requestDrivingMode
+  // requestDrivingMode
   uint8_t requestDrivingMode;
   binary_reader >> requestDrivingMode;
 
-  //requestCostomAction1Number
+  // requestCostomAction1Number
   uint8_t requestCostomAction1Number;
   binary_reader >> requestCostomAction1Number;
 
-  //requestCostomAction2Number
+  // requestCostomAction2Number
   uint8_t requestCostomAction2Number;
   binary_reader >> requestCostomAction2Number;
 
-  //customAction1Id
+  // customAction1Id
   std::array<uint8_t, 4> customAction1Id;
 
 
@@ -309,7 +307,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> customAction1Id[2];
   binary_reader >> customAction1Id[3];
 
-  //customAction2Id
+  // customAction2Id
   std::array<uint8_t, 4> customAction2Id;
 
   binary_reader >> customAction2Id[0];
@@ -317,7 +315,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> customAction2Id[2];
   binary_reader >> customAction2Id[3];
 
-  //customAction1Data
+  // customAction1Data
   std::array<float, 8> customAction1Data;
 
 
@@ -330,7 +328,7 @@ size_t RosMsgsDatagramConverter::convertMotionCommand2Twist(
   binary_reader >> customAction1Data[6];
   binary_reader >> customAction1Data[7];
 
-  //customAction2Data
+  // customAction2Data
   float customAction2Data;
 
 

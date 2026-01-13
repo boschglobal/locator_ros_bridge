@@ -1,8 +1,19 @@
-#include "bosch_navigator_bridge/receiving_interface.hpp"
+// Copyright (c) 2026 - for information on the respective copyright owner
+// see the NOTICE file and/or the repository https://github.com/boschglobal/locator_ros_bridge.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "bosch_navigator_bridge/navigator_bridge_node.hpp"
-#include "bosch_navigator_bridge/sending_interface.hpp"
-#include "bosch_navigator_bridge/rosmsgs_datagram_converter.hpp"
-#include "bosch_navigator_bridge/navigator_interface.hpp"
 
 #include <map>
 #include <memory>
@@ -10,6 +21,10 @@
 #include <unordered_map>
 #include <utility>
 
+#include "bosch_navigator_bridge/receiving_interface.hpp"
+#include "bosch_navigator_bridge/sending_interface.hpp"
+#include "bosch_navigator_bridge/rosmsgs_datagram_converter.hpp"
+#include "bosch_navigator_bridge/navigator_interface.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -35,10 +50,8 @@ NavigatorBridgeNode::NavigatorBridgeNode(const std::string & nodeName)
 
 NavigatorBridgeNode::~NavigatorBridgeNode()
 {
-
   odom_sending_interface_->stop();
   odom_sending_interface_thread_.join();
-
 }
 
 void NavigatorBridgeNode::init()
@@ -76,27 +89,22 @@ void NavigatorBridgeNode::init()
   syncConfig();
 
   // Create interface to send binary odometry data if requested
- 
   int feedback_datagram_port;
   get_parameter("feedback_datagram_port", feedback_datagram_port);
 
   odom_sending_interface_.reset(new SendingInterface(feedback_datagram_port, shared_from_this()));
   odom_sending_interface_thread_.start(*odom_sending_interface_);
 
-
   odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-  "odom",
-  rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile(),
-  [this](nav_msgs::msg::Odometry::SharedPtr msg) {this->odom_callback(msg);}
+    "odom",
+    rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile(),
+    [this](nav_msgs::msg::Odometry::SharedPtr msg) {this->odom_callback(msg);}
   );
-
-  
 
   get_parameter("odometry_pose_set", odometry_pose_set_);
   setupBinaryReceiverInterfaces(host, static_cast<Poco::UInt16>(binaryPortsStart));
 
   RCLCPP_INFO_STREAM(get_logger(), "initialization done");
-
 }
 
 
@@ -136,14 +144,11 @@ bool NavigatorBridgeNode::check_module_versions(
 
 void NavigatorBridgeNode::odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
 {
-
-
   Poco::Buffer<char> feedback_datagram = RosMsgsDatagramConverter::convertOdometry2FeedbackDataGram(
     msg,
     ++odom_num_, odometry_pose_set_,
     shared_from_this());
   odom_sending_interface_->sendData(feedback_datagram.begin(), feedback_datagram.size());
-
 }
 
 
@@ -155,9 +160,8 @@ void NavigatorBridgeNode::syncConfig()
   auto nav_client_config = nav_client_interface_->getConfigList();
   if (odometry_pose_set_) {
     nav_client_config["ClientMotion.odometrySource"] = "MOTION_FEEDBACK_ODOMETRY";
-  }else
-  {
-    nav_client_config["ClientMotion.odometrySource"]= "MOTION_FEEDBACK_VELOCITY";
+  } else {
+    nav_client_config["ClientMotion.odometrySource"] = "MOTION_FEEDBACK_VELOCITY";
   }
   // overwrite current navigator config with ros params
 
@@ -213,10 +217,7 @@ void NavigatorBridgeNode::syncConfig()
       get_logger(),
       "One of the modes appears to be in a RUN-state. In order to set the configuration parameters,"
       " all modes are now stopped! ");
-
-
   }
-
 }
 
 
@@ -233,5 +234,4 @@ void NavigatorBridgeNode::setupBinaryReceiverInterfaces(
       binaryClientMotionCommandPort,
       shared_from_this()));
   client_motion_command_interface_thread_.start(*client_motion_command_interface_);
-
 }

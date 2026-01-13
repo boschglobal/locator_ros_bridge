@@ -1,5 +1,20 @@
-#ifndef BOSCH_NAVIGATOR_BRIDGE__NAVIGATOR_RPC_INTERFACE_HPP_
-#define BOSCH_NAVIGATOR_BRIDGE__NAVIGATOR_RPC_INTERFACE_HPP_
+// Copyright (c) 2026 - for information on the respective copyright owner
+// see the NOTICE file and/or the repository https://github.com/boschglobal/locator_ros_bridge.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef BOSCH_NAVIGATOR_BRIDGE__NAVIGATOR_INTERFACE_HPP_
+#define BOSCH_NAVIGATOR_BRIDGE__NAVIGATOR_INTERFACE_HPP_
 
 #include <Poco/JSON/Object.h>
 #include <Poco/Net/HTTPClientSession.h>
@@ -24,11 +39,11 @@ public:
    */
   virtual ~NavigatorInterface();
 
-   /**
-   * @brief Logs into the Navigator API
-   * @param user The username for login
-   * @param password The password for login
-   */
+  /**
+  * @brief Logs into the Navigator API
+  * @param user The username for login
+  * @param password The password for login
+  */
   void login(const std::string & user, const std::string & password);
 
   /**
@@ -71,7 +86,7 @@ public:
    * @return A Poco::JSON::Object with session query details
    */
   Poco::JSON::Object getSessionQuery() const;
-  
+
   /**
    * @brief Calls a generic RPC method on the Navigator
    *
@@ -82,13 +97,13 @@ public:
   Poco::JSON::Object call(const std::string & method, const Poco::JSON::Object & query_obj);
 
 protected:
- /**
-   * @brief Performs a generic JSON-RPC call using an HTTP client session
-   * @param session The HTTPClientSession to use for the call
-   * @param method The name of the RPC method to call
-   * @param query_obj A Poco::JSON::Object containing the parameters for the method call
-   * @return A Poco::JSON::Object containing the response from the RPC call
-   */
+  /**
+    * @brief Performs a generic JSON-RPC call using an HTTP client session
+    * @param session The HTTPClientSession to use for the call
+    * @param method The name of the RPC method to call
+    * @param query_obj A Poco::JSON::Object containing the parameters for the method call
+    * @return A Poco::JSON::Object containing the response from the RPC call
+    */
   Poco::JSON::Object json_rpc_call(
     Poco::Net::HTTPClientSession & session, const std::string & method,
     const Poco::JSON::Object & query_obj);
@@ -98,4 +113,4 @@ protected:
   size_t query_id_;
 };
 
-#endif  // BOSCH_Navigator_BRIDGE__Navigator_RPC_INTERFACE_HPP_
+#endif  // BOSCH_NAVIGATOR_BRIDGE__NAVIGATOR_INTERFACE_HPP_

@@ -100,7 +100,6 @@ size_t ClientMotionCommandInterface::tryToParseData(
   if (bytes_parsed > 0) {
     // publish
     client_motion_command_pub_->publish(twist);
-
   }
   return bytes_parsed;
 }

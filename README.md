@@ -1,7 +1,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](LICENSE)
 [![Build status](http://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/badge/icon?subject=Build%20farm%3A%20Humble)](https://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/)
-[![Build action: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml)
-[![Build action (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml)
+[![Build action Locator: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_humble.yml)
+[![Build action Locator (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_utils_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_utils_humble.yml)
+[![Build action Navigator: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_navigator_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_navigator_humble.yml)
 
 ---
 **Level Up Your Mobile Robots. Rexroth ROKIT – Your Easy-to-Use Laser Localization and Navigation Software**

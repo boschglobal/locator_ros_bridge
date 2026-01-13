@@ -42,18 +42,18 @@ public:
    * @param node A shared pointer to the ROS 2 node, used for logging
    */
   SendingInterface(uint16_t port, rclcpp::Node::SharedPtr node);
-   /**
-   * @brief The main execution loop for the sending interface
-   */
+  /**
+  * @brief The main execution loop for the sending interface
+  */
   void run();
   /**
    * @brief Destroys the SendingInterface object
    */
   virtual ~SendingInterface();
 
-   /**
-   * @brief Enumeration for the status of a data sending operation
-   */
+  /**
+  * @brief Enumeration for the status of a data sending operation
+  */
   enum class SendingStatus {SUCCESS, NO_CONNECTIONS, NOT_COMPLETED, RESET_EXCEPTION, IO_EXCEPTION};
 
   /**
