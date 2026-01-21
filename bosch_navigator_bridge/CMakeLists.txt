@@ -16,10 +16,6 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 
-find_package(rosidl_default_generators REQUIRED)
-
-
-ament_export_dependencies(rosidl_default_runtime)
 
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(PCL REQUIRED)

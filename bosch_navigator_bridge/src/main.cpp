@@ -24,7 +24,7 @@ int main(int argc, char ** argv)
   auto node = std::make_shared<NavigatorBridgeNode>("navigator_ros_bridge");
   node->init();
 
-  rclcpp::executors::SingleThreadedExecutor executor;
+  rclcpp::executors::MultiThreadedExecutor executor(rclcpp::ExecutorOptions(), 2);
   executor.add_node(node);
   executor.spin();
   rclcpp::shutdown();

@@ -1,5 +1,5 @@
-// Copyright (c) 2026 - for information on the respective copyright owner
-// see the NOTICE file and/or the repository https://github.com/boschglobal/locator_ros_bridge.
+// Copyright (c) 2021 - for information on the respective copyright owner
+// see the NOTICE file and/or the repository https://github.com/boschglobal/rokit_ros_bridge.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,6 +69,8 @@ void NavigatorBridgeNode::init()
   get_parameter("user_name", user);
   get_parameter("password", pwd);
 
+  callback_group_services_ = create_callback_group(
+    rclcpp::CallbackGroupType::MutuallyExclusive);
 
   // NOTE for now, we only have a session management with the navigation client
   // Same thing is likely needed for the map server

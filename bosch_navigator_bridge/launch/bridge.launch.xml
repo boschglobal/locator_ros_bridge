@@ -31,7 +31,7 @@
   <arg name="localization_datagram_port" default="9011"/>
   
 <!--Client Localization Map Port-->  
- <arg name="loc_binary_map_port" default="9009"/> 
+ <arg name="map_datagram_port" default="9009"/> 
 
   <node pkg="bosch_navigator_bridge" exec="navigator_bridge_node" name="$(var bridge_node_name)" output="screen">
     <param name="nav_host" value="$(var nav_ip)" />
@@ -54,7 +54,7 @@
   <param name="ClientLocalization.pose.address" value="$(var loc_ip):$(var localization_datagram_port)"/>
 
   <!--Client Localization Map-->
-  <param name="ClientLocalization.map.address" value="$(var loc_ip):$(var loc_binary_map_port)"/>
+  <param name="ClientLocalization.map.address" value="$(var loc_ip):$(var map_datagram_port)"/>
 
 </param>
 </node>

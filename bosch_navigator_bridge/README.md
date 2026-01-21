@@ -12,8 +12,8 @@ The package has been tested under [ROS 2] Humble and Ubuntu 22.04.
 The bridge is compatible with ROKIT Navigator version 2.0.
 
 
-The following video gives more information about the ROKIT Navigator.
-[![Rexroth ROKIT Navigator]](https://www.youtube.com/watch?v=7DCcJIb_GD8)
+The following video gives more information about the ROKIT Navigator:
+[[Rexroth ROKIT Navigator]](https://www.youtube.com/watch?v=7DCcJIb_GD8)
 
 ## Quick Start
 This shows you how to start the bridge.
@@ -30,7 +30,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"jsonrpc"
 
 Start the bridge node with
 
-   ros2 launch bosch_navigator_bridge bridge.launch.xml bridge_ip:=<HOST_IP> nav_ip:=<NAVIGATOR_IP> loc_ip:=<LOCATOR_IP> nav_user:=<USER> nav_password:=<PASSWORD> odometry_pose_set:=<ODOMETRY_POSE_SET> odom_topic:=<ODOM_TOPIC> cmd_vel_topic:=<TWIST_TOPIC> feedback_datagram_port:=<FEEDBACK_PORT>
+    ros2 launch bosch_navigator_bridge bridge.launch.xml bridge_ip:=<HOST_IP> nav_ip:=<NAVIGATOR_IP> loc_ip:=<LOCATOR_IP> nav_user:=<USER> nav_password:=<PASSWORD> odometry_pose_set:=<ODOMETRY_POSE_SET> odom_topic:=<ODOM_TOPIC> cmd_vel_topic:=<TWIST_TOPIC> feedback_datagram_port:=<FEEDBACK_PORT>
 
  where
 - `<HOST_IP>` is the IP address of the computer the bridge is to be started
@@ -56,7 +56,7 @@ This node provides an interface to the navigation client.
 
 #### ROKIT Navigator Configuration
 
-For a correct configuration, it is important that ``ClientMotion.feedback.address` is set to the IP address (with port) of the computer where the Navigator Bridge is running. Additionally, it is important that `ClientLocalization.pose.address` is set to IP address (with port) from which the Navigator container can reach the Locator.  
+For a correct configuration, it is important that `ClientMotion.feedback.address` is set to the IP address (with port) of the computer where the Navigator Bridge is running. Additionally, it is important that `ClientLocalization.pose.address` is set to IP address (with port) from which the Navigator container can reach the Locator.  
 
 
 #### Subscribed Topics
