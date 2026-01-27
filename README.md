@@ -24,7 +24,7 @@ The repository also contains the [bosch_locator_bridge_utils](bosch_locator_brid
 
 The following video (click on image) gives more information about the ROKIT Locator.
 
-<a href="https://www.youtube.com/watch?v=S-a_jI3-8dY">
+<a href="https://www.youtube.com/watch?v=g6SIUlXn9Bk">
   <img src="https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg" alt="Rexroth ROKIT Locator" width="75%">
 </a>
 
