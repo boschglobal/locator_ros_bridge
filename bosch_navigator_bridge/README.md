@@ -74,21 +74,17 @@ For a correct configuration, it is important that `ClientMotion.feedback.address
 
 #### Parameters
 
-* **`/nav_host`**
-    The IP address of the computer where ROKIT Navigator is running
-* **`/nav_rpc_port`**
+* **`nav_host`**
+     The IP address of the computer where ROKIT Navigator is running
+* **`nav_rpc_port`**
      The port for the ROKIT Navigator JSON RPC client interface
-* **`/nav_binary_ports_start`**
-*    The port where the binary interface starts
-* **`/feedback_datagram_port`**
-*    The port for the client motion feedback interface, coming from the Bridge
-* **`/user_name`**
-*    The user name of the navigator
-* **`/password`**
-*    The password of the navigator
-* **`/odometry_pose_set`**
-*    this determines whether the pose within the odometry is considered valid and used or only the twist
-* **`/odom`**
-*    The topic name of the odometry
-* **`/cmd_vel`**
-     The topic name of the twist
+* **`nav_binary_ports_start`**
+     The port where the binary interface starts
+* **`feedback_datagram_port`**
+     The port for the client motion feedback interface, coming from the Bridge
+* **`user_name`**
+     The user name of the navigator
+* **`password`**
+     The password of the navigator
+* **`odometry_pose_set`**
+     This determines whether the pose within the odometry is considered valid and used or only the twist
