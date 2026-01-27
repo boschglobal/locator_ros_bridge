@@ -1,0 +1,61 @@
+<launch>
+  <!-- ip of the computer on which the bridge is running -->
+  <arg name="bridge_ip" default="172.17.0.1"/>
+  <!-- ip of the computer, on which the navigator software is running -->
+  <arg name="nav_ip" default="127.0.0.1"/>
+  <arg name="loc_ip" default="172.17.0.1"/>
+
+  <!-- name of the node -->
+  <arg name="bridge_node_name" default="navigator_bridge_node"/>
+  <!--ports-->
+  
+  <arg name="nav_binary_ports_start" default="9104"/>
+  <arg name="nav_rpc_port" default="8180"/>
+
+  <!-- login credentials for the navigator software -->
+  <arg name="nav_user" default="admin"/>
+  <arg name="nav_password" default="admin"/>
+
+  <arg name="odom_topic" default="odom"/>
+  <arg name="cmd_vel_topic" default="cmd_vel"/>
+
+<!-- Odometry Pose Set (fieldMask) -->
+<arg name="odometry_pose_set" default="false" description="set to true if the pose in the odometry should be used"/>
+
+
+<!--Motion Feedback Port-->
+  <arg name="feedback_datagram_port" default="1211"/>
+
+  
+<!--Client Localization Port-->
+  <arg name="localization_datagram_port" default="9011"/>
+  
+<!--Client Localization Map Port-->  
+ <arg name="map_datagram_port" default="9009"/> 
+
+  <node pkg="bosch_navigator_bridge" exec="navigator_bridge_node" name="$(var bridge_node_name)" output="screen">
+    <param name="nav_host" value="$(var nav_ip)" />
+    <param name="nav_rpc_port" value="$(var nav_rpc_port)" />
+    <param name="nav_binary_ports_start" value="$(var nav_binary_ports_start)" />
+    <param name="feedback_datagram_port" value="$(var feedback_datagram_port)"/>
+    <param name="user_name" value="$(var nav_user)"/>
+    <param name="password" value="$(var nav_password)"/>
+    <param name="odometry_pose_set" value="$(var odometry_pose_set)"/>
+    <remap from="odom" to="$(var odom_topic)" />
+    <remap from="cmd_vel" to="$(var cmd_vel_topic)"/>
+
+ <param name="navigator_client_config">
+  <!--Client Motion-->
+  
+  <!--Feedback-->
+  <param name="ClientMotion.feedback.address" value= "$(var bridge_ip):$(var feedback_datagram_port)"/>
+
+  <!--Client Localization-->
+  <param name="ClientLocalization.pose.address" value="$(var loc_ip):$(var localization_datagram_port)"/>
+
+  <!--Client Localization Map-->
+  <param name="ClientLocalization.map.address" value="$(var loc_ip):$(var map_datagram_port)"/>
+
+</param>
+</node>
+</launch>

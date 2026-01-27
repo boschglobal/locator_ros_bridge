@@ -1,4 +1,4 @@
-name: "Build action: Humble"
+name: "Build action Locator: Humble"
 
 on:
   push:

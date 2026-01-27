@@ -1,10 +1,11 @@
 [![License](https://img.shields.io/badge/License-Apache%202-blue.svg)](LICENSE)
 [![Build status](http://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/badge/icon?subject=Build%20farm%3A%20Humble)](https://build.ros2.org/job/Hdev__locator_ros_bridge__ubuntu_jammy_amd64/)
-[![Build action: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_humble.yml)
-[![Build action (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_utils_humble.yml)
+[![Build action Locator: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_humble.yml)
+[![Build action Locator (utils): Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_utils_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_locator_utils_humble.yml)
+[![Build action Navigator: Humble](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_navigator_humble.yml/badge.svg?branch=humble)](https://github.com/boschglobal/locator_ros_bridge/actions/workflows/build_navigator_humble.yml)
 
 ---
-**Level Up Your Mobile Robots. Rexroth ROKIT Locator – Your Easy-to-Use Laser Localization Software**
+**Level Up Your Mobile Robots. Rexroth ROKIT – Your Easy-to-Use Laser Localization and Navigation Software**
 
 ---
 
@@ -22,7 +23,24 @@ There are versions for the following ROS 1 and ROS 2 distributions:
 The repository also contains the [bosch_locator_bridge_utils](bosch_locator_bridge_utils) package, which provides an interface between the bosch_locator_bridge and [Nav2], the navigation stack of ROS 2.
 
 The following video (click on image) gives more information about the ROKIT Locator.
-[![Rexroth ROKIT Locator](https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg)](https://www.youtube.com/watch?v=g6SIUlXn9Bk)
+
+<a href="https://www.youtube.com/watch?v=g6SIUlXn9Bk">
+  <img src="https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/landingpage-stage-bild-keyvisual-locator-gruppe-a.jpg" alt="Rexroth ROKIT Locator" width="75%">
+</a>
+
+
+# navigator_ros_bridge
+
+This repository contains the [bosch_navigator_bridge](bosch_navigator_bridge) package, which provides a [ROS2] interface to the [Rexroth ROKIT Navigator].
+It translates ROS messages to the ROKIT Navigator API (as described in the ROKIT Navigator API documentation) and vice versa.
+
+This version is compatible with the following ROS 2 distribution:
+* ROS 2: Humble (this branch)
+
+<a href="https://www.boschrexroth.com/en/gb/products/industrial-solutions/mobile-robotics/components-for-mobile-robotics/">
+  <img src="https://dc-mkt-prod.cloud.bosch.tech/xrm/media/global/product_group_1/components_for_mobile_robotics/rokit/keyvisual-rokitnavigator-vda5050_1280x720.webp" alt="Rexroth ROKIT Navigator" width="75%">
+</a>
+
 
 ## Installation
 
@@ -55,12 +73,19 @@ To build from source, make sure your colcon workspace is set up correctly. Then 
 
 ## How to Get Started
 
+### locator_ros_bridge
 To get started, take a look at the [README.md](bosch_locator_bridge/README.md) of the bosch_locator_bridge package.
 And for the bosch_locator_bridge_utils package, please have a look at [README.md](bosch_locator_bridge_utils/README.md).
+
+### navigator_ros_bridge
+To get started, take a look at the [README.md](bosch_navigator_bridge/README.md) of the bosch_navigator_bridge package.
+
 
 ## License
 
 locator_ros_bridge is open-sourced under the Apache-2.0 license. See the [LICENSE](LICENSE) file for details.
+
+navigator_ros_bridge is open-sourced under the Apache-2.0 license. See the [LICENSE](LICENSE) file for details.
 
 
 [Nav2]: https://navigation.ros.org/
