@@ -1,0 +1,35 @@
+{
+    "name": "ROKIT Bridge",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        // Networking
+        "--network=host",
+        "--privileged",
+        // GPU access for WSL (DirectX and OpenGL)
+        // WSLg https://github.com/microsoft/wslg/blob/main/samples/container/Containers.md
+        // Uncomment for WSL
+        //"--device=/dev/dxg",
+        //"--device=/dev/dri",
+        //"--gpus=all"
+    ],
+    "mounts": [
+        // WSLg https://github.com/microsoft/wslg/blob/main/samples/container/Containers.md
+        // Uncomment for WSL
+        //"source=/usr/lib/wsl,target=/usr/lib/wsl,type=bind,ro",
+        //"source=/mnt/wslg,target=/mnt/wslg,type=bind",
+        //"source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,ro",
+        // SSH keys
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+    ],
+    "containerEnv": {
+        // WSLg https://github.com/microsoft/wslg/blob/main/samples/container/Containers.md
+        // Uncomment for WSL
+        //"LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
+        //"WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+        //"PULSE_SERVER": "${localEnv:PULSE_SERVER}",
+        "DISPLAY": "${localEnv:DISPLAY}" // Needs to be set here and not in "remoteEnv" for https://github.com/microsoft/vscode-remote-release/issues/10014#issuecomment-2199540477 to work
+    }
+
+}
