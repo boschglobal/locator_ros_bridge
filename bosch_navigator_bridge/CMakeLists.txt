@@ -16,11 +16,6 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
 
-
-find_package(Boost REQUIRED COMPONENTS system)
-find_package(PCL REQUIRED)
-include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
-
 add_executable(${PROJECT_NAME}_node
   src/main.cpp
   src/navigator_bridge_node.cpp
@@ -35,7 +30,6 @@ target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>${tf2_INCLUDE_DIRS}${tf2_geometry_msgs_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME}_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   geometry_msgs
