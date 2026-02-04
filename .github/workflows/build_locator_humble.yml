@@ -12,17 +12,24 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-${{ matrix.ubuntu_distribution }}-ros-${{ matrix.ros_distribution }}-desktop-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
-        # os: [ ubuntu-20.04, windows-latest, macOS-latest ]
-        os: [ ubuntu-22.04 ]
-        ros_distribution: [ humble ]
+        # Each ROS distribution requires a specific Ubuntu version
+        include:
+          - ros_distribution: humble
+            ubuntu_distribution: jammy
+          # To add more distributions, uncomment and adjust:
+          # - ros_distribution: iron
+          #   ubuntu_distribution: jammy
+          # - ros_distribution: jazzy
+          #   ubuntu_distribution: noble
     steps:
-    - uses: ros-tooling/setup-ros@v0.7
-      with:
-        required-ros-distributions: ${{ matrix.ros_distribution }}
     - uses : ros-tooling/action-ros-ci@v0.3
       with:
         package-name: bosch_locator_bridge
