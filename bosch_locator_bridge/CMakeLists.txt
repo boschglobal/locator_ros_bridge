@@ -68,7 +68,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ament_export_dependencies(rosidl_default_runtime)
 
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED)
 find_package(PCL REQUIRED)
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 
