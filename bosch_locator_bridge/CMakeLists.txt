@@ -68,7 +68,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ament_export_dependencies(rosidl_default_runtime)
 
-find_package(Boost REQUIRED COMPONENTS system)
 find_package(PCL REQUIRED)
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 
@@ -83,7 +82,6 @@ set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX ""
 target_include_directories(${PROJECT_NAME}_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME}_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   geometry_msgs
@@ -112,7 +110,6 @@ set_target_properties(${PROJECT_NAME}_server_node PROPERTIES OUTPUT_NAME server_
 target_include_directories(${PROJECT_NAME}_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME}_server_node  ${Boost_LIBRARIES})
 ament_target_dependencies(${PROJECT_NAME}_server_node
   rclcpp
   std_srvs
