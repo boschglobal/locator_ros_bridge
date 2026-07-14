@@ -44,12 +44,12 @@ REQUIRED_MODULE_VERSIONS({
 //  {"Licensing", {8, 1}},
   {"Config", {8, 0}},
   {"AboutBuild", {3, 1}},
-//  {"Certificate", {4, 0}},
+//  {"Certificate", {4, 1}},
 //  {"User", {1, 0}},
 //  {"Internal", {1, 1}},
 //  {"DataExchange", {1, 0}},
 //  {"ServerInternal", {3, 1}},
-  {"ServerMap", {9, 0}},
+  {"ServerMap", {9, 1}},
 //  {"ServerPostAlign", {1, 1}},
 });
 
