@@ -2,6 +2,12 @@
 Changelog for package bosch_locator_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update to Locator v2.1 `#82 <https://github.com/boschglobal/locator_ros_bridge/issues/82>`_ from boschglobal/humble-v2.1
+* CMake: remove boost (`#80 <https://github.com/boschglobal/locator_ros_bridge/issues/80>`_)
+* Contributors: Guilhem Saurel, Sheung Ying Yuen-Wille
+
 2.1.15 (2025-11-10)
 -------------------
 * Update to Locator 2.0 `#74 <https://github.com/boschglobal/locator_ros_bridge/issues/74>`_ from boschglobal/humble-v2.0
