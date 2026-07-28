@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="3"> 
   <name>bosch_navigator_bridge</name>
-  <version>1.0.0</version>
+  <version>2.1.15</version>
   <description>ROS interface to Rexroth ROKIT Navigator</description>
-  <maintainer email="Jasmin.Hoegel@boschrexroth.de">hoj1ul</maintainer>
+  <maintainer email="Fabian.Koenig@boschrexroth.de">Fabian Koenig</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
