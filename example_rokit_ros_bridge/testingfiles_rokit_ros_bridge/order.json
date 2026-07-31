@@ -1,0 +1,119 @@
+{
+    "orderId": "5k6eqxc1676645134053892",
+    "orderUpdateId": 0,
+    "headerId": 1,
+    "version": "2.0.0",
+    "timestamp": "2000-01-01T00:00:00.000Z",
+    "manufacturer": "bosch",
+    "serialNumber": "0001",
+    "nodes": [
+        {
+            "nodeId": "Waypoint-1",
+            "sequenceId": 0,
+            "released": true,
+            "nodePosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        },
+        {
+            "nodeId": "Waypoint-2",
+            "sequenceId": 2,
+            "released": true,
+            "nodePosition": {
+                "x": 0.6,
+                "y": -1,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        },
+        {
+            "nodeId": "Waypoint-3",
+            "sequenceId": 4,
+            "released": true,
+            "nodePosition": {
+                "x": 3.56,
+                "y": -0.53,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        },
+        {
+            "nodeId": "Waypoint-4",
+            "sequenceId": 6,
+            "released": true,
+            "nodePosition": {
+                "x": 3.1,
+                "y": 2.55,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        },
+        {
+            "nodeId": "Waypoint-5",
+            "sequenceId": 8,
+            "released": true,
+            "nodePosition": {
+                "x": 0.1,
+                "y": 2.0,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        },
+        {
+            "nodeId": "Waypoint-6-Final",
+            "sequenceId": 10,
+            "released": true,
+            "nodePosition": {
+                "x": 0,
+                "y": 0,
+                "mapId": "Area-51"
+            },
+            "actions": []
+        }
+    ],
+    "edges": [
+        {
+            "edgeId": "Edge-1-2",
+            "sequenceId": 1,
+            "released": true,
+            "startNodeId": "Waypoint-1",
+            "endNodeId": "Waypoint-2",
+            "actions": []
+        },
+        {
+            "edgeId": "Edge-2-3",
+            "sequenceId": 3,
+            "released": true,
+            "startNodeId": "Waypoint-2",
+            "endNodeId": "Waypoint-3",
+            "actions": []
+        },
+        {
+            "edgeId": "Edge-3-4",
+            "sequenceId": 5,
+            "released": true,
+            "startNodeId": "Waypoint-3",
+            "endNodeId": "Waypoint-4",
+            "actions": []
+        },
+        {
+            "edgeId": "Edge-4-5",
+            "sequenceId": 7,
+            "released": true,
+            "startNodeId": "Waypoint-4",
+            "endNodeId": "Waypoint-5",
+            "actions": []
+        },
+        {
+            "edgeId": "Edge-5-6",
+            "sequenceId": 9,
+            "released": true,
+            "startNodeId": "Waypoint-5",
+            "endNodeId": "Waypoint-6-Final",
+            "actions": []
+        }
+    ]
+}

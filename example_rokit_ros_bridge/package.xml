@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>example_rokit_ros_bridge</name>
+  <version>1.0.0</version>
+  <description>example rokit ros bridge</description>
+  <maintainer email="Fabian.Koenig@boschrexroth.de">Fabian König</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Necessary build tool for CMake-based packages -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  
+  <exec_depend>bosch_locator_bridge</exec_depend>
+  <exec_depend>bosch_navigator_bridge</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <!-- Dependencies for tests and linting -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

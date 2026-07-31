@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Copyright (c) 2021 - for information on the respective copyright owner
+see the NOTICE file and/or the repository https://github.com/boschglobal/locator_ros_bridge.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.-->
+
+<launch>
+  <!-- ip of the computer on which the bridge is running -->
+  <arg name="bridge_ip" default="172.17.0.1"/>
+  <!-- ip of the computer, on which the locator software is running -->
+  <arg name="locator_ip" default="127.0.0.1"/>
+
+    <!-- port at which the JSON RPC ROKIT Locator Client starts -->
+  <arg name="locator_RPC_Port" default="8080"/>
+
+  <!-- port at which the binary interface ClientControlMode starts -->
+  <arg name="locator_binaryPortsStart" default="9004"/>
+
+  <!-- name of the node -->
+  <arg name="bridge_node_name" default="bridge_node"/>
+
+  <!-- login credentials for the locator software -->
+  <arg name="locator_user" default="admin"/>
+  <arg name="locator_password" default="admin"/>
+
+
+  <arg name="laser_datagram_port" default="2112"/>
+
+  <arg name="laser2_datagram_port" default="2113"/>
+
+  <arg name="odom_datagram_port" default="1111"/>
+
+  <arg name="scan_topic" default="/scan"/>
+  <arg name="scan2_topic" default="/scan2"/>
+  <arg name="odom_topic" default="/odom"/>
+  <arg name="odometry_velocity_set" default="false" description="set to true if the velocity in the odometry should be used"/>
+
+  <node pkg="bosch_locator_bridge" exec="node" name="$(var bridge_node_name)" output="screen">
+    <param name="locator_host" value="$(var locator_ip)" />
+    <param name="locator_RPC_Port" value="$(var locator_RPC_Port)" />
+    <param name="locator_binaryPortsStart" value="$(var locator_binaryPortsStart)" />
+    <param name="laser_datagram_port" value="$(var laser_datagram_port)"/>
+    <param name="laser2_datagram_port" value="$(var laser2_datagram_port)"/>
+    <param name="odom_datagram_port" value="$(var odom_datagram_port)"/>
+    <param name="user_name" value="$(var locator_user)"/>
+    <param name="password" value="$(var locator_password)"/>
+    <param name="scan_topic" value="$(var scan_topic)"/>
+    <param name="scan2_topic" value="$(var scan2_topic)"/>
+    <param name="odom_topic" value="$(var odom_topic)"/>
+    <param name="odometry_velocity_set" value="$(var odometry_velocity_set)"/>
+
+    <!-- lasertype needs to be set to "simple" so that we can send LaserDatagrams
+         (instead of using one of the laser drivers built into the locator software) -->
+    <param name="localization_client_config">
+      <param name="ClientSensor.laser.type" value="simple"/>
+      <param name="ClientSensor.laser.address" value="$(var bridge_ip):$(var laser_datagram_port)"/>
+      <param name="ClientSensor.laser.mirrorLaserScans" value="false"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.x" value="-0.012"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.y" value="0.0"/>
+      <param name="ClientSensor.laser.vehicleTransformLaser.yaw" value="0.0"/>
+      <param name="ClientSensor.laser.useIntensities" value="false"/>
+
+      <param name="ClientSensor.enableLaser2" value="false"/>
+      <param name="ClientSensor.laser2.type" value="simple"/>
+      <param name="ClientSensor.laser2.address" value="$(var bridge_ip):$(var laser2_datagram_port)"/>
+      <param name="ClientSensor.laser2.mirrorLaserScans" value="false"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.x" value="0.0"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.y" value="0.0"/>
+      <param name="ClientSensor.laser2.vehicleTransformLaser.yaw" value="0.0"/>
+      <param name="ClientSensor.laser2.useIntensities" value="false"/>
+
+      <param name="ClientSensor.enableReflectorMarkers" value="false"/>
+
+      <param name="ClientLocalization.autostart" value="false"/>
+      <param name="ClientSensor.enableOdometry" value="false"/>
+      <param name="ClientSensor.odometryEncryption" value="false"/>
+      <param name="ClientSensor.odometryAddress" value="$(var bridge_ip):$(var odom_datagram_port)"/>
+    </param>
+  </node>
+
+</launch>
